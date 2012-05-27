@@ -67,25 +67,25 @@ namespace lsimd
 	LSIMD_ENSURE_INLINE
 	sse_f32p neg(const sse_f32p a)
 	{
-		return _mm_xor_ps(a.v, sse_const<f32>::sign_mask());
+		return _mm_xor_ps(sse_const<f32>::sign_mask(), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
 	sse_f64p neg(const sse_f64p a)
 	{
-		return _mm_xor_pd(a.v, sse_const<f64>::sign_mask());
+		return _mm_xor_pd(sse_const<f64>::sign_mask(), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
 	sse_f32p abs(const sse_f32p a)
 	{
-		return _mm_andnot_ps(a.v, sse_const<f32>::sign_mask());
+		return _mm_andnot_ps(sse_const<f32>::sign_mask(), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
 	sse_f64p abs(const sse_f64p a)
 	{
-		return _mm_andnot_pd(a.v, sse_const<f64>::sign_mask());
+		return _mm_andnot_pd(sse_const<f64>::sign_mask(), a.v);
 	}
 
 
@@ -173,6 +173,31 @@ namespace lsimd
 	}
 
 
+	LSIMD_ENSURE_INLINE
+	sse_f32p sqr(const sse_f32p a)
+	{
+		return _mm_mul_ps(a.v, a.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_f64p sqr(const sse_f64p a)
+	{
+		return _mm_mul_pd(a.v, a.v);
+	}
+
+
+	LSIMD_ENSURE_INLINE
+	sse_f32p cube(const sse_f32p a)
+	{
+		return _mm_mul_ps(_mm_mul_ps(a.v, a.v), a.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_f64p cube(const sse_f64p a)
+	{
+		return _mm_mul_pd(_mm_mul_pd(a.v, a.v), a.v);
+	}
+
 
 
 
@@ -186,20 +211,18 @@ namespace lsimd
 	sse_f32p floor_sse2(const sse_f32p a)
 	{
 		__m128 t = _mm_cvtepi32_ps(_mm_cvttps_epi32(a.v));
-		__m128i c = _mm_castps_si128(_mm_cmpgt_ps(t, a.v));
-		__m128i b = _mm_srli_epi32(c, 31); 	// b = (t > a ? 1 : 0);
+		__m128 b = _mm_and_ps(_mm_cmpgt_ps(t, a.v), sse_const<f32>::ones());
 
-		return _mm_sub_ps(t, _mm_cvtepi32_ps(b));
+		return _mm_sub_ps(t, b);
 	}
 
 	LSIMD_ENSURE_INLINE
 	sse_f64p floor_sse2(const sse_f64p a)
 	{
 		__m128d t = _mm_cvtepi32_pd(_mm_cvttpd_epi32(a.v));
-		__m128i c = _mm_castpd_si128(_mm_cmpgt_pd(t, a.v));
-		__m128i b = _mm_srli_epi32(c, 31); 	// b = (t > a ? 1 : 0);
+		__m128d b = _mm_and_pd(_mm_cmpgt_pd(t, a.v), sse_const<f64>::ones());
 
-		return _mm_sub_pd(t, _mm_cvtepi32_pd(b));
+		return _mm_sub_pd(t, b);
 	}
 
 
@@ -207,10 +230,9 @@ namespace lsimd
 	sse_f32p ceil_sse2(const sse_f32p a)
 	{
 		__m128 t = _mm_cvtepi32_ps(_mm_cvttps_epi32(a.v));
-		__m128i c = _mm_castps_si128(_mm_cmplt_ps(t, a.v));
-		__m128i b = _mm_srli_epi32(c, 31); 	// b = (t < a ? 1 : 0);
+		__m128 b = _mm_and_ps(_mm_cmplt_ps(t, a.v), sse_const<f32>::ones());
 
-		return _mm_add_ps(t, _mm_cvtepi32_ps(b));
+		return _mm_add_ps(t, b);
 	}
 
 
@@ -218,10 +240,9 @@ namespace lsimd
 	sse_f64p ceil_sse2(const sse_f64p a)
 	{
 		__m128d t = _mm_cvtepi32_pd(_mm_cvttpd_epi32(a.v));
-		__m128i c = _mm_castpd_si128(_mm_cmplt_pd(t, a.v));
-		__m128i b = _mm_srli_epi32(c, 31); 	// b = (t > a ? 1 : 0);
+		__m128d b = _mm_and_pd(_mm_cmplt_pd(t, a.v), sse_const<f64>::ones());
 
-		return _mm_add_pd(t, _mm_cvtepi32_pd(b));
+		return _mm_add_pd(t, b);
 	}
 
 
