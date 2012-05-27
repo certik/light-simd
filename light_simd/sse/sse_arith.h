@@ -40,13 +40,6 @@ namespace lsimd
 	}
 
 	LSIMD_ENSURE_INLINE
-	sse_i32p add(const sse_i32p a, const sse_i32p b)
-	{
-		return _mm_add_epi32(a.v, b.v);
-	}
-
-
-	LSIMD_ENSURE_INLINE
 	sse_f32p sub(const sse_f32p a, const sse_f32p b)
 	{
 		return _mm_sub_ps(a.v, b.v);
@@ -59,13 +52,6 @@ namespace lsimd
 	}
 
 	LSIMD_ENSURE_INLINE
-	sse_i32p sub(const sse_i32p a, const sse_i32p b)
-	{
-		return _mm_sub_epi32(a.v, b.v);
-	}
-
-
-	LSIMD_ENSURE_INLINE
 	sse_f32p mul(const sse_f32p a, const sse_f32p b)
 	{
 		return _mm_mul_ps(a.v, b.v);
@@ -75,12 +61,6 @@ namespace lsimd
 	sse_f64p mul(const sse_f64p a, const sse_f64p b)
 	{
 		return _mm_mul_pd(a.v, b.v);
-	}
-
-	LSIMD_ENSURE_INLINE
-	sse_i32p mul(const sse_i32p a, const sse_i32p b)
-	{
-		return _mm_mul_epi32(a.v, b.v);
 	}
 
 
@@ -97,13 +77,6 @@ namespace lsimd
 	}
 
 	LSIMD_ENSURE_INLINE
-	sse_i32p neg(const sse_i32p a)
-	{
-		return _mm_xor_si128(a.v, sse_const<i32>::sign_mask());
-	}
-
-
-	LSIMD_ENSURE_INLINE
 	sse_f32p abs(const sse_f32p a)
 	{
 		return _mm_andnot_ps(a.v, sse_const<f32>::sign_mask());
@@ -113,12 +86,6 @@ namespace lsimd
 	sse_f64p abs(const sse_f64p a)
 	{
 		return _mm_andnot_pd(a.v, sse_const<f64>::sign_mask());
-	}
-
-	LSIMD_ENSURE_INLINE
-	sse_i32p abs(const sse_i32p a)
-	{
-		return _mm_andnot_si128(a.v, sse_const<i32>::sign_mask());
 	}
 
 
@@ -135,13 +102,6 @@ namespace lsimd
 	}
 
 	LSIMD_ENSURE_INLINE
-	sse_i32p vmin(const sse_i32p a, const sse_i32p b)
-	{
-		return _mm_min_epi32(a.v, b.v);
-	}
-
-
-	LSIMD_ENSURE_INLINE
 	sse_f32p vmax(const sse_f32p a, const sse_f32p b)
 	{
 		return _mm_max_ps(a.v, b.v);
@@ -153,11 +113,6 @@ namespace lsimd
 		return _mm_max_pd(a.v, b.v);
 	}
 
-	LSIMD_ENSURE_INLINE
-	sse_i32p vmax(const sse_i32p a, const sse_i32p b)
-	{
-		return _mm_max_epi32(a.v, b.v);
-	}
 
 
 	/********************************************
@@ -228,19 +183,6 @@ namespace lsimd
 	 ********************************************/
 
 	LSIMD_ENSURE_INLINE
-	sse_i32p trunc_int(const sse_f32p a)
-	{
-		return _mm_cvttps_epi32(a.v);
-	}
-
-	LSIMD_ENSURE_INLINE
-	sse_i32p trunc_int(const sse_f64p a)  // store results to the first two entries
-	{
-		return _mm_cvttpd_epi32(a.v);
-	}
-
-
-	LSIMD_ENSURE_INLINE
 	sse_f32p floor_sse2(const sse_f32p a)
 	{
 		__m128 t = _mm_cvtepi32_ps(_mm_cvttps_epi32(a.v));
@@ -286,27 +228,27 @@ namespace lsimd
 #ifdef LSIMD_HAS_SSE4_1
 	LSIMD_ENSURE_INLINE sse_f32p floor_sse4(const sse_f32p a)
 	{
-		return _mm_floor_ps(a);
+		return _mm_floor_ps(a.v);
 	}
 
 	LSIMD_ENSURE_INLINE sse_f64p floor_sse4(const sse_f64p a)
 	{
-		return _mm_floor_pd(a);
+		return _mm_floor_pd(a.v);
 	}
 
 	LSIMD_ENSURE_INLINE sse_f32p ceil_sse4(const sse_f32p a)
 	{
-		return _mm_ceil_ps(a);
+		return _mm_ceil_ps(a.v);
 	}
 
 	LSIMD_ENSURE_INLINE sse_f64p ceil_sse4(const sse_f64p a)
 	{
-		return _mm_ceil_pd(a);
+		return _mm_ceil_pd(a.v);
 	}
 #endif
 
 	LSIMD_ENSURE_INLINE
-	sse_i32p floor(const sse_f32p a)
+	sse_f32p floor(const sse_f32p a)
 	{
 #ifdef LSIMD_HAS_SSE4_1
 		return floor_sse4(a);
@@ -316,7 +258,27 @@ namespace lsimd
 	}
 
 	LSIMD_ENSURE_INLINE
-	sse_i32p ceil(const sse_f32p a)
+	sse_f64p floor(const sse_f64p a)
+	{
+#ifdef LSIMD_HAS_SSE4_1
+		return floor_sse4(a);
+#else
+		return floor_sse2(a);
+#endif
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_f32p ceil(const sse_f32p a)
+	{
+#ifdef LSIMD_HAS_SSE4_1
+		return ceil_sse4(a);
+#else
+		return ceil_sse2(a);
+#endif
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_f64p ceil(const sse_f64p a)
 	{
 #ifdef LSIMD_HAS_SSE4_1
 		return ceil_sse4(a);

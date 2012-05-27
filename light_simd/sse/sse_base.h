@@ -49,13 +49,15 @@ namespace lsimd {
 	template<>
 	struct sse_pack<f32>
 	{
+		typedef __m128 intern_type;
+		static const int pack_width = 4;
+
 		union
 		{
 			__m128 v;
 			LSIMD_ALIGN_SSE f32 e[4];
 		};
 
-		typedef __m128 intern_type;
 
 		LSIMD_ENSURE_INLINE
 		sse_pack() { }
@@ -161,12 +163,14 @@ namespace lsimd {
 	struct sse_pack<f64>
 	{
 		typedef __m128d intern_type;
+		static const int pack_width = 2;
 
 		union
 		{
 			__m128d v;
 			LSIMD_ALIGN_SSE f64 e[2];
 		};
+
 
 		LSIMD_ENSURE_INLINE
 		sse_pack() { }
@@ -208,13 +212,13 @@ namespace lsimd {
 		LSIMD_ENSURE_INLINE
 		void set_zero()
 		{
-			v = _mm_setzero_ps();
+			v = _mm_setzero_pd();
 		}
 
 		LSIMD_ENSURE_INLINE
 		void set(const f64 x)
 		{
-			v = _mm_set1_ps(x);
+			v = _mm_set1_pd(x);
 		}
 
 		LSIMD_ENSURE_INLINE
@@ -267,120 +271,10 @@ namespace lsimd {
 	};
 
 
-	template<>
-	struct sse_pack<i32>
-	{
-		typedef __m128i intern_type;
-
-		union
-		{
-			__m128i v;
-			LSIMD_ALIGN_SSE i32 e[4];
-		};
-
-		LSIMD_ENSURE_INLINE
-		sse_pack() { }
-
-		LSIMD_ENSURE_INLINE
-		sse_pack(const intern_type v_)
-		: v(v_) { }
-
-		LSIMD_ENSURE_INLINE
-		sse_pack( zero_t )
-		{
-			v = _mm_setzero_si128();
-		}
-
-		LSIMD_ENSURE_INLINE
-		sse_pack(const i32 x)
-		{
-			v = _mm_set1_epi32(x);
-		}
-
-		LSIMD_ENSURE_INLINE
-		sse_pack(const i32 e0, const i32 e1, const i32 e2, const i32 e3)
-		{
-			v = _mm_set_epi32(e3, e2, e1, e0);
-		}
-
-		LSIMD_ENSURE_INLINE
-		sse_pack(const i32 *__restrict__ a, aligned_t)
-		{
-			v = _mm_load_si128(reinterpret_cast<const __m128i*>(a));
-		}
-
-		LSIMD_ENSURE_INLINE
-		sse_pack(const i32 *__restrict__ a, unaligned_t)
-		{
-			v = _mm_loadu_si128(reinterpret_cast<const __m128i*>(a));
-		}
-
-		LSIMD_ENSURE_INLINE
-		void set_zero()
-		{
-			v = _mm_setzero_si128();
-		}
-
-		LSIMD_ENSURE_INLINE
-		void set(const i32 x)
-		{
-			v = _mm_set1_epi32(x);
-		}
-
-		LSIMD_ENSURE_INLINE
-		void set(const i32 e3, const i32 e2, const i32 e0, const i32 e1)
-		{
-			v = _mm_set_epi32(e3, e2, e1, e0);
-		}
-
-		LSIMD_ENSURE_INLINE
-		void load(const i32 *__restrict__ a, aligned_t)
-		{
-			v = _mm_load_si128(reinterpret_cast<const __m128i*>(a));
-		}
-
-		LSIMD_ENSURE_INLINE
-		void load(const i32 *__restrict__ a, unaligned_t)
-		{
-			v = v = _mm_loadu_si128(reinterpret_cast<const __m128i*>(a));
-		}
-
-		LSIMD_ENSURE_INLINE
-		void store(i32 *__restrict__ a, aligned_t) const
-		{
-			_mm_store_si128(reinterpret_cast<__m128i*>(a), v);
-		}
-
-		LSIMD_ENSURE_INLINE
-		void store(i32 *__restrict__ a, unaligned_t) const
-		{
-			_mm_storeu_si128(reinterpret_cast<__m128i*>(a), v);
-		}
-
-		LSIMD_ENSURE_INLINE
-		intern_type intern() const
-		{
-			return v;
-		}
-
-		LSIMD_ENSURE_INLINE
-		i32 get_e(const int i) const
-		{
-			return e[i];
-		}
-
-		LSIMD_ENSURE_INLINE
-		void set_e(const int i, const i32 x)
-		{
-			e[i] = x;
-		}
-	};
-
+	// typedefs
 
 	typedef sse_pack<f32> sse_f32p;
 	typedef sse_pack<f64> sse_f64p;
-	typedef sse_pack<i32> sse_i32p;
-
 
 }
 
