@@ -1,0 +1,23 @@
+syntax: glob
+
+Makefile
+makefile
+.project
+.cproject
+.settings/*
+Debug/*
+temp/*
+bin/*
+sbin/*
+
+*.swp
+*.suo
+*.ipch
+*.sdf
+*.log
+*.tlog
+*.pdb
+*.vcxproj.user
+*.opensdf
+Debug/*.*
+Release/*.*
