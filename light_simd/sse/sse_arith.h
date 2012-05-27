@@ -20,11 +20,12 @@ namespace lsimd
 {
 	/********************************************
 	 *
-	 *  Simple arithmetic functions
+	 *  Basic arithmetic functions
 	 *
 	 ********************************************/
 
-	// for float
+
+	// basic arithmetic
 
 	LSIMD_ENSURE_INLINE
 	sse_f32p add(const sse_f32p a, const sse_f32p b)
@@ -36,6 +37,12 @@ namespace lsimd
 	sse_f64p add(const sse_f64p a, const sse_f64p b)
 	{
 		return _mm_add_pd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_i32p add(const sse_i32p a, const sse_i32p b)
+	{
+		return _mm_add_epi32(a.v, b.v);
 	}
 
 
@@ -51,6 +58,12 @@ namespace lsimd
 		return _mm_sub_pd(a.v, b.v);
 	}
 
+	LSIMD_ENSURE_INLINE
+	sse_i32p sub(const sse_i32p a, const sse_i32p b)
+	{
+		return _mm_sub_epi32(a.v, b.v);
+	}
+
 
 	LSIMD_ENSURE_INLINE
 	sse_f32p mul(const sse_f32p a, const sse_f32p b)
@@ -64,6 +77,95 @@ namespace lsimd
 		return _mm_mul_pd(a.v, b.v);
 	}
 
+	LSIMD_ENSURE_INLINE
+	sse_i32p mul(const sse_i32p a, const sse_i32p b)
+	{
+		return _mm_mul_epi32(a.v, b.v);
+	}
+
+
+	LSIMD_ENSURE_INLINE
+	sse_f32p neg(const sse_f32p a)
+	{
+		return _mm_xor_ps(a.v, sse_const<f32>::sign_mask());
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_f64p neg(const sse_f64p a)
+	{
+		return _mm_xor_pd(a.v, sse_const<f64>::sign_mask());
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_i32p neg(const sse_i32p a)
+	{
+		return _mm_xor_si128(a.v, sse_const<i32>::sign_mask());
+	}
+
+
+	LSIMD_ENSURE_INLINE
+	sse_f32p abs(const sse_f32p a)
+	{
+		return _mm_andnot_ps(a.v, sse_const<f32>::sign_mask());
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_f64p abs(const sse_f64p a)
+	{
+		return _mm_andnot_pd(a.v, sse_const<f64>::sign_mask());
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_i32p abs(const sse_i32p a)
+	{
+		return _mm_andnot_si128(a.v, sse_const<i32>::sign_mask());
+	}
+
+
+	LSIMD_ENSURE_INLINE
+	sse_f32p vmin(const sse_f32p a, const sse_f32p b)
+	{
+		return _mm_min_ps(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_f64p vmin(const sse_f64p a, const sse_f64p b)
+	{
+		return _mm_min_pd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_i32p vmin(const sse_i32p a, const sse_i32p b)
+	{
+		return _mm_min_epi32(a.v, b.v);
+	}
+
+
+	LSIMD_ENSURE_INLINE
+	sse_f32p vmax(const sse_f32p a, const sse_f32p b)
+	{
+		return _mm_max_ps(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_f64p vmax(const sse_f64p a, const sse_f64p b)
+	{
+		return _mm_max_pd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	sse_i32p vmax(const sse_i32p a, const sse_i32p b)
+	{
+		return _mm_max_epi32(a.v, b.v);
+	}
+
+
+	/********************************************
+	 *
+	 *  Floating-point only arithmetic functions
+	 *
+	 ********************************************/
+
 
 	LSIMD_ENSURE_INLINE
 	sse_f32p div(const sse_f32p a, const sse_f32p b)
@@ -76,33 +178,6 @@ namespace lsimd
 	{
 		return _mm_div_pd(a.v, b.v);
 	}
-
-
-	LSIMD_ENSURE_INLINE
-	sse_f32p neg(const sse_f32p a)
-	{
-		return _mm_xor_ps(a.v, sse_const<float>::sign_mask());
-	}
-
-	LSIMD_ENSURE_INLINE
-	sse_f64p neg(const sse_f64p a)
-	{
-		return _mm_xor_pd(a.v, sse_const<double>::sign_mask());
-	}
-
-
-	LSIMD_ENSURE_INLINE
-	sse_f32p abs(const sse_f32p a)
-	{
-		return _mm_andnot_ps(a.v, sse_const<float>::sign_mask());
-	}
-
-	LSIMD_ENSURE_INLINE
-	sse_f64p abs(const sse_f64p a)
-	{
-		return _mm_andnot_pd(a.v, sse_const<double>::sign_mask());
-	}
-
 
 	LSIMD_ENSURE_INLINE
 	sse_f32p sqrt(const sse_f32p a)
@@ -143,30 +218,7 @@ namespace lsimd
 	}
 
 
-	LSIMD_ENSURE_INLINE
-	sse_f32p vmin(const sse_f32p a, const sse_f32p b)
-	{
-		return _mm_min_ps(a.v, b.v);
-	}
 
-	LSIMD_ENSURE_INLINE
-	sse_f64p vmin(const sse_f64p a, const sse_f64p b)
-	{
-		return _mm_min_pd(a.v, b.v);
-	}
-
-
-	LSIMD_ENSURE_INLINE
-	sse_f32p vmax(const sse_f32p a, const sse_f32p b)
-	{
-		return _mm_max_ps(a.v, b.v);
-	}
-
-	LSIMD_ENSURE_INLINE
-	sse_f64p vmax(const sse_f64p a, const sse_f64p b)
-	{
-		return _mm_max_pd(a.v, b.v);
-	}
 
 
 	/********************************************

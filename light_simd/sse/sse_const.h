@@ -20,7 +20,7 @@ namespace lsimd
 
 	template<typename T> struct sse_const;
 
-	template<> struct sse_const<float>
+	template<> struct sse_const<f32>
 	{
 		LSIMD_ENSURE_INLINE static __m128 zeros()
 		{
@@ -49,7 +49,7 @@ namespace lsimd
 	};
 
 
-	template<> struct sse_const<double>
+	template<> struct sse_const<f64>
 	{
 		LSIMD_ENSURE_INLINE static __m128d zeros()
 		{
@@ -74,6 +74,30 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE static __m128d sign_mask()
 		{
 			return _mm_castsi128_pd(_mm_set_epi32(0x80000000, 0, 0x80000000, 0));
+		}
+	};
+
+
+	template<> struct sse_const<i32>
+	{
+		LSIMD_ENSURE_INLINE static __m128i zeros()
+		{
+			return _mm_setzero_si128();
+		}
+
+		LSIMD_ENSURE_INLINE static __m128i ones()
+		{
+			return _mm_set1_epi32(1);
+		}
+
+		LSIMD_ENSURE_INLINE static __m128i twos()
+		{
+			return _mm_set1_epi32(2);
+		}
+
+		LSIMD_ENSURE_INLINE static __m128i sign_mask()
+		{
+			return _mm_set1_epi32(0x80000000);
 		}
 	};
 
