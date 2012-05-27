@@ -11,7 +11,7 @@
 
 using namespace lsimd;
 
-const int arr_len = 32;
+const int arr_len = 64;
 const unsigned warming_times = 10;
 
 #define FORCE_CALC(var) asm volatile("" : : "x"(var.v));
@@ -27,7 +27,7 @@ struct add_op
 	int folds() const { return 4; }
 
 	LSIMD_ENSURE_INLINE
-	void run(const T *a, const T *b)
+	void run(T *a, const T *b)
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
@@ -620,6 +620,5 @@ int main(int argc, char *argv[])
 	std::printf("\n");
 
 }
-
 
 

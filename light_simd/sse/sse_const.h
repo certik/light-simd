@@ -66,7 +66,7 @@ namespace lsimd
 			return _mm_set1_pd(2.0);
 		}
 
-		LSIMD_ENSURE_INLINE static __m128 halfs()
+		LSIMD_ENSURE_INLINE static __m128d halfs()
 		{
 			return _mm_set1_pd(0.5);
 		}

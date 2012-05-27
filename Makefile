@@ -79,6 +79,6 @@ bench_sse: \
 	$(BIN)/bench_sse_arith
 	
 $(BIN)/bench_sse_arith: $(SSE_H) tests/bench_sse_arith.cpp
-	$(CXX) $(CXXFLAGS) -O3 tests/bench_sse_arith.cpp -o $@
+	$(CXX) $(CXXFLAGS) -O2 tests/bench_sse_arith.cpp -o $@
 	
 
