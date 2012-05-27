@@ -147,6 +147,48 @@ namespace lsimd
 
 
 
+	LSIMD_ENSURE_INLINE
+	inline uint64_t read_tsc(void) {
+	    uint32_t lo, hi;
+	    __asm__ __volatile__("rdtscp" : "=a"(lo), "=d"(hi) :: "ecx" );
+	    return (uint64_t)hi << 32 | lo;
+	}
+
+
+	template<typename T, class Op>
+	uint64_t bench_op(Op op, unsigned warming_times, unsigned repeat_times,
+			int arr_len, T *a, const T lb_a, const T ub_a)
+	{
+		fill_rand(arr_len, a, lb_a, ub_a);
+
+		for (unsigned i = 0; i < warming_times; ++i) op.run(a);
+
+		uint64_t tic = read_tsc();
+		for (unsigned i = 0; i < repeat_times; ++i) op.run(a);
+		uint64_t toc = read_tsc();
+
+		return toc - tic;  // total cycles
+	}
+
+
+	template<typename T, class Op>
+	uint64_t bench_op(Op op, unsigned warming_times, unsigned repeat_times,
+			int arr_len,
+			T *a, const T lb_a, const T ub_a,
+			T *b, const T lb_b, const T ub_b)
+	{
+		fill_rand(arr_len, a, lb_a, ub_b);
+		fill_rand(arr_len, b, lb_b, ub_b);
+
+		for (unsigned i = 0; i < warming_times; ++i) op.run(a, b);
+
+		uint64_t tic = read_tsc();
+		for (unsigned i = 0; i < repeat_times; ++i) op.run(a, b);
+		uint64_t toc = read_tsc();
+
+		return toc - tic;  // total cycles
+	}
+
 }
 
 #endif /* TEST_AUX_H_ */
