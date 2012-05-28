@@ -13,492 +13,395 @@ using namespace lsimd;
 const int N = 100 * 1024;
 
 
-template<typename T>
-void compare_results(const char *name, T lb, T ub, const sse_array<T>& a, const sse_array<T>& b)
+template<typename T, template<typename U> class OpT>
+void test_accuracy_u()
 {
-	T dev = max_dev(a, b);
-	std::printf("\t%-6s:  [%4g, %4g] \t-->\t max-dev = %8.3g\n", name, lb, ub, dev);
+	T lb_x = OpT<T>::lb_x();
+	T ub_x = OpT<T>::ub_x();
+
+	double maxdev = eval_sse_approx_accuracy<T, OpT<T> >(N, lb_x, ub_x);
+	std::printf("\t%-9s:    max-rdev = %8.3g\n",
+			OpT<T>::name(), maxdev);
+}
+
+template<typename T, template<typename U> class OpT>
+void test_accuracy_b()
+{
+	T lb_x = OpT<T>::lb_x();
+	T ub_x = OpT<T>::ub_x();
+
+	T lb_y = OpT<T>::lb_y();
+	T ub_y = OpT<T>::ub_y();
+
+	double maxdev = eval_sse_approx_accuracy<T, OpT<T> >(N, lb_x, ub_x, lb_y, ub_y);
+	std::printf("\t%-9s:    max-rdev = %8.3g\n",
+			OpT<T>::name(), maxdev);
 }
 
 
-template<typename T>
-void test_add()
-{
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
-
-	const T lb = T(-10);
-	const T ub = T(10);
-
-	sse_array<T> a(ns);
-	sse_array<T> b(ns);
-
-	a.set_rand(lb, ub);
-	b.set_rand(lb, ub);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = a[i] + b[i];
-	for (int i = 0; i < nv; ++i) c.set_pack( i, add(a.get_pack(i), b.get_pack(i)) );
-
-	compare_results("add", lb, ub, c, c0);
-}
-
-template<typename T>
-void test_sub()
-{
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
-
-	const T lb = T(-10);
-	const T ub = T(10);
-
-	sse_array<T> a(ns);
-	sse_array<T> b(ns);
-
-	a.set_rand(lb, ub);
-	b.set_rand(lb, ub);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = a[i] - b[i];
-	for (int i = 0; i < nv; ++i) c.set_pack( i, sub(a.get_pack(i), b.get_pack(i)) );
-
-	compare_results("sub", lb, ub, c, c0);
-}
 
 
 template<typename T>
-void test_mul()
+struct add_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "add"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
-	sse_array<T> b(ns);
+	static T lb_y() { return T(-10); }
+	static T ub_y() { return T(10); }
 
-	a.set_rand(lb, ub);
-	b.set_rand(lb, ub);
+	static T eval_scalar(const T x, const T y) { return x + y; }
 
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = a[i] * b[i];
-	for (int i = 0; i < nv; ++i) c.set_pack( i, mul(a.get_pack(i), b.get_pack(i)) );
-
-	compare_results("mul", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	{
+		return add(x, y);
+	}
+};
 
 
 template<typename T>
-void test_div()
+struct sub_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "sub"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
-	sse_array<T> b(ns);
+	static T lb_y() { return T(-10); }
+	static T ub_y() { return T(10); }
 
-	a.set_rand(lb, ub);
-	b.set_rand(T(1), ub);
+	static T eval_scalar(const T x, const T y) { return x - y; }
 
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = a[i] / b[i];
-	for (int i = 0; i < nv; ++i) c.set_pack( i, div(a.get_pack(i), b.get_pack(i)) );
-
-	compare_results("div", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	{
+		return sub(x, y);
+	}
+};
 
 
 template<typename T>
-void test_min()
+struct mul_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "mul"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
-	sse_array<T> b(ns);
+	static T lb_y() { return T(-10); }
+	static T ub_y() { return T(10); }
 
-	a.set_rand(lb, ub);
-	b.set_rand(lb, ub);
+	static T eval_scalar(const T x, const T y) { return x * y; }
 
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = (a[i] < b[i] ? a[i] : b[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, vmin(a.get_pack(i), b.get_pack(i)) );
-
-	compare_results("min", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	{
+		return mul(x, y);
+	}
+};
 
 
 template<typename T>
-void test_max()
+struct div_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "div"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
-	sse_array<T> b(ns);
+	static T lb_y() { return T(1); }
+	static T ub_y() { return T(10); }
 
-	a.set_rand(lb, ub);
-	b.set_rand(lb, ub);
+	static T eval_scalar(const T x, const T y) { return x / y; }
 
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = (a[i] > b[i] ? a[i] : b[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, vmax(a.get_pack(i), b.get_pack(i)) );
-
-	compare_results("max", lb, ub, c, c0);
-}
-
-template<typename T>
-void test_neg()
-{
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
-
-	const T lb = T(-10);
-	const T ub = T(10);
-
-	sse_array<T> a(ns);
-
-	a.set_rand(lb, ub);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = -a[i];
-	for (int i = 0; i < nv; ++i) c.set_pack( i, neg(a.get_pack(i)) );
-
-	compare_results("neg", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	{
+		return div(x, y);
+	}
+};
 
 
 template<typename T>
-void test_abs()
+struct neg_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "neg"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
+	static T eval_scalar(const T x) { return -x; }
 
-	a.set_rand(lb, ub);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = std::fabs(a[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, abs(a.get_pack(i)) );
-
-	compare_results("abs", lb, ub, c, c0);
-}
-
-template<typename T>
-void test_sqrt()
-{
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
-
-	const T lb = T(-10);
-	const T ub = T(10);
-
-	sse_array<T> a(ns);
-
-	a.set_rand(lb, ub);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = std::sqrt(a[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, sqrt(a.get_pack(i)) );
-
-	compare_results("sqrt", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return neg(x);
+	}
+};
 
 
 template<typename T>
-void test_rcp()
+struct abs_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "abs"; }
 
-	const T lb = T(1);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
+	static T eval_scalar(const T x) { return std::fabs(x); }
 
-	a.set_rand(lb, ub);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = T(1) / (a[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, rcp(a.get_pack(i)) );
-
-	compare_results("rcp", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return abs(x);
+	}
+};
 
 
 template<typename T>
-void test_rsqrt()
+struct min_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "min"; }
 
-	const T lb = T(1);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
+	static T lb_y() { return T(1); }
+	static T ub_y() { return T(10); }
 
-	a.set_rand(lb, ub);
+	static T eval_scalar(const T x, const T y) { return x < y ? x : y; }
 
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = T(1) / std::sqrt(a[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, rsqrt(a.get_pack(i)) );
-
-	compare_results("rsqrt", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	{
+		return vmin(x, y);
+	}
+};
 
 
 template<typename T>
-void test_sqr()
+struct max_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "max"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
+	static T lb_y() { return T(1); }
+	static T ub_y() { return T(10); }
 
-	a.set_rand(lb, ub);
+	static T eval_scalar(const T x, const T y) { return x > y ? x : y; }
 
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = a[i] * a[i];
-	for (int i = 0; i < nv; ++i) c.set_pack( i, sqr(a.get_pack(i)) );
-
-	compare_results("sqr", lb, ub, c, c0);
-}
-
-template<typename T>
-void test_cube()
-{
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
-
-	const T lb = T(-10);
-	const T ub = T(10);
-
-	sse_array<T> a(ns);
-
-	a.set_rand(lb, ub);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = a[i] * a[i] * a[i];
-	for (int i = 0; i < nv; ++i) c.set_pack( i, cube(a.get_pack(i)) );
-
-	compare_results("cube", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	{
+		return vmax(x, y);
+	}
+};
 
 
 template<typename T>
-void test_floor()
+struct sqr_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "sqr"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
+	static T eval_scalar(const T x) { return x * x; }
 
-	a.set_rand(lb, ub);
-	for (int i = 0; i <= 20; ++i) a[3 * i] = T(i - 10);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = std::floor(a[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, floor_sse4(a.get_pack(i)) );
-
-	compare_results("floor", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return sqr(x);
+	}
+};
 
 
 template<typename T>
-void test_floor2()
+struct sqrt_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "sqrt"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(0.1); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
+	static T eval_scalar(const T x) { return std::sqrt(x); }
 
-	a.set_rand(lb, ub);
-	for (int i = 0; i <= 20; ++i) a[3 * i] = T(i - 10);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = std::floor(a[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, floor_sse2(a.get_pack(i)) );
-
-	compare_results("floor2", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return sqrt(x);
+	}
+};
 
 
 template<typename T>
-void test_ceil()
+struct rcp_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "rcp"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(1); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
+	static T eval_scalar(const T x) { return T(1) / x; }
 
-	a.set_rand(lb, ub);
-	for (int i = 0; i <= 20; ++i) a[3 * i] = T(i - 10);
-
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
-
-	c0.set_zeros();
-	c.set_zeros();
-
-	for (int i = 0; i < ns; ++i) c0[i] = std::ceil(a[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, ceil_sse4(a.get_pack(i)) );
-
-	compare_results("ceil", lb, ub, c, c0);
-}
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return rcp(x);
+	}
+};
 
 
 template<typename T>
-void test_ceil2()
+struct rsqrt_s
 {
-	const int ns = N;
-	const int nv = ns / sse_vec<T>::pack_width;
+	static const char *name() { return "rsqrt"; }
 
-	const T lb = T(-10);
-	const T ub = T(10);
+	static T lb_x() { return T(1); }
+	static T ub_x() { return T(10); }
 
-	sse_array<T> a(ns);
+	static T eval_scalar(const T x) { return T(1) / std::sqrt(x); }
 
-	a.set_rand(lb, ub);
-	for (int i = 0; i <= 20; ++i) a[3 * i] = T(i - 10);
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return rsqrt(x);
+	}
+};
 
-	sse_array<T> c0(ns);
-	sse_array<T> c(ns);
 
-	c0.set_zeros();
-	c.set_zeros();
+template<typename T>
+struct rcp_a_s
+{
+	static const char *name() { return "rcp(a)"; }
 
-	for (int i = 0; i < ns; ++i) c0[i] = std::ceil(a[i]);
-	for (int i = 0; i < nv; ++i) c.set_pack( i, ceil_sse2(a.get_pack(i)) );
+	static T lb_x() { return T(1); }
+	static T ub_x() { return T(10); }
 
-	compare_results("ceil2", lb, ub, c, c0);
-}
+	static T eval_scalar(const T x) { return T(1) / x; }
+
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return approx_rcp(x);
+	}
+};
+
+
+template<typename T>
+struct rsqrt_a_s
+{
+	static const char *name() { return "rsqrt(a)"; }
+
+	static T lb_x() { return T(1); }
+	static T ub_x() { return T(10); }
+
+	static T eval_scalar(const T x) { return T(1) / std::sqrt(x); }
+
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return approx_rsqrt(x);
+	}
+};
+
+
+template<typename T>
+struct cube_s
+{
+	static const char *name() { return "cube"; }
+
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
+
+	static T eval_scalar(const T x) { return x * x * x; }
+
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return cube(x);
+	}
+};
+
+
+template<typename T>
+struct floor_s
+{
+	static const char *name() { return "floor"; }
+
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
+
+	static T eval_scalar(const T x) { return std::floor(x); }
+
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return floor(x);
+	}
+};
+
+template<typename T>
+struct ceil_s
+{
+	static const char *name() { return "ceil"; }
+
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
+
+	static T eval_scalar(const T x) { return std::ceil(x); }
+
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return ceil(x);
+	}
+};
+
+template<typename T>
+struct floor2_s
+{
+	static const char *name() { return "floor(2)"; }
+
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
+
+	static T eval_scalar(const T x) { return std::floor(x); }
+
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return floor_sse2(x);
+	}
+};
+
+template<typename T>
+struct ceil2_s
+{
+	static const char *name() { return "ceil(2)"; }
+
+	static T lb_x() { return T(-10); }
+	static T ub_x() { return T(10); }
+
+	static T eval_scalar(const T x) { return std::ceil(x); }
+
+	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	{
+		return ceil_sse2(x);
+	}
+};
 
 
 template<typename T>
 void test_all()
 {
-	test_add<T>();
-	test_sub<T>();
-	test_mul<T>();
-	test_div<T>();
-	test_min<T>();
-	test_max<T>();
-	test_neg<T>();
-	test_abs<T>();
+	test_accuracy_b<T, add_s>();
+	test_accuracy_b<T, sub_s>();
+	test_accuracy_b<T, mul_s>();
+	test_accuracy_b<T, div_s>();
 
-	test_sqrt<T>();
-	test_rcp<T>();
-	test_rsqrt<T>();
-	test_sqr<T>();
-	test_cube<T>();
+	test_accuracy_u<T, neg_s>();
+	test_accuracy_u<T, abs_s>();
+	test_accuracy_b<T, min_s>();
+	test_accuracy_b<T, max_s>();
 
-	test_floor<T>();
-	test_floor2<T>();
-	test_ceil<T>();
-	test_ceil2<T>();
+	test_accuracy_u<T, sqr_s>();
+	test_accuracy_u<T, sqrt_s>();
+	test_accuracy_u<T, rcp_s>();
+	test_accuracy_u<T, rsqrt_s>();
+	test_accuracy_u<T, cube_s>();
 
-	std::printf("\n");
+	test_accuracy_u<T, floor_s>();
+	test_accuracy_u<T, ceil_s>();
+	test_accuracy_u<T, floor2_s>();
+	test_accuracy_u<T, ceil2_s>();
 }
 
 
@@ -508,9 +411,16 @@ int main(int argc, char *argv[])
 	std::printf("================================\n");
 	test_all<f32>();
 
+	test_accuracy_u<f32, rcp_a_s>();
+	test_accuracy_u<f32, rsqrt_a_s>();
+
+	std::printf("\n");
+
 	std::printf("Tests on f64\n");
 	std::printf("================================\n");
 	test_all<f64>();
+
+	std::printf("\n");
 
 	return 0;
 }

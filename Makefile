@@ -45,13 +45,14 @@ COMMON_H = \
 SSE_H = $(COMMON_H) \
 	$(INC)/sse/sse_base.h \
 	$(INC)/sse/sse_arith.h \
+	$(INC)/sse/sse_math.h \
 	$(INC)/sse.h
 	
 
 #---------- Target groups -------------------
 
 .PHONY: all
-all: test bench
+all: test 
 
 .PHONY: test
 test: test_sse
@@ -69,13 +70,17 @@ clean:
 
 test_sse: \
 	$(BIN)/test_sse_vecs \
-	$(BIN)/test_sse_arith
+	$(BIN)/test_sse_arith \
+	$(BIN)/test_sse_math_svml
 	
 $(BIN)/test_sse_vecs : $(SSE_H) tests/test_sse_vecs.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_vecs.cpp -o $@
 
 $(BIN)/test_sse_arith:  $(SSE_H) tests/test_sse_arith.cpp
 	$(CXX) $(CXXFLAGS) -O2 tests/test_sse_arith.cpp -o $@
+	
+$(BIN)/test_sse_math_svml:  $(SSE_H) tests/test_sse_math.cpp
+	$(CXX) $(CXXFLAGS) -O2 -DLSIMD_USE_SVML tests/test_sse_math.cpp -lsvml -o $@
 	
 	
 bench_sse: \
@@ -85,7 +90,7 @@ bench_sse: \
 $(BIN)/bench_sse_arith: $(SSE_H) tests/bench_sse_arith.cpp
 	$(CXX) $(CXXFLAGS) -O3 tests/bench_sse_arith.cpp -lsvml -o $@
 	
-$(BIN)/bench_sse_math: $(SSE_H) tests/bench_sse_math.cpp
+$(BIN)/bench_sse_math_svml: $(SSE_H) tests/bench_sse_math.cpp
 	$(CXX) $(CXXFLAGS) -O3 -DLSIMD_USE_SVML tests/bench_sse_math.cpp -lsvml -o $@
 	
 	

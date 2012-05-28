@@ -28,15 +28,20 @@ namespace lsimd
 		for (int i = 0; i < n; ++i) a[i] = T(0);
 	}
 
+	template<typename T>
+	inline T rand_val(const T lb, const T ub)
+	{
+		double r = double(std::rand()) / RAND_MAX;
+		r = double(lb) + r * double(ub - lb);
+		return T(r);
+	}
 
 	template<typename T>
 	inline void fill_rand(int n, T *a, T lb, T ub)
 	{
 		for (int i = 0; i < n; ++i)
 		{
-			double r = double(std::rand()) / RAND_MAX;
-			r = double(lb) + r * double(ub - lb);
-			a[i] = T(r);
+			a[i] = rand_val(lb, ub);
 		}
 	}
 
@@ -137,17 +142,80 @@ namespace lsimd
 	};
 
 
-	template<typename T>
-	T max_dev(const sse_array<T>& a, const sse_array<T>& b)
+	template<typename T, class Op>
+	double eval_sse_approx_accuracy(unsigned n, const T lb_a, const T ub_a)
 	{
-		T s(0);
-		for (int i = 0; i < a.nelems(); ++i)
+		double max_dev = 0.0;
+
+		for (unsigned k = 0; k < n; ++k)
 		{
-			T v = std::fabs(a[i] - b[i]);
-			if (v > s) s = v;
+			sse_vec<T> a;
+
+			for (unsigned i = 0; i < a.width(); ++i)
+			{
+				a.e[i] = rand_val(lb_a, ub_a);
+			}
+
+			LSIMD_ALIGN_SSE T r0[sse_vec<T>::pack_width];
+
+			for (unsigned i = 0; i < a.width(); ++i)
+			{
+				r0[i] = Op::eval_scalar(a.e[i]);
+			}
+
+			sse_vec<T> r = Op::eval_vector(a);
+
+			for (unsigned i = 0; i < a.width(); ++i)
+			{
+				double cdev = std::fabs(double(r.e[i]) - double(r0[i])) / double(r0[i]);
+				if (cdev > max_dev) max_dev = cdev;
+			}
 		}
-		return s;
+
+		return max_dev;
 	}
+
+	template<typename T, class Op>
+	double eval_sse_approx_accuracy(unsigned n,
+			const T lb_a, const T ub_a,
+			const T lb_b, const T ub_b)
+	{
+		double max_dev = 0.0;
+
+		for (unsigned k = 0; k < n; ++k)
+		{
+			sse_vec<T> a;
+			sse_vec<T> b;
+
+			for (unsigned i = 0; i < a.width(); ++i)
+			{
+				a.e[i] = rand_val(lb_a, ub_a);
+			}
+
+			for (unsigned i = 0; i < a.width(); ++i)
+			{
+				b.e[i] = rand_val(lb_b, ub_b);
+			}
+
+			LSIMD_ALIGN_SSE T r0[sse_vec<T>::pack_width];
+
+			for (unsigned i = 0; i < a.width(); ++i)
+			{
+				r0[i] = Op::eval_scalar(a.e[i], b.e[i]);
+			}
+
+			sse_vec<T> r = Op::eval_vector(a, b);
+
+			for (unsigned i = 0; i < a.width(); ++i)
+			{
+				double cdev = std::fabs(double(r.e[i]) - double(r0[i])) / double(r0[i]);
+				if (cdev > max_dev) max_dev = cdev;
+			}
+		}
+
+		return max_dev;
+	}
+
 
 
 

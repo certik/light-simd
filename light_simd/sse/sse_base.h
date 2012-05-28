@@ -224,13 +224,18 @@ namespace lsimd {
 
 		typedef f32 value_type;
 		typedef __m128 intern_type;
-		static const int pack_width = 4;
+		static const unsigned int pack_width = 4;
 
 		union
 		{
 			__m128 v;
 			LSIMD_ALIGN_SSE f32 e[4];
 		};
+
+		LSIMD_ENSURE_INLINE unsigned int width() const
+		{
+			return pack_width;
+		}
 
 
 		// constructors
@@ -349,7 +354,7 @@ namespace lsimd {
 
 		typedef f64 value_type;
 		typedef __m128d intern_type;
-		static const int pack_width = 2;
+		static const unsigned int pack_width = 2;
 
 		union
 		{
@@ -357,6 +362,10 @@ namespace lsimd {
 			LSIMD_ALIGN_SSE f64 e[2];
 		};
 
+		LSIMD_ENSURE_INLINE unsigned int width() const
+		{
+			return pack_width;
+		}
 
 		// constructors
 
