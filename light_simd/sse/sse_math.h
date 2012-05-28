@@ -19,39 +19,51 @@
 
 // External function prototypes
 
+#define SVML_SSE_F( name ) __svml_##name##f4
+#define SVML_SSE_D( name ) __svml_##name##2
+
+#define DECLARE_SVML_SSE_EXTERN1( name ) \
+	__m128  SVML_SSE_F(name)( __m128 ); \
+	__m128d SVML_SSE_D(name)( __m128d );
+
+#define DECLARE_SVML_SSE_EXTERN2( name ) \
+	__m128  SVML_SSE_F(name)( __m128,  __m128  ); \
+	__m128d SVML_SSE_D(name)( __m128d, __m128d );
+
 extern "C"
 {
-	__m128 vmlsExp4(__m128);
-	__m128 vmlsLn4 (__m128);
-
-	__m128d vmldExp2(__m128d);
-	__m128d vmldLn2 (__m128d);
+	DECLARE_SVML_SSE_EXTERN1( exp )
+	DECLARE_SVML_SSE_EXTERN1( log )
 }
-
 
 namespace lsimd
 {
-	sse_f32v4 exp(sse_f32v4 x)
+	LSIMD_ENSURE_INLINE sse_f32v4 exp( sse_f32v4 x )
 	{
-		return vmlsExp4(x.v);
+		return SVML_SSE_F(exp)(x.v);
 	}
 
-	sse_f64v2 exp(sse_f64v2 x)
+	LSIMD_ENSURE_INLINE sse_f64v2 exp( sse_f64v2 x )
 	{
-		return vmldExp2(x.v);
+		return SVML_SSE_D(exp)(x.v);
 	}
 
-	sse_f32v4 log(sse_f32v4 x)
+
+	LSIMD_ENSURE_INLINE sse_f32v4 log( sse_f32v4 x )
 	{
-		return vmlsLn4(x.v);
+		return SVML_SSE_F(log)(x.v);
 	}
 
-	sse_f64v2 log(sse_f64v2 x)
+	LSIMD_ENSURE_INLINE sse_f64v2 log( sse_f64v2 x )
 	{
-		return vmldLn2(x.v);
+		return SVML_SSE_D(exp)(x.v);
 	}
 }
 
+#undef DECLARE_SVML_SSE_EXTERN1
+
+#undef SVML_SSE_F
+#undef SVML_SSE_D
 
 #endif  /* LSIMD_USE_SMVL */
 
