@@ -15,7 +15,7 @@
 using namespace lsimd;
 
 const unsigned arr_len = 64;
-const unsigned warming_times = 10;
+const unsigned warming_times = 1000;
 
 inline void report_bench(const char *name, unsigned rtimes, uint64_t cycles,
 		int pack_w, int nops)

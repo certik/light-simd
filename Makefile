@@ -52,7 +52,7 @@ SSE_H = $(COMMON_H) \
 #---------- Target groups -------------------
 
 .PHONY: all
-all: test 
+all: test bench
 
 .PHONY: test
 test: test_sse
@@ -85,7 +85,7 @@ $(BIN)/test_sse_math_svml:  $(SSE_H) tests/test_sse_math.cpp
 	
 bench_sse: \
 	$(BIN)/bench_sse_arith \
-	$(BIN)/bench_sse_math
+	$(BIN)/bench_sse_math_svml
 	
 $(BIN)/bench_sse_arith: $(SSE_H) tests/bench_sse_arith.cpp
 	$(CXX) $(CXXFLAGS) -O3 tests/bench_sse_arith.cpp -lsvml -o $@
