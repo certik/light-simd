@@ -14,10 +14,12 @@ endif
 # Compiler configuration
 #-------------------------
 
-SVML_LNKPATH=/opt/intel/lib
+ifndef ICC_LIBPATH
+	$(error The environment variable ICC_LIBPATH need to be set)
+endif
 
 WARNING_FLAGS = -Wall -Wextra -Wconversion -Wformat -Wno-unused-parameter
-CPPFLAGS = -I. -L$(SVML_LNKPATH)
+CPPFLAGS = -I. -L$(ICC_LIBPATH)
 
 ifeq ($(UNAME), Linux)
 	CXX=g++
@@ -81,10 +83,10 @@ bench_sse: \
 	$(BIN)/bench_sse_math
 	
 $(BIN)/bench_sse_arith: $(SSE_H) tests/bench_sse_arith.cpp
-	$(CXX) $(CXXFLAGS) -O2 tests/bench_sse_arith.cpp -o $@
+	$(CXX) $(CXXFLAGS) -O3 tests/bench_sse_arith.cpp -lsvml -o $@
 	
 $(BIN)/bench_sse_math: $(SSE_H) tests/bench_sse_math.cpp
-	$(CXX) $(CXXFLAGS) -O2 -DLSIMD_USE_SVML tests/bench_sse_math.cpp -lsvml -o $@
+	$(CXX) $(CXXFLAGS) -O3 -DLSIMD_USE_SVML tests/bench_sse_math.cpp -lsvml -o $@
 	
 	
 	

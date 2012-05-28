@@ -33,7 +33,11 @@ namespace lsimd
 	inline void fill_rand(int n, T *a, T lb, T ub)
 	{
 		for (int i = 0; i < n; ++i)
-			a[i] = lb + (T(std::rand()) / RAND_MAX) * (ub - lb);
+		{
+			double r = double(std::rand()) / RAND_MAX;
+			r = double(lb) + r * double(ub - lb);
+			a[i] = T(r);
+		}
 	}
 
 	template<typename T>
@@ -154,41 +158,79 @@ namespace lsimd
 	    return (uint64_t)hi << 32 | lo;
 	}
 
-
-	template<typename T, class Op>
-	uint64_t bench_op(Op op, unsigned warming_times, unsigned repeat_times,
-			int arr_len, T *a, const T lb_a, const T ub_a)
+	template<typename T>
+	LSIMD_ENSURE_INLINE
+	void force_to_reg(const sse_vec<T> x)
 	{
-		fill_rand(arr_len, a, lb_a, ub_a);
+		asm volatile("" : : "x"(x.v));
+	}
 
-		for (unsigned i = 0; i < warming_times; ++i) op.run(a);
+	template<class Op>
+	uint64_t tsc_bench(Op op, unsigned warming_times, unsigned repeat_times)
+	{
+		for (unsigned i = 0; i < warming_times; ++i) op.run();
 
 		uint64_t tic = read_tsc();
-		for (unsigned i = 0; i < repeat_times; ++i) op.run(a);
+		for (unsigned i = 0; i < repeat_times; ++i) op.run();
 		uint64_t toc = read_tsc();
 
 		return toc - tic;  // total cycles
 	}
 
 
-	template<typename T, class Op>
-	uint64_t bench_op(Op op, unsigned warming_times, unsigned repeat_times,
-			int arr_len,
-			T *a, const T lb_a, const T ub_a,
-			T *b, const T lb_b, const T ub_b)
+	template<typename T, class Op, unsigned Len>
+	struct wrap_op
 	{
-		fill_rand(arr_len, a, lb_a, ub_b);
-		fill_rand(arr_len, b, lb_b, ub_b);
+		static const unsigned w = sse_vec<T>::pack_width;
+		const T *a;
 
-		for (unsigned i = 0; i < warming_times; ++i) op.run(a, b);
+		wrap_op(const T *a_)
+		: a(a_)
+		{
+		}
 
-		uint64_t tic = read_tsc();
-		for (unsigned i = 0; i < repeat_times; ++i) op.run(a, b);
-		uint64_t toc = read_tsc();
+		LSIMD_ENSURE_INLINE
+		void run()
+		{
+			for (unsigned i = 0; i < Len; ++i)
+			{
+				sse_vec<T> x0(a + i * w, aligned_t());
+				force_to_reg(x0);
 
-		return toc - tic;  // total cycles
-	}
+				sse_vec<T> r = Op::run(x0);
+				force_to_reg(r);
+			}
+		}
+	};
 
+	template<typename T, class Op, unsigned Len>
+	struct wrap_op2
+	{
+		static const unsigned w = sse_vec<T>::pack_width;
+		const T *a;
+		const T *b;
+
+		wrap_op2(const T *a_, const T *b_)
+		: a(a_), b(b_)
+		{
+		}
+
+		LSIMD_ENSURE_INLINE
+		void run()
+		{
+			for (unsigned i = 0; i < Len; ++i)
+			{
+				sse_vec<T> x0(a + i * w, b + i * w, aligned_t());
+				force_to_reg(x0);
+
+				sse_vec<T> y0(a + i * w, b + i * w, aligned_t());
+				force_to_reg(y0);
+
+				sse_vec<T> r = Op::run(x0);
+				force_to_reg(r);
+			}
+		}
+	};
 }
 
 #endif /* TEST_AUX_H_ */

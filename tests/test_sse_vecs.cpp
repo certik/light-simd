@@ -43,7 +43,6 @@ bool test_load_store()
 	if (!test_equal(w, a, b)) return false;
 
 	p.load(a, unaligned_t());
-
 	clear_zeros(w, b);
 	p.store(b, aligned_t());
 	if (!test_equal(w, a, b)) return false;

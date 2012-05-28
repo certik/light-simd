@@ -172,7 +172,7 @@ namespace lsimd {
 
 	LSIMD_ENSURE_INLINE inline f64 extract_f64p_e1(__m128d a)
 	{
-		return _mm_cvtsd_f64(_mm_castsi128_pd(_mm_srli_si128(_mm_castps_si128(a), 8)));
+		return _mm_cvtsd_f64(_mm_castsi128_pd(_mm_srli_si128(_mm_castpd_si128(a), 8)));
 	}
 
 
