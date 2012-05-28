@@ -39,10 +39,6 @@ namespace lsimd
 
 	typedef i32 index_t;
 
-	// forward declaration
-
-	template<typename T> struct pack;
-
 	// tag types
 
 	struct aligned_t { };

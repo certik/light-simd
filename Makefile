@@ -42,7 +42,6 @@ COMMON_H = \
 	
 SSE_H = $(COMMON_H) \
 	$(INC)/sse/sse_base.h \
-	$(INC)/sse/sse_const.h \
 	$(INC)/sse/sse_arith.h \
 	$(INC)/sse.h
 	
@@ -67,11 +66,11 @@ clean:
 #--------- Target details -----------------
 
 test_sse: \
-	$(BIN)/test_sse_packs \
+	$(BIN)/test_sse_vecs \
 	$(BIN)/test_sse_arith
 	
-$(BIN)/test_sse_packs : $(SSE_H) tests/test_sse_packs.cpp
-	$(CXX) $(CXXFLAGS) tests/test_sse_packs.cpp -o $@
+$(BIN)/test_sse_vecs : $(SSE_H) tests/test_sse_vecs.cpp
+	$(CXX) $(CXXFLAGS) tests/test_sse_vecs.cpp -o $@
 
 $(BIN)/test_sse_arith:  $(SSE_H) tests/test_sse_arith.cpp
 	$(CXX) $(CXXFLAGS) -O2 tests/test_sse_arith.cpp -o $@

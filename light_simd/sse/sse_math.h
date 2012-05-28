@@ -31,22 +31,22 @@ extern "C"
 
 namespace lsimd
 {
-	sse_f32p exp(sse_f32p x)
+	sse_f32v4 exp(sse_f32v4 x)
 	{
 		return vmlsExp4(x.v);
 	}
 
-	sse_f64p exp(sse_f64p x)
+	sse_f64v2 exp(sse_f64v2 x)
 	{
 		return vmldExp2(x.v);
 	}
 
-	sse_f32p log(sse_f32p x)
+	sse_f32v4 log(sse_f32v4 x)
 	{
 		return vmlsLn4(x.v);
 	}
 
-	sse_f64p log(sse_f64p x)
+	sse_f64v2 log(sse_f64v2 x)
 	{
 		return vmldLn2(x.v);
 	}

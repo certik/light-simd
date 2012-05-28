@@ -25,7 +25,7 @@ template<typename T>
 void test_add()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -52,7 +52,7 @@ template<typename T>
 void test_sub()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -80,7 +80,7 @@ template<typename T>
 void test_mul()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -108,7 +108,7 @@ template<typename T>
 void test_div()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -136,7 +136,7 @@ template<typename T>
 void test_min()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -164,7 +164,7 @@ template<typename T>
 void test_max()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -191,7 +191,7 @@ template<typename T>
 void test_neg()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -217,7 +217,7 @@ template<typename T>
 void test_abs()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -242,7 +242,7 @@ template<typename T>
 void test_sqrt()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -268,7 +268,7 @@ template<typename T>
 void test_rcp()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(1);
 	const T ub = T(10);
@@ -294,7 +294,7 @@ template<typename T>
 void test_rsqrt()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(1);
 	const T ub = T(10);
@@ -320,7 +320,7 @@ template<typename T>
 void test_sqr()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -345,7 +345,7 @@ template<typename T>
 void test_cube()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -371,7 +371,7 @@ template<typename T>
 void test_floor()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -398,7 +398,7 @@ template<typename T>
 void test_floor2()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -425,7 +425,7 @@ template<typename T>
 void test_ceil()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);
@@ -452,7 +452,7 @@ template<typename T>
 void test_ceil2()
 {
 	const int ns = N;
-	const int nv = ns / sse_pack<T>::pack_width;
+	const int nv = ns / sse_vec<T>::pack_width;
 
 	const T lb = T(-10);
 	const T ub = T(10);

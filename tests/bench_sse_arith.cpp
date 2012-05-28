@@ -19,7 +19,7 @@ const unsigned warming_times = 10;
 template<typename T>
 struct add_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "add"; }
@@ -31,13 +31,13 @@ struct add_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
-			sse_pack<T> bi(b + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
+			sse_vec<T> bi(b + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = add(ai, bi);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = add(tmp1, bi); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = add(tmp2, bi); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = add(tmp3, bi); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = add(ai, bi);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = add(tmp1, bi); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = add(tmp2, bi); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = add(tmp3, bi); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -46,7 +46,7 @@ struct add_op
 template<typename T>
 struct sub_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "sub"; }
@@ -58,13 +58,13 @@ struct sub_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
-			sse_pack<T> bi(b + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
+			sse_vec<T> bi(b + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = sub(ai, bi);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = sub(tmp1, bi); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = sub(tmp2, bi); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = sub(tmp3, bi); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = sub(ai, bi);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = sub(tmp1, bi); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = sub(tmp2, bi); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = sub(tmp3, bi); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -74,7 +74,7 @@ struct sub_op
 template<typename T>
 struct mul_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "mul"; }
@@ -86,13 +86,13 @@ struct mul_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
-			sse_pack<T> bi(b + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
+			sse_vec<T> bi(b + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = mul(ai, bi);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = mul(tmp1, bi); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = mul(tmp2, bi); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = mul(tmp3, bi); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = mul(ai, bi);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = mul(tmp1, bi); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = mul(tmp2, bi); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = mul(tmp3, bi); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -101,7 +101,7 @@ struct mul_op
 template<typename T>
 struct div_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "div"; }
@@ -113,13 +113,13 @@ struct div_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
-			sse_pack<T> bi(b + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
+			sse_vec<T> bi(b + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = div(ai, bi);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = div(tmp1, bi); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = div(tmp2, bi); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = div(tmp3, bi); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = div(ai, bi);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = div(tmp1, bi); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = div(tmp2, bi); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = div(tmp3, bi); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -128,7 +128,7 @@ struct div_op
 template<typename T>
 struct neg_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "neg"; }
@@ -140,12 +140,12 @@ struct neg_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = neg(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = neg(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = neg(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = neg(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = neg(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = neg(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = neg(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = neg(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -154,7 +154,7 @@ struct neg_op
 template<typename T>
 struct abs_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "abs"; }
@@ -166,12 +166,12 @@ struct abs_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = abs(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = abs(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = abs(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = abs(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = abs(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = abs(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = abs(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = abs(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -180,7 +180,7 @@ struct abs_op
 template<typename T>
 struct min_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "min"; }
@@ -192,13 +192,13 @@ struct min_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
-			sse_pack<T> bi(b + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
+			sse_vec<T> bi(b + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = vmin(ai, bi);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = vmin(tmp1, bi); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = vmin(tmp2, bi); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = vmin(tmp3, bi); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = vmin(ai, bi);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = vmin(tmp1, bi); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = vmin(tmp2, bi); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = vmin(tmp3, bi); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -207,7 +207,7 @@ struct min_op
 template<typename T>
 struct max_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "max"; }
@@ -219,13 +219,13 @@ struct max_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
-			sse_pack<T> bi(b + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
+			sse_vec<T> bi(b + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = vmax(ai, bi);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = vmax(tmp1, bi); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = vmax(tmp2, bi); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = vmax(tmp3, bi); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = vmax(ai, bi);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = vmax(tmp1, bi); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = vmax(tmp2, bi); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = vmax(tmp3, bi); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -234,7 +234,7 @@ struct max_op
 template<typename T>
 struct sqr_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "sqr"; }
@@ -246,12 +246,12 @@ struct sqr_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = sqr(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = sqr(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = sqr(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = sqr(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = sqr(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = sqr(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = sqr(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = sqr(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -260,7 +260,7 @@ struct sqr_op
 template<typename T>
 struct cube_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "cube"; }
@@ -272,12 +272,12 @@ struct cube_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = cube(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = cube(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = cube(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = cube(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = cube(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = cube(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = cube(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = cube(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -286,7 +286,7 @@ struct cube_op
 template<typename T>
 struct sqrt_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "sqrt"; }
@@ -298,12 +298,12 @@ struct sqrt_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = sqrt(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = sqrt(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = sqrt(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = sqrt(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = sqrt(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = sqrt(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = sqrt(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = sqrt(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -312,7 +312,7 @@ struct sqrt_op
 template<typename T>
 struct rcp_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "rcp"; }
@@ -324,12 +324,12 @@ struct rcp_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = rcp(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = rcp(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = rcp(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = rcp(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = rcp(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = rcp(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = rcp(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = rcp(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -338,7 +338,7 @@ struct rcp_op
 template<typename T>
 struct rsqrt_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "rsqrt"; }
@@ -350,12 +350,12 @@ struct rsqrt_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = rsqrt(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = rsqrt(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = rsqrt(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = rsqrt(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = rsqrt(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = rsqrt(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = rsqrt(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = rsqrt(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -364,7 +364,7 @@ struct rsqrt_op
 template<typename T>
 struct approx_rcp_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "rcp(a)"; }
@@ -376,12 +376,12 @@ struct approx_rcp_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = approx_rcp(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = approx_rcp(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = approx_rcp(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = approx_rcp(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = approx_rcp(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = approx_rcp(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = approx_rcp(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = approx_rcp(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -390,7 +390,7 @@ struct approx_rcp_op
 template<typename T>
 struct approx_rsqrt_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "rsqrt(a)"; }
@@ -402,12 +402,12 @@ struct approx_rsqrt_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = approx_rsqrt(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = approx_rsqrt(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = approx_rsqrt(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = approx_rsqrt(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = approx_rsqrt(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = approx_rsqrt(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = approx_rsqrt(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = approx_rsqrt(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -416,7 +416,7 @@ struct approx_rsqrt_op
 template<typename T>
 struct floor_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "floor"; }
@@ -428,12 +428,12 @@ struct floor_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = floor(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = floor(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = floor(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = floor(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = floor(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = floor(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = floor(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = floor(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -442,7 +442,7 @@ struct floor_op
 template<typename T>
 struct ceil_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "ceil"; }
@@ -454,12 +454,12 @@ struct ceil_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = ceil(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = ceil(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = ceil(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = ceil(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = ceil(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = ceil(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = ceil(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = ceil(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -468,7 +468,7 @@ struct ceil_op
 template<typename T>
 struct floor2_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "floor(2)"; }
@@ -480,12 +480,12 @@ struct floor2_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = floor_sse2(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = floor_sse2(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = floor_sse2(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = floor_sse2(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = floor_sse2(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = floor_sse2(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = floor_sse2(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = floor_sse2(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -494,7 +494,7 @@ struct floor2_op
 template<typename T>
 struct ceil2_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "ceil(2)"; }
@@ -506,12 +506,12 @@ struct ceil2_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = ceil_sse2(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = ceil_sse2(tmp1); FORCE_CALC(tmp2)
-			sse_pack<T> tmp3 = ceil_sse2(tmp2); FORCE_CALC(tmp3)
-			sse_pack<T> tmp4 = ceil_sse2(tmp3); FORCE_CALC(tmp4)
+			sse_vec<T> tmp1 = ceil_sse2(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = ceil_sse2(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp3 = ceil_sse2(tmp2); FORCE_CALC(tmp3)
+			sse_vec<T> tmp4 = ceil_sse2(tmp3); FORCE_CALC(tmp4)
 		}
 	}
 };
@@ -537,7 +537,7 @@ inline void bench(unsigned repeat_times,
 {
 	OpT<T> op;
 	uint64_t cycles = bench_op(op, warming_times, repeat_times, arr_len, a, la, ua);
-	report_bench(op.name(), repeat_times, cycles, 1, op.folds(), (int)sse_pack<T>::pack_width);
+	report_bench(op.name(), repeat_times, cycles, 1, op.folds(), (int)sse_vec<T>::pack_width);
 }
 
 
@@ -548,7 +548,7 @@ inline void bench(unsigned repeat_times,
 {
 	OpT<T> op;
 	uint64_t cycles = bench_op(op, warming_times, repeat_times, arr_len, a, la, ua, b, lb, ub);
-	report_bench(op.name(), repeat_times, cycles, 2, op.folds(), (int)sse_pack<T>::pack_width);
+	report_bench(op.name(), repeat_times, cycles, 2, op.folds(), (int)sse_vec<T>::pack_width);
 }
 
 

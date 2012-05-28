@@ -20,7 +20,7 @@ const unsigned warming_times = 10;
 template<typename T>
 struct exp_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "exp"; }
@@ -32,10 +32,10 @@ struct exp_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = exp(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = exp(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp1 = exp(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = exp(tmp1); FORCE_CALC(tmp2)
 		}
 	}
 };
@@ -43,7 +43,7 @@ struct exp_op
 template<typename T>
 struct log_op
 {
-	static const int width = sse_pack<T>::pack_width;
+	static const int width = sse_vec<T>::pack_width;
 	static const int nvecs = arr_len / width;
 
 	const char *name() const { return "log"; }
@@ -55,10 +55,10 @@ struct log_op
 	{
 		for (int i = 0; i < nvecs; ++i)
 		{
-			sse_pack<T> ai(a + i * width, aligned_t());
+			sse_vec<T> ai(a + i * width, aligned_t());
 
-			sse_pack<T> tmp1 = log(ai);   FORCE_CALC(tmp1)
-			sse_pack<T> tmp2 = log(tmp1); FORCE_CALC(tmp2)
+			sse_vec<T> tmp1 = log(ai);   FORCE_CALC(tmp1)
+			sse_vec<T> tmp2 = log(tmp1); FORCE_CALC(tmp2)
 		}
 	}
 };
@@ -84,7 +84,7 @@ inline void bench(unsigned repeat_times,
 {
 	OpT<T> op;
 	uint64_t cycles = bench_op(op, warming_times, repeat_times, arr_len, a, la, ua);
-	report_bench(op.name(), repeat_times, cycles, 1, op.folds(), (int)sse_pack<T>::pack_width);
+	report_bench(op.name(), repeat_times, cycles, 1, op.folds(), (int)sse_vec<T>::pack_width);
 }
 
 
@@ -95,7 +95,7 @@ inline void bench(unsigned repeat_times,
 {
 	OpT<T> op;
 	uint64_t cycles = bench_op(op, warming_times, repeat_times, arr_len, a, la, ua, b, lb, ub);
-	report_bench(op.name(), repeat_times, cycles, 2, op.folds(), (int)sse_pack<T>::pack_width);
+	report_bench(op.name(), repeat_times, cycles, 2, op.folds(), (int)sse_vec<T>::pack_width);
 }
 
 

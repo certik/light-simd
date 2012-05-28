@@ -53,11 +53,11 @@ namespace lsimd
 	{
 	public:
 		sse_array(int n)
-		: m_n(n), m_nv(m_n / sse_pack<T>::pack_width), m_data(alloc(n))
+		: m_n(n), m_nv(m_n / sse_vec<T>::pack_width), m_data(alloc(n))
 		{ }
 
 		sse_array(const sse_array& a)
-		: m_n(a.m_n), m_nv(m_n / sse_pack<T>::pack_width), m_data(alloc(a.m_n))
+		: m_n(a.m_n), m_nv(m_n / sse_vec<T>::pack_width), m_data(alloc(a.m_n))
 		{
 			::memcpy(m_data, a.m_data, sizeof(T) * size_t(m_n));
 		}
@@ -90,15 +90,15 @@ namespace lsimd
 		T& operator[] (int i) { return m_data[i]; }
 
 		LSIMD_ENSURE_INLINE
-		sse_pack<T> get_pack(int i)
+		sse_vec<T> get_pack(int i)
 		{
-			return sse_pack<T>(m_data + i * sse_pack<T>::pack_width, aligned_t());
+			return sse_vec<T>(m_data + i * sse_vec<T>::pack_width, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void set_pack(int i, sse_pack<T> p)
+		void set_pack(int i, sse_vec<T> p)
 		{
-			p.store(m_data + i * sse_pack<T>::pack_width, aligned_t());
+			p.store(m_data + i * sse_vec<T>::pack_width, aligned_t());
 		}
 
 	private:

@@ -40,15 +40,189 @@ namespace lsimd {
 
 	/********************************************
 	 *
+	 *  Useful constants
+	 *
+	 ********************************************/
+
+	template<typename T> struct sse_const;
+
+	template<> struct sse_const<f32>
+	{
+		LSIMD_ENSURE_INLINE static __m128 zeros()
+		{
+			return _mm_setzero_ps();
+		}
+
+		LSIMD_ENSURE_INLINE static __m128 ones()
+		{
+			return _mm_set1_ps(1.f);
+		}
+
+		LSIMD_ENSURE_INLINE static __m128 twos()
+		{
+			return _mm_set1_ps(2.f);
+		}
+
+		LSIMD_ENSURE_INLINE static __m128 halfs()
+		{
+			return _mm_set1_ps(0.5f);
+		}
+
+		LSIMD_ENSURE_INLINE static __m128 sign_mask()
+		{
+			return _mm_castsi128_ps(_mm_set1_epi32(int(0x80000000)));
+		}
+	};
+
+
+	template<> struct sse_const<f64>
+	{
+		LSIMD_ENSURE_INLINE static __m128d zeros()
+		{
+			return _mm_setzero_pd();
+		}
+
+		LSIMD_ENSURE_INLINE static __m128d ones()
+		{
+			return _mm_set1_pd(1.0);
+		}
+
+		LSIMD_ENSURE_INLINE static __m128d twos()
+		{
+			return _mm_set1_pd(2.0);
+		}
+
+		LSIMD_ENSURE_INLINE static __m128d halfs()
+		{
+			return _mm_set1_pd(0.5);
+		}
+
+		LSIMD_ENSURE_INLINE static __m128d sign_mask()
+		{
+			return _mm_castsi128_pd(_mm_set_epi32(int(0x80000000), 0, int(0x80000000), 0));
+		}
+	};
+
+
+	/********************************************
+	 *
+	 *  Entry extraction
+	 *
+	 ********************************************/
+
+#if defined(LSIMD_HAS_SSE4_1)
+
+	LSIMD_ENSURE_INLINE inline f32 extract_f32p_e0(__m128 a)
+	{
+		f32 r;
+		_MM_EXTRACT_FLOAT(r, a, 0);
+		return r;
+	}
+
+	LSIMD_ENSURE_INLINE inline f32 extract_f32p_e1(__m128 a)
+	{
+		f32 r;
+		_MM_EXTRACT_FLOAT(r, a, 1);
+		return r;
+	}
+
+	LSIMD_ENSURE_INLINE inline f32 extract_f32p_e2(__m128 a)
+	{
+		f32 r;
+		_MM_EXTRACT_FLOAT(r, a, 2);
+		return r;
+	}
+
+	LSIMD_ENSURE_INLINE inline f32 extract_f32p_e3(__m128 a)
+	{
+		f32 r;
+		_MM_EXTRACT_FLOAT(r, a, 3);
+		return r;
+	}
+
+#else
+
+	LSIMD_ENSURE_INLINE inline f32 extract_f32p_e0(__m128 a)
+	{
+		return _mm_cvtss_f32(a);
+	}
+
+	LSIMD_ENSURE_INLINE inline f32 extract_f32p_e1(__m128 a)
+	{
+		return _mm_cvtss_f32(_mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(a), 4)));
+	}
+
+	LSIMD_ENSURE_INLINE inline f32 extract_f32p_e2(__m128 a)
+	{
+		return _mm_cvtss_f32(_mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(a), 8)));
+	}
+
+	LSIMD_ENSURE_INLINE inline f32 extract_f32p_e3(__m128 a)
+	{
+		return _mm_cvtss_f32(_mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(a), 12)));
+	}
+
+
+#endif
+
+	LSIMD_ENSURE_INLINE inline f64 extract_f64p_e0(__m128d a)
+	{
+		return _mm_cvtsd_f64(a);
+	}
+
+	LSIMD_ENSURE_INLINE inline f64 extract_f64p_e1(__m128d a)
+	{
+		return _mm_cvtsd_f64(_mm_castsi128_pd(_mm_srli_si128(_mm_castps_si128(a), 8)));
+	}
+
+
+	template<typename T, int I> struct entry_extractor;
+
+	template<> struct entry_extractor<f32, 0>
+	{
+		LSIMD_ENSURE_INLINE static f32 get(__m128 a) { return extract_f32p_e0(a); }
+	};
+
+	template<> struct entry_extractor<f32, 1>
+	{
+		LSIMD_ENSURE_INLINE static f32 get(__m128 a) { return extract_f32p_e1(a); }
+	};
+
+	template<> struct entry_extractor<f32, 2>
+	{
+		LSIMD_ENSURE_INLINE static f32 get(__m128 a) { return extract_f32p_e2(a); }
+	};
+
+	template<> struct entry_extractor<f32, 3>
+	{
+		LSIMD_ENSURE_INLINE static f32 get(__m128 a) { return extract_f32p_e3(a); }
+	};
+
+	template<> struct entry_extractor<f64, 0>
+	{
+		LSIMD_ENSURE_INLINE static f64 get(__m128d a) { return extract_f64p_e0(a); }
+	};
+
+	template<> struct entry_extractor<f64, 1>
+	{
+		LSIMD_ENSURE_INLINE static f64 get(__m128d a) { return extract_f64p_e1(a); }
+	};
+
+
+	/********************************************
+	 *
 	 *  SSE pack classes
 	 *
 	 ********************************************/
 
-	template<typename T> struct sse_pack;
+	template<typename T> struct sse_vec;
 
 	template<>
-	struct sse_pack<f32>
+	struct sse_vec<f32>
 	{
+		// types
+
+		typedef f32 value_type;
 		typedef __m128 intern_type;
 		static const int pack_width = 4;
 
@@ -59,109 +233,121 @@ namespace lsimd {
 		};
 
 
-		LSIMD_ENSURE_INLINE
-		sse_pack() { }
+		// constructors
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const __m128 v_)
+		LSIMD_ENSURE_INLINE sse_vec() { }
+
+		LSIMD_ENSURE_INLINE sse_vec(const __m128 v_)
 		: v(v_) { }
 
-		LSIMD_ENSURE_INLINE
-		sse_pack( zero_t )
+		LSIMD_ENSURE_INLINE sse_vec( zero_t )
 		{
 			v = _mm_setzero_ps();
 		}
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const f32 x)
+		LSIMD_ENSURE_INLINE sse_vec(const f32 x)
 		{
 			v = _mm_set1_ps(x);
 		}
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const f32 e0, const f32 e1, const f32 e2, const f32 e3)
+		LSIMD_ENSURE_INLINE sse_vec(const f32 e0, const f32 e1, const f32 e2, const f32 e3)
 		{
 			v = _mm_set_ps(e3, e2, e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const f32 *__restrict__ a, aligned_t)
+		LSIMD_ENSURE_INLINE sse_vec(const f32 *__restrict__ a, aligned_t)
 		{
 			v = _mm_load_ps(a);
 		}
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const f32 *__restrict__ a, unaligned_t)
+		LSIMD_ENSURE_INLINE sse_vec(const f32 *__restrict__ a, unaligned_t)
 		{
 			v = _mm_loadu_ps(a);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void set_zero()
+
+		// set, load, store
+
+		LSIMD_ENSURE_INLINE void set_zero()
 		{
 			v = _mm_setzero_ps();
 		}
 
-		LSIMD_ENSURE_INLINE
-		void set(const f32 x)
+		LSIMD_ENSURE_INLINE void set(const f32 x)
 		{
 			v = _mm_set1_ps(x);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void set(const f32 e0, const f32 e1, const f32 e2, const f32 e3)
+		LSIMD_ENSURE_INLINE void set(const f32 e0, const f32 e1, const f32 e2, const f32 e3)
 		{
 			v = _mm_set_ps(e3, e2, e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void load(const f32 *__restrict__ a, aligned_t)
+		LSIMD_ENSURE_INLINE void load(const f32 *__restrict__ a, aligned_t)
 		{
 			v = _mm_load_ps(a);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void load(const f32 *__restrict__ a, unaligned_t)
+		LSIMD_ENSURE_INLINE void load(const f32 *__restrict__ a, unaligned_t)
 		{
 			v = _mm_loadu_ps(a);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void store(f32 *__restrict__ a, aligned_t) const
+		LSIMD_ENSURE_INLINE void store(f32 *__restrict__ a, aligned_t) const
 		{
 			_mm_store_ps(a, v);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void store(f32 *__restrict__ a, unaligned_t) const
+		LSIMD_ENSURE_INLINE void store(f32 *__restrict__ a, unaligned_t) const
 		{
 			_mm_storeu_ps(a, v);
 		}
 
-		LSIMD_ENSURE_INLINE
-		intern_type intern() const
+		// entry access
+
+		LSIMD_ENSURE_INLINE __m128 intern() const
 		{
 			return v;
 		}
 
-		LSIMD_ENSURE_INLINE
-		f32 get_e(const int i) const
+		template<int I>
+		LSIMD_ENSURE_INLINE f32 extract() const
 		{
-			return e[i];
+			return entry_extractor<f32, I>::get(v);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void set_e(const int i, const f32 x)
+
+		// constants
+
+		LSIMD_ENSURE_INLINE static sse_vec zeros()
 		{
-			e[i] = x;
+			return sse_const<f32>::zeros();
+		}
+
+		LSIMD_ENSURE_INLINE static sse_vec ones()
+		{
+			return sse_const<f32>::ones();
+		}
+
+		LSIMD_ENSURE_INLINE static sse_vec twos()
+		{
+			return sse_const<f32>::twos();
+		}
+
+		LSIMD_ENSURE_INLINE static sse_vec halfs()
+		{
+			return sse_const<f32>::halfs();
 		}
 
 	};
 
 
 	template<>
-	struct sse_pack<f64>
+	struct sse_vec<f64>
 	{
+		// types
+
+		typedef f64 value_type;
 		typedef __m128d intern_type;
 		static const int pack_width = 2;
 
@@ -172,109 +358,118 @@ namespace lsimd {
 		};
 
 
-		LSIMD_ENSURE_INLINE
-		sse_pack() { }
+		// constructors
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const intern_type v_)
+		LSIMD_ENSURE_INLINE sse_vec() { }
+
+		LSIMD_ENSURE_INLINE sse_vec(const intern_type v_)
 		: v(v_) { }
 
-		LSIMD_ENSURE_INLINE
-		sse_pack( zero_t )
+		LSIMD_ENSURE_INLINE sse_vec( zero_t )
 		{
 			v = _mm_setzero_pd();
 		}
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const f64 x)
+		LSIMD_ENSURE_INLINE sse_vec(const f64 x)
 		{
 			v = _mm_set1_pd(x);
 		}
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const f64 e0, const f64 e1)
+		LSIMD_ENSURE_INLINE sse_vec(const f64 e0, const f64 e1)
 		{
 			v = _mm_set_pd(e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const f64 *__restrict__ a, aligned_t)
+		LSIMD_ENSURE_INLINE sse_vec(const f64 *__restrict__ a, aligned_t)
 		{
 			v = _mm_load_pd(a);
 		}
 
-		LSIMD_ENSURE_INLINE
-		sse_pack(const f64 *__restrict__ a, unaligned_t)
+		LSIMD_ENSURE_INLINE sse_vec(const f64 *__restrict__ a, unaligned_t)
 		{
 			v = _mm_loadu_pd(a);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void set_zero()
+
+		// set, load, store
+
+		LSIMD_ENSURE_INLINE void set_zero()
 		{
 			v = _mm_setzero_pd();
 		}
 
-		LSIMD_ENSURE_INLINE
-		void set(const f64 x)
+		LSIMD_ENSURE_INLINE void set(const f64 x)
 		{
 			v = _mm_set1_pd(x);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void set(const f64 e0, const f64 e1)
+		LSIMD_ENSURE_INLINE void set(const f64 e0, const f64 e1)
 		{
 			v = _mm_set_pd(e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void load(const f64 *__restrict__ a, aligned_t)
+		LSIMD_ENSURE_INLINE void load(const f64 *__restrict__ a, aligned_t)
 		{
 			v = _mm_load_pd(a);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void load(const f64 *__restrict__ a, unaligned_t)
+		LSIMD_ENSURE_INLINE void load(const f64 *__restrict__ a, unaligned_t)
 		{
 			v = _mm_loadu_pd(a);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void store(f64 *__restrict__ a, aligned_t) const
+		LSIMD_ENSURE_INLINE void store(f64 *__restrict__ a, aligned_t) const
 		{
 			_mm_store_pd(a, v);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void store(f64 *__restrict__ a, unaligned_t) const
+		LSIMD_ENSURE_INLINE void store(f64 *__restrict__ a, unaligned_t) const
 		{
 			_mm_storeu_pd(a, v);
 		}
 
-		LSIMD_ENSURE_INLINE
-		intern_type intern() const
+		// entry access
+
+		LSIMD_ENSURE_INLINE intern_type intern() const
 		{
 			return v;
 		}
 
-		LSIMD_ENSURE_INLINE
-		f64 get_e(const int i) const
+		template<int I>
+		LSIMD_ENSURE_INLINE f64 extract() const
 		{
-			return e[i];
+			return entry_extractor<f64, I>::get(v);
 		}
 
-		LSIMD_ENSURE_INLINE
-		void set_e(const int i, const f64 x)
+		// constants
+
+		LSIMD_ENSURE_INLINE static sse_vec zeros()
 		{
-			e[i] = x;
+			return sse_const<f64>::zeros();
 		}
+
+		LSIMD_ENSURE_INLINE static sse_vec ones()
+		{
+			return sse_const<f64>::ones();
+		}
+
+		LSIMD_ENSURE_INLINE static sse_vec twos()
+		{
+			return sse_const<f64>::twos();
+		}
+
+		LSIMD_ENSURE_INLINE static sse_vec halfs()
+		{
+			return sse_const<f64>::halfs();
+		}
+
 	};
 
 
 	// typedefs
 
-	typedef sse_pack<f32> sse_f32p;
-	typedef sse_pack<f64> sse_f64p;
+	typedef sse_vec<f32> sse_f32v4;
+	typedef sse_vec<f64> sse_f64v2;
 
 }
 
