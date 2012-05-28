@@ -14,8 +14,10 @@ endif
 # Compiler configuration
 #-------------------------
 
+SVML_LNKPATH=/opt/intel/lib
+
 WARNING_FLAGS = -Wall -Wextra -Wconversion -Wformat -Wno-unused-parameter
-CPPFLAGS = -I. 
+CPPFLAGS = -I. -L$(SVML_LNKPATH)
 
 ifeq ($(UNAME), Linux)
 	CXX=g++
@@ -76,9 +78,14 @@ $(BIN)/test_sse_arith:  $(SSE_H) tests/test_sse_arith.cpp
 	
 	
 bench_sse: \
-	$(BIN)/bench_sse_arith
+	$(BIN)/bench_sse_arith \
+	$(BIN)/bench_sse_math
 	
 $(BIN)/bench_sse_arith: $(SSE_H) tests/bench_sse_arith.cpp
 	$(CXX) $(CXXFLAGS) -O2 tests/bench_sse_arith.cpp -o $@
 	
-
+$(BIN)/bench_sse_math: $(SSE_H) tests/bench_sse_math.cpp
+	$(CXX) $(CXXFLAGS) -O2 -DLSIMD_USE_SVML tests/bench_sse_math.cpp -lsvml -o $@
+	
+	
+	

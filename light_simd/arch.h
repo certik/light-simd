@@ -73,8 +73,6 @@
 	#error Light-SIMD needs SSE2 support to work.
 #endif
 
-
-
 #endif
 
 
