@@ -46,6 +46,10 @@ namespace lsimd
 
 	struct zero_t { };
 
+	// trait types
+
+	template<typename VT> struct simd_traits;
+
 }
 
 // useful macros

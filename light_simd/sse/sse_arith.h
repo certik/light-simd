@@ -208,8 +208,6 @@ namespace lsimd
 	}
 
 
-
-
 	/********************************************
 	 *
 	 *  Rounding functions
