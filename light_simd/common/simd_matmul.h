@@ -22,12 +22,15 @@ namespace lsimd
 	LSIMD_ENSURE_INLINE
 	VT simd_mv_cm_n44_p4(VT col0, VT col1, VT col2, VT col3, VT x)  // column-major (4 x 4) * (4 x 1)
 	{
-		VT y = mul(col0, VT(x.e[0]));
-		y = add_prod(y, col1, VT(x.e[1]));
-		y = add_prod(y, col2, VT(x.e[2]));
-		y = add_prod(y, col3, VT(x.e[3]));
+		VT y0 = mul(col0, VT(x.e[0]));
+		VT y1 = mul(col1, VT(x.e[1]));
+		VT y2 = mul(col2, VT(x.e[2]));
+		VT y3 = mul(col3, VT(x.e[3]));
 
-		return y;
+		y0 = add(y0, y1);
+		y2 = add(y2, y3);
+
+		return add(y0, y2);
 	}
 
 	template<typename VT>
