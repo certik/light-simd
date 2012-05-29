@@ -245,12 +245,12 @@ namespace lsimd {
 		LSIMD_ENSURE_INLINE sse_vec(const __m128 v_)
 		: v(v_) { }
 
-		LSIMD_ENSURE_INLINE sse_vec( zero_t )
+		LSIMD_ENSURE_INLINE explicit sse_vec( zero_t )
 		{
 			v = _mm_setzero_ps();
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f32 x)
+		LSIMD_ENSURE_INLINE explicit sse_vec(const f32 x)
 		{
 			v = _mm_set1_ps(x);
 		}
@@ -260,12 +260,12 @@ namespace lsimd {
 			v = _mm_set_ps(e3, e2, e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f32 *__restrict__ a, aligned_t)
+		LSIMD_ENSURE_INLINE sse_vec(const f32* a, aligned_t)
 		{
 			v = _mm_load_ps(a);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f32 *__restrict__ a, unaligned_t)
+		LSIMD_ENSURE_INLINE sse_vec(const f32* a, unaligned_t)
 		{
 			v = _mm_loadu_ps(a);
 		}
@@ -288,22 +288,22 @@ namespace lsimd {
 			v = _mm_set_ps(e3, e2, e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE void load(const f32 *__restrict__ a, aligned_t)
+		LSIMD_ENSURE_INLINE void load(const f32* a, aligned_t)
 		{
 			v = _mm_load_ps(a);
 		}
 
-		LSIMD_ENSURE_INLINE void load(const f32 *__restrict__ a, unaligned_t)
+		LSIMD_ENSURE_INLINE void load(const f32* a, unaligned_t)
 		{
 			v = _mm_loadu_ps(a);
 		}
 
-		LSIMD_ENSURE_INLINE void store(f32 *__restrict__ a, aligned_t) const
+		LSIMD_ENSURE_INLINE void store(f32* a, aligned_t) const
 		{
 			_mm_store_ps(a, v);
 		}
 
-		LSIMD_ENSURE_INLINE void store(f32 *__restrict__ a, unaligned_t) const
+		LSIMD_ENSURE_INLINE void store(f32* a, unaligned_t) const
 		{
 			_mm_storeu_ps(a, v);
 		}
@@ -374,12 +374,12 @@ namespace lsimd {
 		LSIMD_ENSURE_INLINE sse_vec(const intern_type v_)
 		: v(v_) { }
 
-		LSIMD_ENSURE_INLINE sse_vec( zero_t )
+		LSIMD_ENSURE_INLINE explicit sse_vec( zero_t )
 		{
 			v = _mm_setzero_pd();
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f64 x)
+		LSIMD_ENSURE_INLINE explicit sse_vec(const f64 x)
 		{
 			v = _mm_set1_pd(x);
 		}
@@ -389,12 +389,12 @@ namespace lsimd {
 			v = _mm_set_pd(e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f64 *__restrict__ a, aligned_t)
+		LSIMD_ENSURE_INLINE sse_vec(const f64* a, aligned_t)
 		{
 			v = _mm_load_pd(a);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f64 *__restrict__ a, unaligned_t)
+		LSIMD_ENSURE_INLINE sse_vec(const f64* a, unaligned_t)
 		{
 			v = _mm_loadu_pd(a);
 		}
@@ -417,22 +417,22 @@ namespace lsimd {
 			v = _mm_set_pd(e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE void load(const f64 *__restrict__ a, aligned_t)
+		LSIMD_ENSURE_INLINE void load(const f64* a, aligned_t)
 		{
 			v = _mm_load_pd(a);
 		}
 
-		LSIMD_ENSURE_INLINE void load(const f64 *__restrict__ a, unaligned_t)
+		LSIMD_ENSURE_INLINE void load(const f64* a, unaligned_t)
 		{
 			v = _mm_loadu_pd(a);
 		}
 
-		LSIMD_ENSURE_INLINE void store(f64 *__restrict__ a, aligned_t) const
+		LSIMD_ENSURE_INLINE void store(f64* a, aligned_t) const
 		{
 			_mm_store_pd(a, v);
 		}
 
-		LSIMD_ENSURE_INLINE void store(f64 *__restrict__ a, unaligned_t) const
+		LSIMD_ENSURE_INLINE void store(f64* a, unaligned_t) const
 		{
 			_mm_storeu_pd(a, v);
 		}

@@ -13,7 +13,7 @@
 #ifndef SIMD_MATMUL_H_
 #define SIMD_MATMUL_H_
 
-#include <light_simd/common/common_base.h>
+#include <light_simd/common/simd_arith.h>
 
 namespace lsimd
 {
