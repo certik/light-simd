@@ -245,7 +245,7 @@ namespace lsimd {
 		LSIMD_ENSURE_INLINE sse_vec(const __m128 v_)
 		: v(v_) { }
 
-		LSIMD_ENSURE_INLINE explicit sse_vec( zero_t )
+		LSIMD_ENSURE_INLINE sse_vec( zero_t )
 		{
 			v = _mm_setzero_ps();
 		}
@@ -374,7 +374,7 @@ namespace lsimd {
 		LSIMD_ENSURE_INLINE sse_vec(const intern_type v_)
 		: v(v_) { }
 
-		LSIMD_ENSURE_INLINE explicit sse_vec( zero_t )
+		LSIMD_ENSURE_INLINE sse_vec( zero_t )
 		{
 			v = _mm_setzero_pd();
 		}

@@ -124,7 +124,7 @@ bool test_set<float>()
 	if (!test_equal(w, r2, b)) return false;
 
 
-	sse_f32v4 z =  zero_t();
+	sse_f32v4 z = zero_t();
 
 	for (int i = 0; i < w; ++i) b[i] = v1;
 	z.store(b, aligned_t());

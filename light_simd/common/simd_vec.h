@@ -90,7 +90,7 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE simd_vec(const intern_type v)
 		: impl(v) { }
 
-		LSIMD_ENSURE_INLINE explicit simd_vec( zero_t )
+		LSIMD_ENSURE_INLINE simd_vec( zero_t )
 		: impl(zero_t()) { }
 
 		LSIMD_ENSURE_INLINE explicit simd_vec(const T x)
