@@ -40,7 +40,10 @@ BIN=bin
 
 COMMON_H = \
 	$(INC)/arch.h \
-	$(INC)/common/common_base.h
+	$(INC)/common/common_base.h \
+	$(INC)/common/simd_vec.h \
+	$(INC)/common/simd_arith.h \
+	$(INC)/common/simd_math.h
 	
 SSE_H = $(COMMON_H) \
 	$(INC)/sse/sse_base.h \

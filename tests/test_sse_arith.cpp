@@ -19,7 +19,7 @@ void test_accuracy_u()
 	T lb_x = OpT<T>::lb_x();
 	T ub_x = OpT<T>::ub_x();
 
-	double maxdev = eval_sse_approx_accuracy<T, OpT<T> >(N, lb_x, ub_x);
+	double maxdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x);
 	std::printf("\t%-9s:    max-rdev = %8.3g\n",
 			OpT<T>::name(), maxdev);
 }
@@ -33,7 +33,7 @@ void test_accuracy_b()
 	T lb_y = OpT<T>::lb_y();
 	T ub_y = OpT<T>::ub_y();
 
-	double maxdev = eval_sse_approx_accuracy<T, OpT<T> >(N, lb_x, ub_x, lb_y, ub_y);
+	double maxdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x, lb_y, ub_y);
 	std::printf("\t%-9s:    max-rdev = %8.3g\n",
 			OpT<T>::name(), maxdev);
 }
@@ -54,7 +54,7 @@ struct add_s
 
 	static T eval_scalar(const T x, const T y) { return x + y; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x, const simd_vec<T, sse_kind> y)
 	{
 		return add(x, y);
 	}
@@ -74,7 +74,7 @@ struct sub_s
 
 	static T eval_scalar(const T x, const T y) { return x - y; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x, const simd_vec<T, sse_kind> y)
 	{
 		return sub(x, y);
 	}
@@ -94,7 +94,7 @@ struct mul_s
 
 	static T eval_scalar(const T x, const T y) { return x * y; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x, const simd_vec<T, sse_kind> y)
 	{
 		return mul(x, y);
 	}
@@ -114,7 +114,7 @@ struct div_s
 
 	static T eval_scalar(const T x, const T y) { return x / y; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x, const simd_vec<T, sse_kind> y)
 	{
 		return div(x, y);
 	}
@@ -131,7 +131,7 @@ struct neg_s
 
 	static T eval_scalar(const T x) { return -x; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return neg(x);
 	}
@@ -148,7 +148,7 @@ struct abs_s
 
 	static T eval_scalar(const T x) { return std::fabs(x); }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return abs(x);
 	}
@@ -168,7 +168,7 @@ struct min_s
 
 	static T eval_scalar(const T x, const T y) { return x < y ? x : y; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x, const simd_vec<T, sse_kind> y)
 	{
 		return vmin(x, y);
 	}
@@ -188,7 +188,7 @@ struct max_s
 
 	static T eval_scalar(const T x, const T y) { return x > y ? x : y; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x, const sse_vec<T> y)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x, const simd_vec<T, sse_kind> y)
 	{
 		return vmax(x, y);
 	}
@@ -205,7 +205,7 @@ struct sqr_s
 
 	static T eval_scalar(const T x) { return x * x; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return sqr(x);
 	}
@@ -222,7 +222,7 @@ struct sqrt_s
 
 	static T eval_scalar(const T x) { return std::sqrt(x); }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return sqrt(x);
 	}
@@ -239,7 +239,7 @@ struct rcp_s
 
 	static T eval_scalar(const T x) { return T(1) / x; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return rcp(x);
 	}
@@ -256,7 +256,7 @@ struct rsqrt_s
 
 	static T eval_scalar(const T x) { return T(1) / std::sqrt(x); }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return rsqrt(x);
 	}
@@ -273,9 +273,9 @@ struct rcp_a_s
 
 	static T eval_scalar(const T x) { return T(1) / x; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
-		return approx_rcp(x);
+		return approx_rcp(x.impl);
 	}
 };
 
@@ -290,9 +290,9 @@ struct rsqrt_a_s
 
 	static T eval_scalar(const T x) { return T(1) / std::sqrt(x); }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
-		return approx_rsqrt(x);
+		return approx_rsqrt(x.impl);
 	}
 };
 
@@ -307,7 +307,7 @@ struct cube_s
 
 	static T eval_scalar(const T x) { return x * x * x; }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return cube(x);
 	}
@@ -324,7 +324,7 @@ struct floor_s
 
 	static T eval_scalar(const T x) { return std::floor(x); }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return floor(x);
 	}
@@ -340,7 +340,7 @@ struct ceil_s
 
 	static T eval_scalar(const T x) { return std::ceil(x); }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
 		return ceil(x);
 	}
@@ -356,9 +356,9 @@ struct floor2_s
 
 	static T eval_scalar(const T x) { return std::floor(x); }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
-		return floor_sse2(x);
+		return floor_sse2(x.impl);
 	}
 };
 
@@ -372,9 +372,9 @@ struct ceil2_s
 
 	static T eval_scalar(const T x) { return std::ceil(x); }
 
-	static sse_vec<T> eval_vector(const sse_vec<T> x)
+	static simd_vec<T, sse_kind> eval_vector(const simd_vec<T, sse_kind> x)
 	{
-		return ceil_sse2(x);
+		return ceil_sse2(x.impl);
 	}
 };
 

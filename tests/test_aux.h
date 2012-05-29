@@ -18,7 +18,7 @@
 #include <cstring>
 #include <cmath>
 
-#include <light_simd/sse.h>
+#include <light_simd/simd.h>
 
 namespace lsimd
 {
@@ -57,21 +57,24 @@ namespace lsimd
 
 
 
-	template<typename T>
-	struct sse_array
+	template<typename T, typename Kind>
+	struct simd_array
 	{
 	public:
-		sse_array(int n)
-		: m_n(n), m_nv(m_n / sse_vec<T>::pack_width), m_data(alloc(n))
+		typedef simd_vec<T, Kind> vec_t;
+		static const unsigned pack_width = simd<T, Kind>::pack_width;
+
+		simd_array(int n)
+		: m_n(n), m_nv(m_n / pack_width), m_data(alloc(n))
 		{ }
 
-		sse_array(const sse_array& a)
-		: m_n(a.m_n), m_nv(m_n / sse_vec<T>::pack_width), m_data(alloc(a.m_n))
+		simd_array(const simd_array& a)
+		: m_n(a.m_n), m_nv(m_n / pack_width), m_data(alloc(a.m_n))
 		{
 			::memcpy(m_data, a.m_data, sizeof(T) * size_t(m_n));
 		}
 
-		~sse_array()
+		~simd_array()
 		{
 			dealloc(m_data);
 		}
@@ -99,15 +102,15 @@ namespace lsimd
 		T& operator[] (int i) { return m_data[i]; }
 
 		LSIMD_ENSURE_INLINE
-		sse_vec<T> get_pack(int i)
+		vec_t get_pack(int i)
 		{
-			return sse_vec<T>(m_data + i * sse_vec<T>::pack_width, aligned_t());
+			return vec_t(m_data + i * pack_width, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void set_pack(int i, sse_vec<T> p)
+		void set_pack(int i, vec_t p)
 		{
-			p.store(m_data + i * sse_vec<T>::pack_width, aligned_t());
+			p.store(m_data + i * pack_width, aligned_t());
 		}
 
 	private:
@@ -116,7 +119,7 @@ namespace lsimd
 		T *m_data;
 
 	private:
-		sse_array& operator = (const sse_array& );
+		simd_array& operator = (const simd_array& );
 
 		static T *alloc(int n)
 		{
@@ -142,32 +145,38 @@ namespace lsimd
 	};
 
 
-	template<typename T, class Op>
-	double eval_sse_approx_accuracy(unsigned n, const T lb_a, const T ub_a)
+	template<typename T, typename Kind, class Op>
+	double eval_approx_accuracy(unsigned n, const T lb_a, const T ub_a)
 	{
 		double max_dev = 0.0;
+		const unsigned w = simd<T, Kind>::pack_width;
+		LSIMD_ALIGN_SSE T src[w];
+		LSIMD_ALIGN_SSE T dst[w];
 
 		for (unsigned k = 0; k < n; ++k)
 		{
-			sse_vec<T> a;
+			simd_vec<T, Kind> a;
 
-			for (unsigned i = 0; i < a.width(); ++i)
+			for (unsigned i = 0; i < w; ++i)
 			{
-				a.e[i] = rand_val(lb_a, ub_a);
+				src[i] = rand_val(lb_a, ub_a);
 			}
 
-			LSIMD_ALIGN_SSE T r0[sse_vec<T>::pack_width];
+			a.load(src, aligned_t());
 
-			for (unsigned i = 0; i < a.width(); ++i)
+			LSIMD_ALIGN_SSE T r0[w];
+
+			for (unsigned i = 0; i < w; ++i)
 			{
-				r0[i] = Op::eval_scalar(a.e[i]);
+				r0[i] = Op::eval_scalar(src[i]);
 			}
 
-			sse_vec<T> r = Op::eval_vector(a);
+			simd_vec<T, Kind> r = Op::eval_vector(a);
+			r.store(dst, aligned_t());
 
-			for (unsigned i = 0; i < a.width(); ++i)
+			for (unsigned i = 0; i < w; ++i)
 			{
-				double cdev = std::fabs(double(r.e[i]) - double(r0[i])) / double(r0[i]);
+				double cdev = std::fabs(double(dst[i]) - double(r0[i])) / double(r0[i]);
 				if (cdev > max_dev) max_dev = cdev;
 			}
 		}
@@ -175,40 +184,44 @@ namespace lsimd
 		return max_dev;
 	}
 
-	template<typename T, class Op>
-	double eval_sse_approx_accuracy(unsigned n,
+	template<typename T, typename Kind, class Op>
+	double eval_approx_accuracy(unsigned n,
 			const T lb_a, const T ub_a,
 			const T lb_b, const T ub_b)
 	{
 		double max_dev = 0.0;
+		const unsigned w = simd<T, Kind>::pack_width;
+		LSIMD_ALIGN_SSE T sa[w];
+		LSIMD_ALIGN_SSE T sb[w];
+		LSIMD_ALIGN_SSE T dst[w];
 
 		for (unsigned k = 0; k < n; ++k)
 		{
-			sse_vec<T> a;
-			sse_vec<T> b;
+			simd_vec<T, Kind> a;
+			simd_vec<T, Kind> b;
 
-			for (unsigned i = 0; i < a.width(); ++i)
+			for (unsigned i = 0; i < w; ++i)
 			{
-				a.e[i] = rand_val(lb_a, ub_a);
+				sa[i] = rand_val(lb_a, ub_a);
+				sb[i] = rand_val(lb_b, ub_b);
 			}
 
-			for (unsigned i = 0; i < a.width(); ++i)
+			a.load(sa, aligned_t());
+			b.load(sb, aligned_t());
+
+			LSIMD_ALIGN_SSE T r0[w];
+
+			for (unsigned i = 0; i < w; ++i)
 			{
-				b.e[i] = rand_val(lb_b, ub_b);
+				r0[i] = Op::eval_scalar(sa[i], sb[i]);
 			}
 
-			LSIMD_ALIGN_SSE T r0[sse_vec<T>::pack_width];
+			simd_vec<T, Kind> r = Op::eval_vector(a, b);
+			r.store(dst, aligned_t());
 
-			for (unsigned i = 0; i < a.width(); ++i)
+			for (unsigned i = 0; i < w; ++i)
 			{
-				r0[i] = Op::eval_scalar(a.e[i], b.e[i]);
-			}
-
-			sse_vec<T> r = Op::eval_vector(a, b);
-
-			for (unsigned i = 0; i < a.width(); ++i)
-			{
-				double cdev = std::fabs(double(r.e[i]) - double(r0[i])) / double(r0[i]);
+				double cdev = std::fabs(double(dst[i]) - double(r0[i])) / double(r0[i]);
 				if (cdev > max_dev) max_dev = cdev;
 			}
 		}
@@ -228,9 +241,9 @@ namespace lsimd
 
 	template<typename T>
 	LSIMD_ENSURE_INLINE
-	void force_to_reg(const sse_vec<T> x)
+	void force_to_reg(const simd_vec<T, sse_kind> x)
 	{
-		asm volatile("" : : "x"(x.v));
+		asm volatile("" : : "x"(x.impl.v));
 	}
 
 	template<class Op>
@@ -246,10 +259,10 @@ namespace lsimd
 	}
 
 
-	template<typename T, class Op, unsigned Len>
+	template<typename T, typename Kind, class Op, unsigned Len>
 	struct wrap_op
 	{
-		static const unsigned w = sse_vec<T>::pack_width;
+		static const unsigned w = simd<T, Kind>::pack_width;
 		const T *a;
 
 		wrap_op(const T *a_)
@@ -262,19 +275,19 @@ namespace lsimd
 		{
 			for (unsigned i = 0; i < Len; ++i)
 			{
-				sse_vec<T> x0(a + i * w, aligned_t());
+				simd_vec<T, Kind> x0(a + i * w, aligned_t());
 				force_to_reg(x0);
 
-				sse_vec<T> r = Op::run(x0);
+				simd_vec<T, Kind> r = Op::run(x0);
 				force_to_reg(r);
 			}
 		}
 	};
 
-	template<typename T, class Op, unsigned Len>
+	template<typename T, typename Kind, class Op, unsigned Len>
 	struct wrap_op2
 	{
-		static const unsigned w = sse_vec<T>::pack_width;
+		static const unsigned w = simd<T, Kind>::pack_width;
 		const T *a;
 		const T *b;
 
@@ -288,13 +301,13 @@ namespace lsimd
 		{
 			for (unsigned i = 0; i < Len; ++i)
 			{
-				sse_vec<T> x0(a + i * w, b + i * w, aligned_t());
+				simd_vec<T, Kind> x0(a + i * w, b + i * w, aligned_t());
 				force_to_reg(x0);
 
-				sse_vec<T> y0(a + i * w, b + i * w, aligned_t());
+				simd_vec<T, Kind> y0(a + i * w, b + i * w, aligned_t());
 				force_to_reg(y0);
 
-				sse_vec<T> r = Op::run(x0);
+				simd_vec<T, Kind> r = Op::run(x0);
 				force_to_reg(r);
 			}
 		}
