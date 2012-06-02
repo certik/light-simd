@@ -41,7 +41,7 @@ inline void bench(unsigned repeat_times, T *pa)
 	uint64_t cs1 = tsc_bench(op1, warming_times, repeat_times);
 
 	report_bench(OpT<T>::name(), repeat_times * OpT<T>::folds(),
-			cs1, (int)simd_vec<T, sse_kind>::pack_width, 1);
+			cs1, (int)simd_pack<T, sse_kind>::pack_width, 1);
 }
 
 
@@ -56,7 +56,7 @@ struct sqrt_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return lsimd::sqrt(x);
 	}
@@ -74,7 +74,7 @@ struct rcp_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return rcp(x);
 	}
@@ -91,7 +91,7 @@ struct rsqrt_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return rsqrt(x);
 	}
@@ -108,7 +108,7 @@ struct approx_rcp_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return approx_rcp(x.impl);
 	}
@@ -125,7 +125,7 @@ struct approx_rsqrt_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return approx_rsqrt(x.impl);
 	}
@@ -142,7 +142,7 @@ struct floor_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return floor(x);
 	}
@@ -159,7 +159,7 @@ struct ceil_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return ceil(x);
 	}
@@ -176,7 +176,7 @@ struct floor2_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return floor_sse2(x.impl);
 	}
@@ -193,7 +193,7 @@ struct ceil2_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return ceil_sse2(x.impl);
 	}

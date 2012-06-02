@@ -1,5 +1,5 @@
 /**
- * @file simd_vec.h
+ * @file simd_pack.h
  *
  * The common SIMD vector class
  *
@@ -23,7 +23,7 @@ namespace lsimd
 
 	template<typename T, typename Kind> struct simd;
 
-	template<typename T, typename Kind> struct simd_vec;
+	template<typename T, typename Kind> struct simd_pack;
 
 
 	/******************************************************
@@ -42,7 +42,7 @@ namespace lsimd
 	template<typename T>
 	struct simd<T, sse_kind>
 	{
-		typedef sse_vec<T> impl_type;
+		typedef sse_pack<T> impl_type;
 		typedef typename impl_type::intern_type intern_type;
 		static const unsigned int pack_width = impl_type::pack_width;
 	};
@@ -58,7 +58,7 @@ namespace lsimd
 	 ******************************************************/
 
 	template<typename T, typename Kind=default_simd_kind>
-	struct simd_vec
+	struct simd_pack
 	{
 		typedef T value_type;
 
@@ -82,24 +82,24 @@ namespace lsimd
 
 		// constructors
 
-		LSIMD_ENSURE_INLINE simd_vec() { }
+		LSIMD_ENSURE_INLINE simd_pack() { }
 
-		LSIMD_ENSURE_INLINE simd_vec(const impl_type imp)
+		LSIMD_ENSURE_INLINE simd_pack(const impl_type imp)
 		: impl(imp) { }
 
-		LSIMD_ENSURE_INLINE simd_vec(const intern_type v)
+		LSIMD_ENSURE_INLINE simd_pack(const intern_type v)
 		: impl(v) { }
 
-		LSIMD_ENSURE_INLINE simd_vec( zero_t )
+		LSIMD_ENSURE_INLINE simd_pack( zero_t )
 		: impl(zero_t()) { }
 
-		LSIMD_ENSURE_INLINE explicit simd_vec(const T x)
+		LSIMD_ENSURE_INLINE explicit simd_pack(const T x)
 		: impl(x) { }
 
-		LSIMD_ENSURE_INLINE simd_vec(const T* a, aligned_t)
+		LSIMD_ENSURE_INLINE simd_pack(const T* a, aligned_t)
 		: impl(a, aligned_t()) { }
 
-		LSIMD_ENSURE_INLINE simd_vec(const T* a, unaligned_t)
+		LSIMD_ENSURE_INLINE simd_pack(const T* a, unaligned_t)
 		: impl(a, unaligned_t()) { }
 
 
@@ -138,22 +138,22 @@ namespace lsimd
 
 		// constants
 
-		LSIMD_ENSURE_INLINE static simd_vec zeros()
+		LSIMD_ENSURE_INLINE static simd_pack zeros()
 		{
 			return impl_type::zeros();
 		}
 
-		LSIMD_ENSURE_INLINE static simd_vec ones()
+		LSIMD_ENSURE_INLINE static simd_pack ones()
 		{
 			return impl_type::ones();
 		}
 
-		LSIMD_ENSURE_INLINE static simd_vec twos()
+		LSIMD_ENSURE_INLINE static simd_pack twos()
 		{
 			return impl_type::twos();
 		}
 
-		LSIMD_ENSURE_INLINE static simd_vec halfs()
+		LSIMD_ENSURE_INLINE static simd_pack halfs()
 		{
 			return impl_type::halfs();
 		}

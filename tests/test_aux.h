@@ -61,7 +61,7 @@ namespace lsimd
 	struct simd_array
 	{
 	public:
-		typedef simd_vec<T, Kind> vec_t;
+		typedef simd_pack<T, Kind> pack_t;
 		static const unsigned pack_width = simd<T, Kind>::pack_width;
 
 		simd_array(int n)
@@ -102,13 +102,13 @@ namespace lsimd
 		T& operator[] (int i) { return m_data[i]; }
 
 		LSIMD_ENSURE_INLINE
-		vec_t get_pack(int i)
+		pack_t get_pack(int i)
 		{
-			return vec_t(m_data + i * pack_width, aligned_t());
+			return pack_t(m_data + i * pack_width, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void set_pack(int i, vec_t p)
+		void set_pack(int i, pack_t p)
 		{
 			p.store(m_data + i * pack_width, aligned_t());
 		}
@@ -155,7 +155,7 @@ namespace lsimd
 
 		for (unsigned k = 0; k < n; ++k)
 		{
-			simd_vec<T, Kind> a;
+			simd_pack<T, Kind> a;
 
 			for (unsigned i = 0; i < w; ++i)
 			{
@@ -171,7 +171,7 @@ namespace lsimd
 				r0[i] = Op::eval_scalar(src[i]);
 			}
 
-			simd_vec<T, Kind> r = Op::eval_vector(a);
+			simd_pack<T, Kind> r = Op::eval_vector(a);
 			r.store(dst, aligned_t());
 
 			for (unsigned i = 0; i < w; ++i)
@@ -197,8 +197,8 @@ namespace lsimd
 
 		for (unsigned k = 0; k < n; ++k)
 		{
-			simd_vec<T, Kind> a;
-			simd_vec<T, Kind> b;
+			simd_pack<T, Kind> a;
+			simd_pack<T, Kind> b;
 
 			for (unsigned i = 0; i < w; ++i)
 			{
@@ -216,7 +216,7 @@ namespace lsimd
 				r0[i] = Op::eval_scalar(sa[i], sb[i]);
 			}
 
-			simd_vec<T, Kind> r = Op::eval_vector(a, b);
+			simd_pack<T, Kind> r = Op::eval_vector(a, b);
 			r.store(dst, aligned_t());
 
 			for (unsigned i = 0; i < w; ++i)
@@ -241,7 +241,7 @@ namespace lsimd
 
 	template<typename T>
 	LSIMD_ENSURE_INLINE
-	void force_to_reg(const simd_vec<T, sse_kind> x)
+	void force_to_reg(const simd_pack<T, sse_kind> x)
 	{
 		asm volatile("" : : "x"(x.impl.v));
 	}
@@ -275,10 +275,10 @@ namespace lsimd
 		{
 			for (unsigned i = 0; i < Len; ++i)
 			{
-				simd_vec<T, Kind> x0(a + i * w, aligned_t());
+				simd_pack<T, Kind> x0(a + i * w, aligned_t());
 				force_to_reg(x0);
 
-				simd_vec<T, Kind> r = Op::run(x0);
+				simd_pack<T, Kind> r = Op::run(x0);
 				force_to_reg(r);
 			}
 		}
@@ -301,13 +301,13 @@ namespace lsimd
 		{
 			for (unsigned i = 0; i < Len; ++i)
 			{
-				simd_vec<T, Kind> x0(a + i * w, b + i * w, aligned_t());
+				simd_pack<T, Kind> x0(a + i * w, b + i * w, aligned_t());
 				force_to_reg(x0);
 
-				simd_vec<T, Kind> y0(a + i * w, b + i * w, aligned_t());
+				simd_pack<T, Kind> y0(a + i * w, b + i * w, aligned_t());
 				force_to_reg(y0);
 
-				simd_vec<T, Kind> r = Op::run(x0);
+				simd_pack<T, Kind> r = Op::run(x0);
 				force_to_reg(r);
 			}
 		}

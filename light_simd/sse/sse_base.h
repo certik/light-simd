@@ -215,10 +215,10 @@ namespace lsimd {
 	 *
 	 ********************************************/
 
-	template<typename T> struct sse_vec;
+	template<typename T> struct sse_pack;
 
 	template<>
-	struct sse_vec<f32>
+	struct sse_pack<f32>
 	{
 		// types
 
@@ -240,32 +240,32 @@ namespace lsimd {
 
 		// constructors
 
-		LSIMD_ENSURE_INLINE sse_vec() { }
+		LSIMD_ENSURE_INLINE sse_pack() { }
 
-		LSIMD_ENSURE_INLINE sse_vec(const __m128 v_)
+		LSIMD_ENSURE_INLINE sse_pack(const __m128 v_)
 		: v(v_) { }
 
-		LSIMD_ENSURE_INLINE sse_vec( zero_t )
+		LSIMD_ENSURE_INLINE sse_pack( zero_t )
 		{
 			v = _mm_setzero_ps();
 		}
 
-		LSIMD_ENSURE_INLINE explicit sse_vec(const f32 x)
+		LSIMD_ENSURE_INLINE explicit sse_pack(const f32 x)
 		{
 			v = _mm_set1_ps(x);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f32 e0, const f32 e1, const f32 e2, const f32 e3)
+		LSIMD_ENSURE_INLINE sse_pack(const f32 e0, const f32 e1, const f32 e2, const f32 e3)
 		{
 			v = _mm_set_ps(e3, e2, e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f32* a, aligned_t)
+		LSIMD_ENSURE_INLINE sse_pack(const f32* a, aligned_t)
 		{
 			v = _mm_load_ps(a);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f32* a, unaligned_t)
+		LSIMD_ENSURE_INLINE sse_pack(const f32* a, unaligned_t)
 		{
 			v = _mm_loadu_ps(a);
 		}
@@ -324,22 +324,22 @@ namespace lsimd {
 
 		// constants
 
-		LSIMD_ENSURE_INLINE static sse_vec zeros()
+		LSIMD_ENSURE_INLINE static sse_pack zeros()
 		{
 			return sse_const<f32>::zeros();
 		}
 
-		LSIMD_ENSURE_INLINE static sse_vec ones()
+		LSIMD_ENSURE_INLINE static sse_pack ones()
 		{
 			return sse_const<f32>::ones();
 		}
 
-		LSIMD_ENSURE_INLINE static sse_vec twos()
+		LSIMD_ENSURE_INLINE static sse_pack twos()
 		{
 			return sse_const<f32>::twos();
 		}
 
-		LSIMD_ENSURE_INLINE static sse_vec halfs()
+		LSIMD_ENSURE_INLINE static sse_pack halfs()
 		{
 			return sse_const<f32>::halfs();
 		}
@@ -348,7 +348,7 @@ namespace lsimd {
 
 
 	template<>
-	struct sse_vec<f64>
+	struct sse_pack<f64>
 	{
 		// types
 
@@ -369,32 +369,32 @@ namespace lsimd {
 
 		// constructors
 
-		LSIMD_ENSURE_INLINE sse_vec() { }
+		LSIMD_ENSURE_INLINE sse_pack() { }
 
-		LSIMD_ENSURE_INLINE sse_vec(const intern_type v_)
+		LSIMD_ENSURE_INLINE sse_pack(const intern_type v_)
 		: v(v_) { }
 
-		LSIMD_ENSURE_INLINE sse_vec( zero_t )
+		LSIMD_ENSURE_INLINE sse_pack( zero_t )
 		{
 			v = _mm_setzero_pd();
 		}
 
-		LSIMD_ENSURE_INLINE explicit sse_vec(const f64 x)
+		LSIMD_ENSURE_INLINE explicit sse_pack(const f64 x)
 		{
 			v = _mm_set1_pd(x);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f64 e0, const f64 e1)
+		LSIMD_ENSURE_INLINE sse_pack(const f64 e0, const f64 e1)
 		{
 			v = _mm_set_pd(e1, e0);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f64* a, aligned_t)
+		LSIMD_ENSURE_INLINE sse_pack(const f64* a, aligned_t)
 		{
 			v = _mm_load_pd(a);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec(const f64* a, unaligned_t)
+		LSIMD_ENSURE_INLINE sse_pack(const f64* a, unaligned_t)
 		{
 			v = _mm_loadu_pd(a);
 		}
@@ -452,22 +452,22 @@ namespace lsimd {
 
 		// constants
 
-		LSIMD_ENSURE_INLINE static sse_vec zeros()
+		LSIMD_ENSURE_INLINE static sse_pack zeros()
 		{
 			return sse_const<f64>::zeros();
 		}
 
-		LSIMD_ENSURE_INLINE static sse_vec ones()
+		LSIMD_ENSURE_INLINE static sse_pack ones()
 		{
 			return sse_const<f64>::ones();
 		}
 
-		LSIMD_ENSURE_INLINE static sse_vec twos()
+		LSIMD_ENSURE_INLINE static sse_pack twos()
 		{
 			return sse_const<f64>::twos();
 		}
 
-		LSIMD_ENSURE_INLINE static sse_vec halfs()
+		LSIMD_ENSURE_INLINE static sse_pack halfs()
 		{
 			return sse_const<f64>::halfs();
 		}
@@ -477,8 +477,8 @@ namespace lsimd {
 
 	// typedefs
 
-	typedef sse_vec<f32> sse_f32v4;
-	typedef sse_vec<f64> sse_f64v2;
+	typedef sse_pack<f32> sse_f32pk;
+	typedef sse_pack<f64> sse_f64pk;
 
 }
 

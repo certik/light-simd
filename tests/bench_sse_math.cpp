@@ -52,9 +52,9 @@ struct pow_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
-		return pow(x, simd_vec<T, sse_kind>(2.5));
+		return pow(x, simd_pack<T, sse_kind>(2.5));
 	}
 };
 
@@ -67,7 +67,7 @@ struct cbrt_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return cbrt(x);
 	}
@@ -82,9 +82,9 @@ struct hypot_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
-		return hypot(x, simd_vec<T, sse_kind>(2.0));
+		return hypot(x, simd_pack<T, sse_kind>(2.0));
 	}
 };
 
@@ -98,7 +98,7 @@ struct exp_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return exp(x);
 	}
@@ -113,7 +113,7 @@ struct exp2_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return exp2(x);
 	}
@@ -128,7 +128,7 @@ struct exp10_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return exp2(x);
 	}
@@ -143,7 +143,7 @@ struct log_op
 	static T ubound() { return T(100); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return exp(x);
 	}
@@ -158,7 +158,7 @@ struct log2_op
 	static T ubound() { return T(100); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return exp(x);
 	}
@@ -173,7 +173,7 @@ struct log10_op
 	static T ubound() { return T(100); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return exp(x);
 	}
@@ -188,7 +188,7 @@ struct expm1_op
 	static T ubound() { return T(0.1); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return expm1(x);
 	}
@@ -203,7 +203,7 @@ struct log1p_op
 	static T ubound() { return T(0.1); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return log1p(x);
 	}
@@ -219,7 +219,7 @@ struct sin_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return sin(x);
 	}
@@ -234,7 +234,7 @@ struct cos_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return cos(x);
 	}
@@ -249,7 +249,7 @@ struct tan_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return tan(x);
 	}
@@ -264,7 +264,7 @@ struct asin_op
 	static T ubound() { return T(1); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return asin(x);
 	}
@@ -279,7 +279,7 @@ struct acos_op
 	static T ubound() { return T(1); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return acos(x);
 	}
@@ -294,7 +294,7 @@ struct atan_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return atan(x);
 	}
@@ -309,9 +309,9 @@ struct atan2_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
-		return atan2(x, simd_vec<T, sse_kind>::ones());
+		return atan2(x, simd_pack<T, sse_kind>::ones());
 	}
 };
 
@@ -325,7 +325,7 @@ struct sinh_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return sinh(x);
 	}
@@ -340,7 +340,7 @@ struct cosh_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return cosh(x);
 	}
@@ -355,7 +355,7 @@ struct tanh_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return tanh(x);
 	}
@@ -370,7 +370,7 @@ struct asinh_op
 	static T ubound() { return T(1); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return asinh(x);
 	}
@@ -385,7 +385,7 @@ struct acosh_op
 	static T ubound() { return T(1); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return acosh(x);
 	}
@@ -400,7 +400,7 @@ struct atanh_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return atanh(x);
 	}
@@ -416,7 +416,7 @@ struct erf_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return erf(x);
 	}
@@ -431,7 +431,7 @@ struct erfc_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static simd_vec<T, sse_kind> run(simd_vec<T, sse_kind> x)
+	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
 	{
 		return erfc(x);
 	}
