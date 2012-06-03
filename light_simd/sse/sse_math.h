@@ -13,7 +13,7 @@
 #ifndef LSIMD_SSE_MATH_H_
 #define LSIMD_SSE_MATH_H_
 
-#include "sse_base.h"
+#include "sse_pack.h"
 
 #ifdef LSIMD_USE_SVML
 

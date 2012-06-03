@@ -246,6 +246,19 @@ namespace lsimd
 		asm volatile("" : : "x"(x.impl.v));
 	}
 
+	LSIMD_ENSURE_INLINE
+	void force_to_reg(const f32& x)
+	{
+		asm volatile("" : : "x"(x));
+	}
+
+	LSIMD_ENSURE_INLINE
+	void force_to_reg(const f64& x)
+	{
+		asm volatile("" : : "x"(x));
+	}
+
+
 	template<class Op>
 	uint64_t tsc_bench(Op op, unsigned warming_times, unsigned repeat_times)
 	{

@@ -13,7 +13,7 @@
 #ifndef LSIMD_SSE_ARITH_H_
 #define LSIMD_SSE_ARITH_H_
 
-#include "sse_base.h"
+#include "sse_pack.h"
 
 namespace lsimd
 {
@@ -66,25 +66,25 @@ namespace lsimd
 	LSIMD_ENSURE_INLINE
 	inline sse_f32pk neg(const sse_f32pk a)
 	{
-		return _mm_xor_ps(sse_const<f32>::sign_mask(), a.v);
+		return _mm_xor_ps(_mm_set1_ps(-0.f), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f64pk neg(const sse_f64pk a)
 	{
-		return _mm_xor_pd(sse_const<f64>::sign_mask(), a.v);
+		return _mm_xor_pd(_mm_set1_pd(-0.0), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f32pk abs(const sse_f32pk a)
 	{
-		return _mm_andnot_ps(sse_const<f32>::sign_mask(), a.v);
+		return _mm_andnot_ps(_mm_set1_ps(-0.f), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f64pk abs(const sse_f64pk a)
 	{
-		return _mm_andnot_pd(sse_const<f64>::sign_mask(), a.v);
+		return _mm_andnot_pd(_mm_set1_pd(-0.0), a.v);
 	}
 
 
@@ -148,7 +148,7 @@ namespace lsimd
 	LSIMD_ENSURE_INLINE
 	inline sse_f32pk rcp(const sse_f32pk a)
 	{
-		return _mm_div_ps(sse_const<f32>::ones(), a.v);
+		return _mm_div_ps(_mm_set1_ps(1.0f), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
@@ -160,13 +160,13 @@ namespace lsimd
 	LSIMD_ENSURE_INLINE
 	inline sse_f64pk rcp(const sse_f64pk a)
 	{
-		return _mm_div_pd(sse_const<f64>::ones(), a.v);
+		return _mm_div_pd(_mm_set1_pd(1.0), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f32pk rsqrt(const sse_f32pk a)
 	{
-		return _mm_div_ps(sse_const<f32>::ones(), _mm_sqrt_ps(a.v));
+		return _mm_div_ps(_mm_set1_ps(1.0f), _mm_sqrt_ps(a.v));
 	}
 
 	LSIMD_ENSURE_INLINE
@@ -178,7 +178,7 @@ namespace lsimd
 	LSIMD_ENSURE_INLINE
 	inline sse_f64pk rsqrt(const sse_f64pk a)
 	{
-		return _mm_div_pd(sse_const<f64>::ones(), _mm_sqrt_pd(a.v));
+		return _mm_div_pd(_mm_set1_pd(1.0), _mm_sqrt_pd(a.v));
 	}
 
 
@@ -218,7 +218,7 @@ namespace lsimd
 	inline sse_f32pk floor_sse2(const sse_f32pk a)
 	{
 		__m128 t = _mm_cvtepi32_ps(_mm_cvttps_epi32(a.v));
-		__m128 b = _mm_and_ps(_mm_cmpgt_ps(t, a.v), sse_const<f32>::ones());
+		__m128 b = _mm_and_ps(_mm_cmpgt_ps(t, a.v), _mm_set1_ps(1.0f));
 
 		return _mm_sub_ps(t, b);
 	}
@@ -227,7 +227,7 @@ namespace lsimd
 	inline sse_f64pk floor_sse2(const sse_f64pk a)
 	{
 		__m128d t = _mm_cvtepi32_pd(_mm_cvttpd_epi32(a.v));
-		__m128d b = _mm_and_pd(_mm_cmpgt_pd(t, a.v), sse_const<f64>::ones());
+		__m128d b = _mm_and_pd(_mm_cmpgt_pd(t, a.v), _mm_set1_pd(1.0));
 
 		return _mm_sub_pd(t, b);
 	}
@@ -237,7 +237,7 @@ namespace lsimd
 	inline sse_f32pk ceil_sse2(const sse_f32pk a)
 	{
 		__m128 t = _mm_cvtepi32_ps(_mm_cvttps_epi32(a.v));
-		__m128 b = _mm_and_ps(_mm_cmplt_ps(t, a.v), sse_const<f32>::ones());
+		__m128 b = _mm_and_ps(_mm_cmplt_ps(t, a.v), _mm_set1_ps(1.0f));
 
 		return _mm_add_ps(t, b);
 	}
@@ -247,7 +247,7 @@ namespace lsimd
 	inline sse_f64pk ceil_sse2(const sse_f64pk a)
 	{
 		__m128d t = _mm_cvtepi32_pd(_mm_cvttpd_epi32(a.v));
-		__m128d b = _mm_and_pd(_mm_cmplt_pd(t, a.v), sse_const<f64>::ones());
+		__m128d b = _mm_and_pd(_mm_cmplt_pd(t, a.v), _mm_set1_pd(1.0));
 
 		return _mm_add_pd(t, b);
 	}

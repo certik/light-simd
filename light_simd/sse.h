@@ -15,5 +15,6 @@
 
 #include <light_simd/sse/sse_arith.h>
 #include <light_simd/sse/sse_math.h>
+#include <light_simd/sse/sse_reduce.h>
 
 #endif /* SSE_H_ */

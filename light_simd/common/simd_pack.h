@@ -10,21 +10,14 @@
 #pragma once
 #endif
 
-#ifndef LSIMD_SIMD_VEC_H_
-#define LSIMD_SIMD_VEC_H_
+#ifndef LSIMD_SIMD_PACK_H_
+#define LSIMD_SIMD_PACK_H_
 
 #include <light_simd/common/common_base.h>
-#include <light_simd/sse/sse_base.h>
+#include <light_simd/sse/sse_pack.h>
 
 namespace lsimd
 {
-
-	// forward declarations
-
-	template<typename T, typename Kind> struct simd;
-
-	template<typename T, typename Kind> struct simd_pack;
-
 
 	/******************************************************
 	 *
@@ -45,6 +38,7 @@ namespace lsimd
 		typedef sse_pack<T> impl_type;
 		typedef typename impl_type::intern_type intern_type;
 		static const unsigned int pack_width = impl_type::pack_width;
+		static const unsigned int max_registers = 8;
 	};
 
 
@@ -135,6 +129,10 @@ namespace lsimd
 			impl.store(a, unaligned_t());
 		}
 
+		LSIMD_ENSURE_INLINE T to_scalar() const
+		{
+			return impl.to_scalar();
+		}
 
 		// constants
 

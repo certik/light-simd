@@ -46,9 +46,14 @@ namespace lsimd
 
 	struct zero_t { };
 
-	// trait types
+	// forward declaration
 
-	template<typename VT> struct simd_traits;
+	template<typename T, typename Kind> struct simd;
+
+	template<typename T, typename Kind> struct simd_pack;
+
+	template<typename T, unsigned int N, typename Kind>
+	struct simd_kernel;
 
 }
 
