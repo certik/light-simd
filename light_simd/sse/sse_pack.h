@@ -125,7 +125,7 @@ namespace lsimd
 		template<int I>
 		LSIMD_ENSURE_INLINE f32 extract() const
 		{
-			return detail::entry_extractor<f32, I>::get(v);
+			return sse::f32p_extract<I>(v);
 		}
 
 		template<int I0, int I1, int I2, int I3>
@@ -152,6 +152,38 @@ namespace lsimd
 			return _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(v), (I << 2)));
 		}
 
+
+		// special entry manipulation
+
+		LSIMD_ENSURE_INLINE sse_pack dup_0101() const // [0, 1, 0, 1]
+		{
+			return _mm_movelh_ps(v, v);
+		}
+
+		LSIMD_ENSURE_INLINE sse_pack dup_2323() const // [2, 3, 2, 3]
+		{
+			return _mm_movehl_ps(v, v);
+		}
+
+		LSIMD_ENSURE_INLINE sse_pack dup_0022() const // [0, 0, 2, 2]
+		{
+// #if (defined(LSIMD_HAS_SSE3))
+#if false
+			return _mm_moveldup_ps(v);
+#else
+			return _mm_shuffle_ps(v, v, _MM_SHUFFLE(2, 2, 0, 0));
+#endif
+		}
+
+		LSIMD_ENSURE_INLINE sse_pack dup_1133() const // [1, 1, 3, 3]
+		{
+// #if (defined(LSIMD_HAS_SSE3))
+#if false
+			return _mm_movehdup_ps(v);
+#else
+			return _mm_shuffle_ps(v, v, _MM_SHUFFLE(3, 3, 1, 1));
+#endif
+		}
 
 		// constants
 
@@ -283,7 +315,7 @@ namespace lsimd
 		template<int I>
 		LSIMD_ENSURE_INLINE f64 extract() const
 		{
-			return detail::entry_extractor<f64, I>::get(v);
+			return sse::f64p_extract<I>(v);
 		}
 
 		template<int I0, int I1>
@@ -308,6 +340,24 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE sse_pack shift_back() const
 		{
 			return _mm_castsi128_pd(_mm_slli_si128(_mm_castpd_si128(v), (I << 3)));
+		}
+
+
+		// special entry manipulation
+
+		LSIMD_ENSURE_INLINE sse_pack dup_00() const // [0, 0]
+		{
+// #if (defined(LSIMD_HAS_SSE3))
+#if false
+			return _mm_movedup_pd(v);
+#else
+			return _mm_shuffle_pd(v, v, _MM_SHUFFLE2(0, 0));
+#endif
+		}
+
+		LSIMD_ENSURE_INLINE sse_pack dup_11() const // [1, 1]
+		{
+			return _mm_shuffle_pd(v, v, _MM_SHUFFLE2(1, 1));
 		}
 
 		// constants

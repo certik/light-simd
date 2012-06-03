@@ -480,6 +480,57 @@ bool test_shift<f64>()
 
 
 template<typename T>
+bool test_dup();
+
+template<>
+bool test_dup<f32>()
+{
+	LSIMD_ALIGN_SSE f32 s[4] = {1.f, 2.f, 3.f, 4.f};
+	LSIMD_ALIGN_SSE f32 dst[4] = {0.f, 0.f, 0.f, 0.f};
+
+	sse_f32pk a(s, aligned_t());
+
+	LSIMD_ALIGN_SSE f32 r01[4] = {1.f, 2.f, 1.f, 2.f};
+	a.dup_0101().store(dst, aligned_t());
+	if ( !test_equal(4, dst, r01) ) return false;
+
+	LSIMD_ALIGN_SSE f32 r23[4] = {3.f, 4.f, 3.f, 4.f};
+	a.dup_2323().store(dst, aligned_t());
+	if ( !test_equal(4, dst, r23) ) return false;
+
+	LSIMD_ALIGN_SSE f32 r02[4] = {1.f, 1.f, 3.f, 3.f};
+	a.dup_0022().store(dst, aligned_t());
+	if ( !test_equal(4, dst, r02) ) return false;
+
+	LSIMD_ALIGN_SSE f32 r13[4] = {2.f, 2.f, 4.f, 4.f};
+	a.dup_1133().store(dst, aligned_t());
+	if ( !test_equal(4, dst, r13) ) return false;
+
+	return true;
+}
+
+
+template<>
+bool test_dup<f64>()
+{
+	LSIMD_ALIGN_SSE f64 s[2] = {1.0, 2.0};
+	LSIMD_ALIGN_SSE f64 dst[2] = {0.0, 0.0};
+
+	sse_f64pk a(s, aligned_t());
+
+	LSIMD_ALIGN_SSE f64 r0[2] = {1.0, 1.0};
+	a.dup_00().store(dst, aligned_t());
+	if ( !test_equal(2, dst, r0) ) return false;
+
+	LSIMD_ALIGN_SSE f64 r1[2] = {2.0, 2.0};
+	a.dup_11().store(dst, aligned_t());
+	if ( !test_equal(2, dst, r1) ) return false;
+
+	return true;
+}
+
+
+template<typename T>
 bool do_tests()
 {
 	TEST_ITEM( load_store )
@@ -489,6 +540,7 @@ bool do_tests()
 	TEST_ITEM( broadcast )
 	TEST_ITEM( swizzle )
 	TEST_ITEM( shift )
+	TEST_ITEM( dup )
 
 	return true;
 }

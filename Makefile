@@ -46,7 +46,9 @@ COMMON_H = \
 	$(INC)/common/simd_math.h
 	
 SSE_H = $(COMMON_H) \
+	$(INC)/sse/details/sse_pack_manip.h \
 	$(INC)/sse/sse_base.h \
+	$(INC)/sse/sse_pack.h \
 	$(INC)/sse/sse_arith.h \
 	$(INC)/sse/sse_math.h \
 	$(INC)/sse.h
