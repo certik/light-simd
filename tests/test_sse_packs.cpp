@@ -638,7 +638,7 @@ template<>
 bool test_sum<f32>()
 {
 	LSIMD_ALIGN_SSE f32 a[4] = {1.f, 2.f, 3.f, 4.f};
-	sse_f32pk p(a, aligned_t());
+	simd_pack<f32, sse_kind> p(a, aligned_t());
 
 	if ( p.sum() != 10.f ) return false;
 	if ( p.partial_sum<1>() != 1.f ) return false;
@@ -652,7 +652,7 @@ template<>
 bool test_sum<f64>()
 {
 	LSIMD_ALIGN_SSE f64 a[2] = {2.0, 3.0};
-	sse_f64pk p(a, aligned_t());
+	simd_pack<f64, sse_kind> p(a, aligned_t());
 
 	if ( p.sum() != 5.0 ) return false;
 	if ( p.partial_sum<1>() != 2.0 ) return false;
@@ -668,7 +668,7 @@ template<>
 bool test_max<f32>()
 {
 	LSIMD_ALIGN_SSE f32 a[4] = {1.f, 3.f, 2.f, 4.f};
-	sse_f32pk p(a, aligned_t());
+	simd_pack<f32, sse_kind> p(a, aligned_t());
 
 	if ( p.max() != 4.f ) return false;
 	if ( p.partial_max<1>() != 1.f ) return false;
@@ -682,7 +682,7 @@ template<>
 bool test_max<f64>()
 {
 	LSIMD_ALIGN_SSE f64 a[2] = {2.0, 3.0};
-	sse_f64pk p(a, aligned_t());
+	simd_pack<f64, sse_kind> p(a, aligned_t());
 
 	if ( p.max() != 3.0 ) return false;
 	if ( p.partial_max<1>() != 2.0 ) return false;
@@ -698,7 +698,7 @@ template<>
 bool test_min<f32>()
 {
 	LSIMD_ALIGN_SSE f32 a[4] = {3.f, 2.f, 1.f, 4.f};
-	sse_f32pk p(a, aligned_t());
+	simd_pack<f32, sse_kind> p(a, aligned_t());
 
 	if ( p.min() != 1.f ) return false;
 	if ( p.partial_min<1>() != 3.f ) return false;
@@ -712,7 +712,7 @@ template<>
 bool test_min<f64>()
 {
 	LSIMD_ALIGN_SSE f64 a[2] = {2.0, 3.0};
-	sse_f64pk p(a, aligned_t());
+	simd_pack<f64, sse_kind> p(a, aligned_t());
 
 	if ( p.min() != 2.0 ) return false;
 	if ( p.partial_min<1>() != 2.0 ) return false;

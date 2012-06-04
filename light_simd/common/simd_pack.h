@@ -187,6 +187,28 @@ namespace lsimd
 			return impl.partial_sum<I>();
 		}
 
+		LSIMD_ENSURE_INLINE T max() const
+		{
+			return impl.max();
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE T partial_max() const
+		{
+			return impl.partial_max<I>();
+		}
+
+		LSIMD_ENSURE_INLINE T min() const
+		{
+			return impl.min();
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE T partial_min() const
+		{
+			return impl.partial_min<I>();
+		}
+
 
 		// constants
 
