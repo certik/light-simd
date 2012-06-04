@@ -291,8 +291,7 @@ namespace lsimd
 				simd_pack<T, Kind> x0(a + i * w, aligned_t());
 				force_to_reg(x0);
 
-				simd_pack<T, Kind> r = Op::run(x0);
-				force_to_reg(r);
+				Op::run(x0);
 			}
 		}
 	};
@@ -320,8 +319,7 @@ namespace lsimd
 				simd_pack<T, Kind> y0(a + i * w, b + i * w, aligned_t());
 				force_to_reg(y0);
 
-				simd_pack<T, Kind> r = Op::run(x0);
-				force_to_reg(r);
+				Op::run(x0, y0);
 			}
 		}
 	};

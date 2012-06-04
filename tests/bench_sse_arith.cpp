@@ -56,9 +56,10 @@ struct sqrt_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return lsimd::sqrt(x);
+		simd_pack<T, sse_kind> r = lsimd::sqrt(x);
+		force_to_reg(r);
 	}
 };
 
@@ -74,9 +75,10 @@ struct rcp_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return rcp(x);
+		simd_pack<T, sse_kind> r = rcp(x);
+		force_to_reg(r);
 	}
 };
 
@@ -91,9 +93,10 @@ struct rsqrt_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return rsqrt(x);
+		simd_pack<T, sse_kind> r = rsqrt(x);
+		force_to_reg(r);
 	}
 };
 
@@ -108,9 +111,10 @@ struct approx_rcp_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return approx_rcp(x.impl);
+		simd_pack<T, sse_kind> r = approx_rcp(x.impl);
+		force_to_reg(r);
 	}
 };
 
@@ -125,9 +129,10 @@ struct approx_rsqrt_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return approx_rsqrt(x.impl);
+		simd_pack<T, sse_kind> r =  approx_rsqrt(x.impl);
+		force_to_reg(r);
 	}
 };
 
@@ -142,9 +147,10 @@ struct floor_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return floor(x);
+		simd_pack<T, sse_kind> r = floor(x);
+		force_to_reg(r);
 	}
 };
 
@@ -159,9 +165,10 @@ struct ceil_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return ceil(x);
+		simd_pack<T, sse_kind> r = ceil(x);
+		force_to_reg(r);
 	}
 };
 
@@ -176,9 +183,10 @@ struct floor2_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return floor_sse2(x.impl);
+		simd_pack<T, sse_kind> r = floor_sse2(x.impl);
+		force_to_reg(r);
 	}
 };
 
@@ -193,9 +201,10 @@ struct ceil2_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static simd_pack<T, sse_kind> run(simd_pack<T, sse_kind> x)
+	static void run(simd_pack<T, sse_kind> x)
 	{
-		return ceil_sse2(x.impl);
+		simd_pack<T, sse_kind> r = ceil_sse2(x.impl);
+		force_to_reg(r);
 	}
 };
 
