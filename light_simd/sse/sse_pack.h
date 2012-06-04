@@ -115,6 +115,19 @@ namespace lsimd
 			_mm_storeu_ps(a, v);
 		}
 
+		template<int I>
+		LSIMD_ENSURE_INLINE void partial_load(const f32 *a)
+		{
+			v = sse::partial_load<I>(a);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE void partial_store(f32 *a) const
+		{
+			sse::partial_store<I>(a, v);
+		}
+
+
 		// entry manipulation
 
 		LSIMD_ENSURE_INLINE f32 to_scalar() const
@@ -126,12 +139,6 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE f32 extract() const
 		{
 			return sse::f32p_extract<I>(v);
-		}
-
-		template<int I0, int I1, int I2, int I3>
-		LSIMD_ENSURE_INLINE sse_pack swizzle() const
-		{
-			return _mm_shuffle_ps(v, v, _MM_SHUFFLE(I3, I2, I1, I0));
 		}
 
 		template<int I>
@@ -155,35 +162,68 @@ namespace lsimd
 
 		// special entry manipulation
 
-		LSIMD_ENSURE_INLINE sse_pack dup_0101() const // [0, 1, 0, 1]
+		template<int I0, int I1, int I2, int I3>
+		LSIMD_ENSURE_INLINE sse_pack swizzle() const
 		{
-			return _mm_movelh_ps(v, v);
+			return _mm_shuffle_ps(v, v, _MM_SHUFFLE(I3, I2, I1, I0));
 		}
 
-		LSIMD_ENSURE_INLINE sse_pack dup_2323() const // [2, 3, 2, 3]
+		LSIMD_ENSURE_INLINE sse_pack dup_low() const // [0, 1, 0, 1]
 		{
-			return _mm_movehl_ps(v, v);
+			return sse::f32_dup_low(v);
 		}
 
-		LSIMD_ENSURE_INLINE sse_pack dup_0022() const // [0, 0, 2, 2]
+		LSIMD_ENSURE_INLINE sse_pack dup_high() const // [2, 3, 2, 3]
 		{
-// #if (defined(LSIMD_HAS_SSE3))
-#if false
-			return _mm_moveldup_ps(v);
-#else
-			return _mm_shuffle_ps(v, v, _MM_SHUFFLE(2, 2, 0, 0));
-#endif
+			return sse::f32_dup_high(v);
 		}
 
-		LSIMD_ENSURE_INLINE sse_pack dup_1133() const // [1, 1, 3, 3]
+		LSIMD_ENSURE_INLINE sse_pack dup2_low() const // [0, 0, 2, 2]
 		{
-// #if (defined(LSIMD_HAS_SSE3))
-#if false
-			return _mm_movehdup_ps(v);
-#else
-			return _mm_shuffle_ps(v, v, _MM_SHUFFLE(3, 3, 1, 1));
-#endif
+			return sse::f32_dup2_low(v);
 		}
+
+		LSIMD_ENSURE_INLINE sse_pack dup2_high() const // [1, 1, 3, 3]
+		{
+			return sse::f32_dup2_high(v);
+		}
+
+
+		// statistics
+
+		LSIMD_ENSURE_INLINE f32 sum() const
+		{
+			return sse::f32_sum(v);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE f32 partial_sum() const
+		{
+			return sse::f32_partial_sum<I>(v);
+		}
+
+		LSIMD_ENSURE_INLINE f32 max() const
+		{
+			return sse::f32_max(v);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE f32 partial_max() const
+		{
+			return sse::f32_partial_max<I>(v);
+		}
+
+		LSIMD_ENSURE_INLINE f32 min() const
+		{
+			return sse::f32_min(v);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE f32 partial_min() const
+		{
+			return sse::f32_partial_min<I>(v);
+		}
+
 
 		// constants
 
@@ -305,6 +345,18 @@ namespace lsimd
 			_mm_storeu_pd(a, v);
 		}
 
+		template<int I>
+		LSIMD_ENSURE_INLINE void partial_load(const f64 *a)
+		{
+			v = sse::partial_load<I>(a);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE void partial_store(f64 *a) const
+		{
+			sse::partial_store<I>(a, v);
+		}
+
 		// entry manipulation
 
 		LSIMD_ENSURE_INLINE f64 to_scalar() const
@@ -316,12 +368,6 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE f64 extract() const
 		{
 			return sse::f64p_extract<I>(v);
-		}
-
-		template<int I0, int I1>
-		LSIMD_ENSURE_INLINE sse_pack swizzle() const
-		{
-			return _mm_shuffle_pd(v, v, _MM_SHUFFLE2(I1, I0));
 		}
 
 		template<int I>
@@ -345,20 +391,58 @@ namespace lsimd
 
 		// special entry manipulation
 
-		LSIMD_ENSURE_INLINE sse_pack dup_00() const // [0, 0]
+		template<int I0, int I1>
+		LSIMD_ENSURE_INLINE sse_pack swizzle() const
 		{
-// #if (defined(LSIMD_HAS_SSE3))
-#if false
-			return _mm_movedup_pd(v);
-#else
-			return _mm_shuffle_pd(v, v, _MM_SHUFFLE2(0, 0));
-#endif
+			return _mm_shuffle_pd(v, v, _MM_SHUFFLE2(I1, I0));
 		}
 
-		LSIMD_ENSURE_INLINE sse_pack dup_11() const // [1, 1]
+		LSIMD_ENSURE_INLINE sse_pack dup_low() const // [0, 0]
 		{
-			return _mm_shuffle_pd(v, v, _MM_SHUFFLE2(1, 1));
+			return sse::f64_dup_low(v);
 		}
+
+		LSIMD_ENSURE_INLINE sse_pack dup_high() const // [1, 1]
+		{
+			return sse::f64_dup_high(v);
+		}
+
+
+		// statistics
+
+		LSIMD_ENSURE_INLINE f64 sum() const
+		{
+			return sse::f64_sum(v);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE f64 partial_sum() const
+		{
+			return sse::f64_partial_sum<I>(v);
+		}
+
+		LSIMD_ENSURE_INLINE f64 max() const
+		{
+			return sse::f64_max(v);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE f64 partial_max() const
+		{
+			return sse::f64_partial_max<I>(v);
+		}
+
+		LSIMD_ENSURE_INLINE f64 min() const
+		{
+			return sse::f64_min(v);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE f64 partial_min() const
+		{
+			return sse::f64_partial_min<I>(v);
+		}
+
 
 		// constants
 

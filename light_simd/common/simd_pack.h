@@ -129,10 +129,64 @@ namespace lsimd
 			impl.store(a, unaligned_t());
 		}
 
+		template<int I>
+		LSIMD_ENSURE_INLINE void partial_load(const T *a)
+		{
+			impl.partial_load<I>(a);
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE void partial_store(T *a) const
+		{
+			impl.partial_store<I>(a);
+		}
+
+
+		// entry manipulation
+
 		LSIMD_ENSURE_INLINE T to_scalar() const
 		{
 			return impl.to_scalar();
 		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE T extract() const
+		{
+			return impl.extract<I>();
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE simd_pack broadcast() const
+		{
+			return impl.broadcast<I>();
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE simd_pack shift_front() const
+		{
+			return impl.shift_front<I>();
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE simd_pack shift_back() const
+		{
+			return impl.shift_back<I>();
+		}
+
+
+		// statistics
+
+		LSIMD_ENSURE_INLINE T sum() const
+		{
+			return impl.sum();
+		}
+
+		template<int I>
+		LSIMD_ENSURE_INLINE T partial_sum() const
+		{
+			return impl.partial_sum<I>();
+		}
+
 
 		// constants
 

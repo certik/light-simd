@@ -33,8 +33,8 @@ bool test_load_store()
 {
 	const int w = simd<T, sse_kind>::pack_width;
 
-	LSIMD_ALIGN_SSE T a[4] = {1.f, 2.f, 3.f, 5.f};
-	LSIMD_ALIGN_SSE T b[4];
+	LSIMD_ALIGN_SSE T a[4] = {T(1), T(2), T(3), T(5)};
+	LSIMD_ALIGN_SSE T b[4] = {T(0), T(0), T(0), T(0)};
 
 	simd_pack<T, sse_kind> v;
 	v.load(a, aligned_t());
@@ -79,6 +79,107 @@ bool test_load_store()
 
 	return true;
 }
+
+
+template<typename T>
+bool test_partial_load();
+
+template<>
+bool test_partial_load<f32>()
+{
+	f32 a[4] = {1.f, 2.f, 3.f, 4.f};
+	f32 b[4];
+
+	simd_pack<f32, sse_kind> v;
+
+	v.partial_load<1>(a);
+	for (int i = 0; i < 4; ++i) b[i] = -1.f;
+	v.store(b, unaligned_t());
+
+	f32 r1[4] = {1.f, 0.f, 0.f, 0.f};
+	if ( !test_equal(4, b, r1) ) return false;
+
+	v.partial_load<2>(a);
+	for (int i = 0; i < 4; ++i) b[i] = -1.f;
+	v.store(b, unaligned_t());
+
+	f32 r2[4] = {1.f, 2.f, 0.f, 0.f};
+	if ( !test_equal(4, b, r2) ) return false;
+
+	v.partial_load<3>(a);
+	for (int i = 0; i < 4; ++i) b[i] = -1.f;
+	v.store(b, unaligned_t());
+
+	f32 r3[4] = {1.f, 2.f, 3.f, 0.f};
+	if ( !test_equal(4, b, r3) ) return false;
+
+	return true;
+}
+
+
+template<>
+bool test_partial_load<f64>()
+{
+	f64 a[2] = {1.0, 2.0};
+	f64 b[2] = {-1.0, -1.0};
+
+	simd_pack<f64, sse_kind> v;
+
+	v.partial_load<1>(a);
+	v.store(b, unaligned_t());
+
+	f64 r1[2] = {1.0, 0.0};
+	if ( !test_equal(2, b, r1) ) return false;
+
+	return true;
+}
+
+
+template<typename T>
+bool test_partial_store();
+
+template<>
+bool test_partial_store<f32>()
+{
+	f32 a[4] = {1.f, 2.f, 3.f, 4.f};
+	f32 b[4];
+
+	simd_pack<f32, sse_kind> p(a, unaligned_t());
+
+	for (int i = 0; i < 4; ++i) b[i] = -1.f;
+	p.partial_store<1>(b);
+	f32 r1[4] = {1.f, -1.f, -1.f, -1.f};
+	if ( !test_equal(4, b, r1) ) return false;
+
+	for (int i = 0; i < 4; ++i) b[i] = -1.f;
+	p.partial_store<2>(b);
+	f32 r2[4] = {1.f, 2.f, -1.f, -1.f};
+	if ( !test_equal(4, b, r2) ) return false;
+
+	for (int i = 0; i < 4; ++i) b[i] = -1.f;
+	p.partial_store<3>(b);
+	f32 r3[4] = {1.f, 2.f, 3.f, -1.f};
+	if ( !test_equal(4, b, r3) ) return false;
+
+	return true;
+}
+
+template<>
+bool test_partial_store<f64>()
+{
+	f64 a[2] = {1.0, 2.0};
+	f64 b[2] = {-1.0, -1.0};
+
+	simd_pack<f64, sse_kind> p(a, unaligned_t());
+
+	p.partial_store<1>(b);
+	f64 r1[2] = {1.0, -1.0};
+	if ( !test_equal(2, b, r1) ) return false;
+
+	return true;
+}
+
+
 
 
 template<typename T>
@@ -225,7 +326,7 @@ bool test_extract<f32>()
 {
 	LSIMD_ALIGN_SSE f32 src[4] = {1.11f, 2.22f, 3.33f, 4.44f};
 
-	sse_f32pk a(src, aligned_t());
+	simd_pack<f32, sse_kind> a(src, aligned_t());
 
 	f32 e0 = a.extract<0>();
 	f32 e1 = a.extract<1>();
@@ -248,7 +349,7 @@ bool test_extract<f64>()
 {
 	LSIMD_ALIGN_SSE f64 src[4] = {1.11, 2.22, 3.33, 4.44};
 
-	sse_f64pk a(src, aligned_t());
+	simd_pack<f64, sse_kind> a(src, aligned_t());
 
 	f64 e0 = a.extract<0>();
 	f64 e1 = a.extract<1>();
@@ -273,7 +374,7 @@ bool test_broadcast<f32>()
 	LSIMD_ALIGN_SSE f32 s[4] = {1.f, 2.f, 3.f, 4.f};
 	LSIMD_ALIGN_SSE f32 dst[4] = {0.f, 0.f, 0.f, 0.f};
 
-	sse_f32pk a(s, aligned_t());
+	simd_pack<f32, sse_kind> a(s, aligned_t());
 
 	LSIMD_ALIGN_SSE f32 r0[4] = {s[0], s[0], s[0], s[0]};
 	a.broadcast<0>().store(dst, aligned_t());
@@ -301,7 +402,7 @@ bool test_broadcast<f64>()
 	LSIMD_ALIGN_SSE f64 s[2] = {1.0, 2.0};
 	LSIMD_ALIGN_SSE f64 dst[2] = {0.0, 0.0};
 
-	sse_f64pk a(s, aligned_t());
+	simd_pack<f64, sse_kind> a(s, aligned_t());
 
 	LSIMD_ALIGN_SSE f64 r0[4] = {s[0], s[0]};
 	a.broadcast<0>().store(dst, aligned_t());
@@ -388,7 +489,7 @@ bool test_shift<f32>()
 	LSIMD_ALIGN_SSE f32 s[4] = {1.f, 2.f, 3.f, 4.f};
 	LSIMD_ALIGN_SSE f32 dst[4] = {0.f, 0.f, 0.f, 0.f};
 
-	sse_f32pk a(s, aligned_t());
+	simd_pack<f32, sse_kind> a(s, aligned_t());
 
 	// shift front
 
@@ -445,7 +546,7 @@ bool test_shift<f64>()
 	LSIMD_ALIGN_SSE f64 s[2] = {1.0, 2.0};
 	LSIMD_ALIGN_SSE f64 dst[2] = {0.0, 0.0};
 
-	sse_f64pk a(s, aligned_t());
+	simd_pack<f64, sse_kind> a(s, aligned_t());
 
 	// shift front
 
@@ -491,19 +592,19 @@ bool test_dup<f32>()
 	sse_f32pk a(s, aligned_t());
 
 	LSIMD_ALIGN_SSE f32 r01[4] = {1.f, 2.f, 1.f, 2.f};
-	a.dup_0101().store(dst, aligned_t());
+	a.dup_low().store(dst, aligned_t());
 	if ( !test_equal(4, dst, r01) ) return false;
 
 	LSIMD_ALIGN_SSE f32 r23[4] = {3.f, 4.f, 3.f, 4.f};
-	a.dup_2323().store(dst, aligned_t());
+	a.dup_high().store(dst, aligned_t());
 	if ( !test_equal(4, dst, r23) ) return false;
 
 	LSIMD_ALIGN_SSE f32 r02[4] = {1.f, 1.f, 3.f, 3.f};
-	a.dup_0022().store(dst, aligned_t());
+	a.dup2_low().store(dst, aligned_t());
 	if ( !test_equal(4, dst, r02) ) return false;
 
 	LSIMD_ALIGN_SSE f32 r13[4] = {2.f, 2.f, 4.f, 4.f};
-	a.dup_1133().store(dst, aligned_t());
+	a.dup2_high().store(dst, aligned_t());
 	if ( !test_equal(4, dst, r13) ) return false;
 
 	return true;
@@ -519,12 +620,102 @@ bool test_dup<f64>()
 	sse_f64pk a(s, aligned_t());
 
 	LSIMD_ALIGN_SSE f64 r0[2] = {1.0, 1.0};
-	a.dup_00().store(dst, aligned_t());
+	a.dup_low().store(dst, aligned_t());
 	if ( !test_equal(2, dst, r0) ) return false;
 
 	LSIMD_ALIGN_SSE f64 r1[2] = {2.0, 2.0};
-	a.dup_11().store(dst, aligned_t());
+	a.dup_high().store(dst, aligned_t());
 	if ( !test_equal(2, dst, r1) ) return false;
+
+	return true;
+}
+
+
+template<typename T>
+bool test_sum();
+
+template<>
+bool test_sum<f32>()
+{
+	LSIMD_ALIGN_SSE f32 a[4] = {1.f, 2.f, 3.f, 4.f};
+	sse_f32pk p(a, aligned_t());
+
+	if ( p.sum() != 10.f ) return false;
+	if ( p.partial_sum<1>() != 1.f ) return false;
+	if ( p.partial_sum<2>() != 3.f ) return false;
+	if ( p.partial_sum<3>() != 6.f ) return false;
+
+	return true;
+}
+
+template<>
+bool test_sum<f64>()
+{
+	LSIMD_ALIGN_SSE f64 a[2] = {2.0, 3.0};
+	sse_f64pk p(a, aligned_t());
+
+	if ( p.sum() != 5.0 ) return false;
+	if ( p.partial_sum<1>() != 2.0 ) return false;
+
+	return true;
+}
+
+
+template<typename T>
+bool test_max();
+
+template<>
+bool test_max<f32>()
+{
+	LSIMD_ALIGN_SSE f32 a[4] = {1.f, 3.f, 2.f, 4.f};
+	sse_f32pk p(a, aligned_t());
+
+	if ( p.max() != 4.f ) return false;
+	if ( p.partial_max<1>() != 1.f ) return false;
+	if ( p.partial_max<2>() != 3.f ) return false;
+	if ( p.partial_max<3>() != 3.f ) return false;
+
+	return true;
+}
+
+template<>
+bool test_max<f64>()
+{
+	LSIMD_ALIGN_SSE f64 a[2] = {2.0, 3.0};
+	sse_f64pk p(a, aligned_t());
+
+	if ( p.max() != 3.0 ) return false;
+	if ( p.partial_max<1>() != 2.0 ) return false;
+
+	return true;
+}
+
+
+template<typename T>
+bool test_min();
+
+template<>
+bool test_min<f32>()
+{
+	LSIMD_ALIGN_SSE f32 a[4] = {3.f, 2.f, 1.f, 4.f};
+	sse_f32pk p(a, aligned_t());
+
+	if ( p.min() != 1.f ) return false;
+	if ( p.partial_min<1>() != 3.f ) return false;
+	if ( p.partial_min<2>() != 2.f ) return false;
+	if ( p.partial_min<3>() != 1.f ) return false;
+
+	return true;
+}
+
+template<>
+bool test_min<f64>()
+{
+	LSIMD_ALIGN_SSE f64 a[2] = {2.0, 3.0};
+	sse_f64pk p(a, aligned_t());
+
+	if ( p.min() != 2.0 ) return false;
+	if ( p.partial_min<1>() != 2.0 ) return false;
 
 	return true;
 }
@@ -534,13 +725,20 @@ template<typename T>
 bool do_tests()
 {
 	TEST_ITEM( load_store )
+	TEST_ITEM( partial_load )
+	TEST_ITEM( partial_store )
 	TEST_ITEM( set )
 	TEST_ITEM( to_scalar )
+
 	TEST_ITEM( extract )
 	TEST_ITEM( broadcast )
-	TEST_ITEM( swizzle )
 	TEST_ITEM( shift )
+	TEST_ITEM( swizzle )
 	TEST_ITEM( dup )
+
+	TEST_ITEM( sum )
+	TEST_ITEM( max )
+	TEST_ITEM( min )
 
 	return true;
 }

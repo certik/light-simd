@@ -52,8 +52,9 @@ namespace lsimd
 
 	template<typename T, typename Kind> struct simd_pack;
 
-	template<typename T, unsigned int N, typename Kind>
-	struct simd_kernel;
+	template<typename T, unsigned int N, typename Kind> struct simd_sum_aux;
+	template<typename T, unsigned int N, typename Kind> struct simd_max_aux;
+	template<typename T, unsigned int N, typename Kind> struct simd_min_aux;
 
 }
 

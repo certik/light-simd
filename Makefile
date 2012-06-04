@@ -76,7 +76,7 @@ clean:
 test_sse: \
 	$(BIN)/test_sse_packs \
 	$(BIN)/test_sse_arith \
-	$(BIN)/test_sse_math_svml
+	$(BIN)/test_sse_math_svml 
 	
 $(BIN)/test_sse_packs : $(SSE_H) tests/test_sse_packs.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_packs.cpp -o $@
@@ -86,6 +86,7 @@ $(BIN)/test_sse_arith:  $(SSE_H) tests/test_sse_arith.cpp
 	
 $(BIN)/test_sse_math_svml:  $(SSE_H) tests/test_sse_math.cpp
 	$(CXX) $(CXXFLAGS) -O2 -DLSIMD_USE_SVML tests/test_sse_math.cpp -lsvml -o $@
+	
 	
 	
 bench_sse: \
