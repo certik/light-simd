@@ -13,7 +13,7 @@
 #ifndef LSIMD_SSE_PACK_H_
 #define LSIMD_SSE_PACK_H_
 
-#include "details/sse_pack_manip.h"
+#include "details/sse_pack_bits.h"
 
 namespace lsimd
 {

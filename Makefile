@@ -43,14 +43,16 @@ COMMON_H = \
 	$(INC)/common/common_base.h \
 	$(INC)/common/simd_pack.h \
 	$(INC)/common/simd_arith.h \
-	$(INC)/common/simd_math.h
+	$(INC)/common/simd_math.h \
+	$(INC)/common/simd_vec.h 
 	
 SSE_H = $(COMMON_H) \
-	$(INC)/sse/details/sse_pack_manip.h \
+	$(INC)/sse/details/sse_pack_bits.h \
 	$(INC)/sse/sse_base.h \
 	$(INC)/sse/sse_pack.h \
 	$(INC)/sse/sse_arith.h \
 	$(INC)/sse/sse_math.h \
+	$(INC)/sse/sse_vec.h \
 	$(INC)/sse.h
 	
 
@@ -76,7 +78,8 @@ clean:
 test_sse: \
 	$(BIN)/test_sse_packs \
 	$(BIN)/test_sse_arith \
-	$(BIN)/test_sse_math_svml 
+	$(BIN)/test_sse_math_svml \
+	$(BIN)/test_sse_vecs
 	
 $(BIN)/test_sse_packs : $(SSE_H) tests/test_sse_packs.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_packs.cpp -o $@
@@ -87,6 +90,8 @@ $(BIN)/test_sse_arith:  $(SSE_H) tests/test_sse_arith.cpp
 $(BIN)/test_sse_math_svml:  $(SSE_H) tests/test_sse_math.cpp
 	$(CXX) $(CXXFLAGS) -O2 -DLSIMD_USE_SVML tests/test_sse_math.cpp -lsvml -o $@
 	
+$(BIN)/test_sse_vecs : $(SSE_H) tests/test_sse_vecs.cpp
+	$(CXX) $(CXXFLAGS) tests/test_sse_vecs.cpp -o $@
 	
 	
 bench_sse: \

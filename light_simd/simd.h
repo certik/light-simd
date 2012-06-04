@@ -17,5 +17,6 @@
 
 #include <light_simd/common/simd_arith.h>
 #include <light_simd/common/simd_math.h>
+#include <light_simd/common/simd_vec.h>
 
 #endif 

@@ -1,7 +1,7 @@
 /**
- * @file sse_pack_manip.h
+ * @file sse_pack_bits.h
  *
- * Internal implementation of entry manipulation for SSE packs
+ * Internal implementation for SSE packs
  *
  * @author Dahua Lin
  */
@@ -10,8 +10,8 @@
 #pragma once
 #endif
 
-#ifndef LSIMD_SSE_PACK_MANIP_H_
-#define LSIMD_SSE_PACK_MANIP_H_
+#ifndef LSIMD_SSE_PACK_BITS_H_
+#define LSIMD_SSE_PACK_BITS_H_
 
 #include "../sse_base.h"
 
