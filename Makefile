@@ -31,8 +31,7 @@ ifeq ($(UNAME), Darwin)
 endif
 
 CXX_B=icpc
-CXXFLAGS_B = -pedantic -march=native -mtune=native -O3 $(WARNING_FLAGS) $(CPPFLAGS) 
-
+CXXFLAGS_B=-pedantic -march=native -mtune=native -O3 $(WARNING_FLAGS) $(CPPFLAGS) 
 
 # directory configuration
 
