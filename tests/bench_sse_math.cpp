@@ -410,6 +410,7 @@ struct acosh_op
 	static void run(simd_pack<T, sse_kind> x)
 	{
 		simd_pack<T, sse_kind> r = acosh(x);
+		force_to_reg(r);
 	}
 };
 

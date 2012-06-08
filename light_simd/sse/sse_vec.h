@@ -30,7 +30,7 @@ namespace lsimd
 
 	template<> class sse_vec<f32, 1>
 	{
-	private:
+	public:
 		LSIMD_ENSURE_INLINE sse_vec(__m128 p) : m_pk(p) { }
 		LSIMD_ENSURE_INLINE sse_vec(sse_f32pk p) : m_pk(p) { }
 
@@ -127,7 +127,7 @@ namespace lsimd
 
 	template<> class sse_vec<f32, 2>
 	{
-	private:
+	public:
 		LSIMD_ENSURE_INLINE sse_vec(__m128 p) : m_pk(p) { }
 		LSIMD_ENSURE_INLINE sse_vec(sse_f32pk p) : m_pk(p) { }
 
@@ -224,7 +224,7 @@ namespace lsimd
 
 	template<> class sse_vec<f32, 3>
 	{
-	private:
+	public:
 		LSIMD_ENSURE_INLINE sse_vec(__m128 p) : m_pk(p) { }
 		LSIMD_ENSURE_INLINE sse_vec(sse_f32pk p) : m_pk(p) { }
 
@@ -321,7 +321,7 @@ namespace lsimd
 
 	template<> class sse_vec<f32, 4>
 	{
-	private:
+	public:
 		LSIMD_ENSURE_INLINE sse_vec(__m128 p) : m_pk(p) { }
 		LSIMD_ENSURE_INLINE sse_vec(sse_f32pk p) : m_pk(p) { }
 
@@ -425,7 +425,7 @@ namespace lsimd
 
 	template<> class sse_vec<f64, 1>
 	{
-	private:
+	public:
 		LSIMD_ENSURE_INLINE sse_vec(__m128d p) : m_pk(p) { }
 		LSIMD_ENSURE_INLINE sse_vec(sse_f64pk p) : m_pk(p) { }
 
@@ -522,7 +522,7 @@ namespace lsimd
 
 	template<> class sse_vec<f64, 2>
 	{
-	private:
+	public:
 		LSIMD_ENSURE_INLINE sse_vec(__m128d p) : m_pk(p) { }
 		LSIMD_ENSURE_INLINE sse_vec(sse_f64pk p) : m_pk(p) { }
 
@@ -619,7 +619,7 @@ namespace lsimd
 
 	template<> class sse_vec<f64, 3>
 	{
-	private:
+	public:
 		LSIMD_ENSURE_INLINE sse_vec(sse_f64pk pk0, sse_f64pk pk1)
 		: m_pk0(pk0), m_pk1(pk1) { }
 
@@ -739,7 +739,7 @@ namespace lsimd
 
 	template<> class sse_vec<f64, 4>
 	{
-	private:
+	public:
 		LSIMD_ENSURE_INLINE sse_vec(sse_f64pk pk0, sse_f64pk pk1)
 		: m_pk0(pk0), m_pk1(pk1) { }
 

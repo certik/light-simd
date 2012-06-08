@@ -24,14 +24,18 @@ CPPFLAGS = -I. -L$(ICC_LIBPATH)
 ifeq ($(UNAME), Linux)
 	CXX=g++
 	CXXFLAGS = -std=c++0x -pedantic -march=native $(WARNING_FLAGS) $(CPPFLAGS) 
+	CXX_B=g++
+	CXXFLAGS_B=-pedantic -march=native -mtune=native -O3 $(WARNING_FLAGS) $(CPPFLAGS) 
 endif
+
 ifeq ($(UNAME), Darwin)
 	CXX=clang++
 	CXXFLAGS = -std=c++0x -stdlib=libc++ -pedantic -march=native $(WARNING_FLAGS) $(CPPFLAGS)
+	CXX_B=icpc
+	CXXFLAGS_B=-pedantic -xsse4.2 -O3 $(WARNING_FLAGS) $(CPPFLAGS) 
 endif
 
-CXX_B=icpc
-CXXFLAGS_B=-pedantic -march=native -mtune=native -O3 $(WARNING_FLAGS) $(CPPFLAGS) 
+
 
 # directory configuration
 
