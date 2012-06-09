@@ -46,7 +46,6 @@ namespace lsimd
 
 	struct zero_t { };
 
-	struct trans_t { };
 
 	// forward declaration
 

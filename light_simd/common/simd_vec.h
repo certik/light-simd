@@ -84,9 +84,9 @@ namespace lsimd
 			return impl - rhs.impl;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec operator * (simd_vec rhs) const
+		LSIMD_ENSURE_INLINE simd_vec operator % (simd_vec rhs) const
 		{
-			return impl * rhs.impl;
+			return impl % rhs.impl;
 		}
 
 		LSIMD_ENSURE_INLINE simd_vec& operator += (simd_vec rhs)
@@ -101,9 +101,9 @@ namespace lsimd
 			return *this;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec& operator *= (simd_vec rhs)
+		LSIMD_ENSURE_INLINE simd_vec& operator %= (simd_vec rhs)
 		{
-			impl *= rhs.impl;
+			impl %= rhs.impl;
 			return *this;
 		}
 

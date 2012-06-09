@@ -288,11 +288,11 @@ bool test_mul()
 	simd_vec<T, N, sse_kind> va(a, aligned_t());
 	simd_vec<T, N, sse_kind> vb(b, aligned_t());
 
-	(va * vb).store(dst, aligned_t());
+	(va % vb).store(dst, aligned_t());
 
 	if ( !test_equal(L, dst, r) ) return false;
 
-	va *= vb;
+	va %= vb;
 	va.store(dst, aligned_t());
 
 	if ( !test_equal(L, dst, r) ) return false;

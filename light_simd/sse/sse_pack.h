@@ -474,6 +474,74 @@ namespace lsimd
 	typedef sse_pack<f32> sse_f32pk;
 	typedef sse_pack<f64> sse_f64pk;
 
+
+	// Some auxiliary routines
+
+	template<int I0, int I1, int I2, int I3>
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk shuffle(sse_f32pk a, sse_f32pk b)
+	{
+		return _mm_shuffle_ps(a.v, b.v, _MM_SHUFFLE(I3, I2, I1, I0));
+	}
+
+	template<int I0, int I1>
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk shuffle(sse_f64pk a, sse_f64pk b)
+	{
+		return _mm_shuffle_pd(a.v, b.v, _MM_SHUFFLE2(I1, I0));
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk merge_low(sse_f32pk a, sse_f32pk b)
+	{
+		return _mm_movelh_ps(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk merge_high(sse_f32pk a, sse_f32pk b)
+	{
+		return _mm_movehl_ps(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk merge_low(sse_f64pk a, sse_f64pk b)
+	{
+		return _mm_castps_pd(
+				_mm_movelh_ps(_mm_castpd_ps(a.v), _mm_castpd_ps(b.v)));
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk merge_high(sse_f64pk a, sse_f64pk b)
+	{
+		return _mm_castps_pd(
+				_mm_movehl_ps(_mm_castpd_ps(a.v), _mm_castpd_ps(b.v)));
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk unpack_low(sse_f32pk a, sse_f32pk b)
+	{
+		return _mm_unpacklo_ps(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk unpack_high(sse_f32pk a, sse_f32pk b)
+	{
+		return _mm_unpackhi_ps(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk unpack_low(sse_f64pk a, sse_f64pk b)
+	{
+		return _mm_unpacklo_pd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk unpack_high(sse_f64pk a, sse_f64pk b)
+	{
+		return _mm_unpackhi_pd(a.v, b.v);
+	}
+
+
 }
 
 #endif /* SSE_PACK_H_ */
