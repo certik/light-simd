@@ -49,13 +49,17 @@ namespace lsimd
 
 	// forward declaration
 
+	struct sse_kind { };
+
+	typedef sse_kind default_simd_kind;
+
 	template<typename T, typename Kind> struct simd;
 
-	template<typename T, typename Kind> struct simd_pack;
+	template<typename T, typename Kind=default_simd_kind> struct simd_pack;
 
-	template<typename T, int N, typename Kind> struct simd_vec;
+	template<typename T, int N, typename Kind=default_simd_kind> struct simd_vec;
 
-	template<typename T, int M, int N, typename Kind> struct simd_mat;
+	template<typename T, int M, int N, typename Kind=default_simd_kind> struct simd_mat;
 
 }
 

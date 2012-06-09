@@ -28,10 +28,6 @@ namespace lsimd
 	 *
 	 ******************************************************/
 
-	struct sse_kind { };
-
-	typedef sse_kind default_simd_kind;
-
 	template<typename T>
 	struct simd<T, sse_kind>
 	{
@@ -51,7 +47,7 @@ namespace lsimd
 	 *
 	 ******************************************************/
 
-	template<typename T, typename Kind=default_simd_kind>
+	template<typename T, typename Kind>
 	struct simd_pack
 	{
 		typedef T value_type;
