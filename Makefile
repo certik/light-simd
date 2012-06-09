@@ -51,15 +51,18 @@ COMMON_H = \
 	$(INC)/common/simd_pack.h \
 	$(INC)/common/simd_arith.h \
 	$(INC)/common/simd_math.h \
-	$(INC)/common/simd_vec.h 
+	$(INC)/common/simd_vec.h \
+	$(INC)/common/simd_mat.h
 	
 SSE_H = $(COMMON_H) \
 	$(INC)/sse/details/sse_pack_bits.h \
+	$(INC)/sse/details/sse_mat_bits_f32.h \
 	$(INC)/sse/sse_base.h \
 	$(INC)/sse/sse_pack.h \
 	$(INC)/sse/sse_arith.h \
 	$(INC)/sse/sse_math.h \
 	$(INC)/sse/sse_vec.h \
+	$(INC)/sse/sse_mat.h \
 	$(INC)/sse.h
 	
 

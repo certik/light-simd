@@ -28,7 +28,7 @@ namespace lsimd
 	};
 
 
-	template<typename T, int N, typename Kind>
+	template<typename T, int N, typename Kind=default_simd_kind>
 	struct simd_vec
 	{
 		typedef T value_type;
