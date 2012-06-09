@@ -247,6 +247,23 @@ namespace lsimd
 			return _mm_set1_ps(0.5f);
 		}
 
+		// debug
+
+		LSIMD_ENSURE_INLINE bool test_equal(f32 e0, f32 e1, f32 e2, f32 e3) const
+		{
+			return e[0] == e0 && e[1] == e1 && e[2] == e2 && e[3] == e3;
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("(");
+			std::printf(fmt, e[0]); std::printf(", ");
+			std::printf(fmt, e[1]); std::printf(", ");
+			std::printf(fmt, e[2]); std::printf(", ");
+			std::printf(fmt, e[3]);
+			std::printf(")");
+		}
+
 	};
 
 
@@ -464,6 +481,21 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE static sse_pack halfs()
 		{
 			return _mm_set1_pd(0.5);
+		}
+
+		// debug
+
+		LSIMD_ENSURE_INLINE bool test_equal(f64 e0, f64 e1) const
+		{
+			return e[0] == e0 && e[1] == e1;
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("(");
+			std::printf(fmt, e[0]); std::printf(", ");
+			std::printf(fmt, e[1]);
+			std::printf(")");
 		}
 
 	};

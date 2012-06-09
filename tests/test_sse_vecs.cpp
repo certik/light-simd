@@ -218,8 +218,6 @@ bool test_add()
 
 	LSIMD_ALIGN_SSE T a[L] = { T(1), T(2), T(3), T(4) };
 	LSIMD_ALIGN_SSE T b[L] = { T(3), T(7), T(2), T(6) };
-	LSIMD_ALIGN_SSE T dst[L] = { T(-1), T(-1), T(-1), T(-1) };
-
 
 	T r[L];
 	for (int i = 0; i < L; ++i) r[i] = T(-1);
@@ -228,14 +226,10 @@ bool test_add()
 	simd_vec<T, N, sse_kind> va(a, aligned_t());
 	simd_vec<T, N, sse_kind> vb(b, aligned_t());
 
-	(va + vb).store(dst, aligned_t());
-
-	if ( !test_equal(L, dst, r) ) return false;
+	if ( !(va + vb).impl.test_equal(r) ) return false;
 
 	va += vb;
-	va.store(dst, aligned_t());
-
-	if ( !test_equal(L, dst, r) ) return false;
+	if ( !va.impl.test_equal(r) ) return false;
 
 	return true;
 }
@@ -248,8 +242,6 @@ bool test_sub()
 
 	LSIMD_ALIGN_SSE T a[L] = { T(1), T(2), T(3), T(4) };
 	LSIMD_ALIGN_SSE T b[L] = { T(3), T(7), T(2), T(6) };
-	LSIMD_ALIGN_SSE T dst[L] = { T(-1), T(-1), T(-1), T(-1) };
-
 
 	T r[L];
 	for (int i = 0; i < L; ++i) r[i] = T(-1);
@@ -258,14 +250,10 @@ bool test_sub()
 	simd_vec<T, N, sse_kind> va(a, aligned_t());
 	simd_vec<T, N, sse_kind> vb(b, aligned_t());
 
-	(va - vb).store(dst, aligned_t());
-
-	if ( !test_equal(L, dst, r) ) return false;
+	if ( !(va - vb).impl.test_equal(r) ) return false;
 
 	va -= vb;
-	va.store(dst, aligned_t());
-
-	if ( !test_equal(L, dst, r) ) return false;
+	if ( !va.impl.test_equal(r) ) return false;
 
 	return true;
 }
@@ -278,7 +266,6 @@ bool test_mul()
 
 	LSIMD_ALIGN_SSE T a[L] = { T(1), T(2), T(3), T(4) };
 	LSIMD_ALIGN_SSE T b[L] = { T(3), T(7), T(2), T(6) };
-	LSIMD_ALIGN_SSE T dst[L] = { T(-1), T(-1), T(-1), T(-1) };
 
 
 	T r[L];
@@ -288,14 +275,10 @@ bool test_mul()
 	simd_vec<T, N, sse_kind> va(a, aligned_t());
 	simd_vec<T, N, sse_kind> vb(b, aligned_t());
 
-	(va % vb).store(dst, aligned_t());
-
-	if ( !test_equal(L, dst, r) ) return false;
+	if ( !(va % vb).impl.test_equal(r) ) return false;
 
 	va %= vb;
-	va.store(dst, aligned_t());
-
-	if ( !test_equal(L, dst, r) ) return false;
+	if ( !va.impl.test_equal(r) ) return false;
 
 	return true;
 }

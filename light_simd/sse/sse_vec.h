@@ -121,6 +121,18 @@ namespace lsimd
 		}
 
 	public:
+		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
+		{
+			return m_pk.test_equal(r[0], 0.f, 0.f, 0.f);
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("f32 [1]:\n");
+			std::printf("    m_pk = "); m_pk.dump(fmt); std::printf("\n");
+		}
+
+	public:
 		sse_f32pk m_pk;
 	};
 
@@ -215,6 +227,18 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE f32 dot(sse_vec rhs) const
 		{
 			return mul(m_pk, rhs.m_pk).partial_sum<2>();
+		}
+
+	public:
+		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
+		{
+			return m_pk.test_equal(r[0], r[1], 0.f, 0.f);
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("f32 [2]:\n");
+			std::printf("    m_pk = "); m_pk.dump(fmt); std::printf("\n");
 		}
 
 	public:
@@ -314,6 +338,19 @@ namespace lsimd
 			return mul(m_pk, rhs.m_pk).partial_sum<3>();
 		}
 
+
+	public:
+		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
+		{
+			return m_pk.test_equal(r[0], r[1], r[2], 0.f);
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("f32 [3]:\n");
+			std::printf("    m_pk = "); m_pk.dump(fmt); std::printf("\n");
+		}
+
 	public:
 		sse_f32pk m_pk;
 	};
@@ -409,6 +446,18 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE f32 dot(sse_vec rhs) const
 		{
 			return mul(m_pk, rhs.m_pk).sum();
+		}
+
+	public:
+		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
+		{
+			return m_pk.test_equal(r[0], r[1], r[2], r[3]);
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("f32 [4]:\n");
+			std::printf("    m_pk = "); m_pk.dump(fmt); std::printf("\n");
 		}
 
 	public:
@@ -516,6 +565,18 @@ namespace lsimd
 		}
 
 	public:
+		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
+		{
+			return m_pk.test_equal(r[0], 0.0);
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("f64 [1]:\n");
+			std::printf("    m_pk = "); m_pk.dump(fmt); std::printf("\n");
+		}
+
+	public:
 		sse_f64pk m_pk;
 	};
 
@@ -610,6 +671,18 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE f64 dot(sse_vec rhs) const
 		{
 			return mul(m_pk, rhs.m_pk).sum();
+		}
+
+	public:
+		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
+		{
+			return m_pk.test_equal(r[0], r[1]);
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("f64 [2]:\n");
+			std::printf("    m_pk = "); m_pk.dump(fmt); std::printf("\n");
 		}
 
 	public:
@@ -711,6 +784,19 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE f64 dot(sse_vec rhs) const
 		{
 			return (operator %(rhs)).sum();
+		}
+
+	public:
+		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
+		{
+			return m_pk0.test_equal(r[0], r[1]) && m_pk1.test_equal(r[2], 0.0);
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("f64 [3]:\n");
+			std::printf("    m_pk0 = "); m_pk0.dump(fmt); std::printf("\n");
+			std::printf("    m_pk1 = "); m_pk1.dump(fmt); std::printf("\n");
 		}
 
 	private:
@@ -831,6 +917,19 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE f64 dot(sse_vec rhs) const
 		{
 			return (operator %(rhs)).sum();
+		}
+
+	public:
+		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
+		{
+			return m_pk0.test_equal(r[0], r[1]) && m_pk1.test_equal(r[2], r[3]);
+		}
+
+		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
+		{
+			std::printf("f64 [4]:\n");
+			std::printf("    m_pk0 = "); m_pk0.dump(fmt); std::printf("\n");
+			std::printf("    m_pk1 = "); m_pk1.dump(fmt); std::printf("\n");
 		}
 
 	private:

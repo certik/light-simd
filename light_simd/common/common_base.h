@@ -17,6 +17,7 @@
 
 #include <cstddef>
 #include <stdint.h>
+#include <cstdio>
 
 namespace lsimd
 {
