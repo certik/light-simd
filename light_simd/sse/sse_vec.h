@@ -120,7 +120,7 @@ namespace lsimd
 			return _mm_cvtss_f32(_mm_mul_ss(m_pk.v, rhs.m_pk.v));
 		}
 
-	private:
+	public:
 		sse_f32pk m_pk;
 	};
 
@@ -217,7 +217,7 @@ namespace lsimd
 			return mul(m_pk, rhs.m_pk).partial_sum<2>();
 		}
 
-	private:
+	public:
 		sse_f32pk m_pk;
 	};
 
@@ -314,7 +314,7 @@ namespace lsimd
 			return mul(m_pk, rhs.m_pk).partial_sum<3>();
 		}
 
-	private:
+	public:
 		sse_f32pk m_pk;
 	};
 
@@ -411,7 +411,7 @@ namespace lsimd
 			return mul(m_pk, rhs.m_pk).sum();
 		}
 
-	private:
+	public:
 		sse_f32pk m_pk;
 	};
 
@@ -515,7 +515,7 @@ namespace lsimd
 			return _mm_cvtsd_f64(_mm_mul_sd(m_pk.v, rhs.m_pk.v));
 		}
 
-	private:
+	public:
 		sse_f64pk m_pk;
 	};
 
@@ -612,7 +612,7 @@ namespace lsimd
 			return mul(m_pk, rhs.m_pk).sum();
 		}
 
-	private:
+	public:
 		sse_f64pk m_pk;
 	};
 
@@ -731,7 +731,7 @@ namespace lsimd
 			m_pk1.partial_store<1>(x + 2);
 		}
 
-	private:
+	public:
 		sse_f64pk m_pk0;
 		sse_f64pk m_pk1;
 	};
@@ -851,7 +851,7 @@ namespace lsimd
 			m_pk1.store(x + 2, AlignT());
 		}
 
-	private:
+	public:
 		sse_f64pk m_pk0;
 		sse_f64pk m_pk1;
 	};

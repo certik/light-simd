@@ -35,6 +35,12 @@ namespace lsimd { namespace sse {
 		smat(sse_f32pk pk) : m_pk(pk) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -142,6 +148,12 @@ namespace lsimd { namespace sse {
 		smat(sse_f32pk pk0, sse_f32pk pk1) : m_pk0(pk0), m_pk1(pk1) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -267,6 +279,12 @@ namespace lsimd { namespace sse {
 		smat(sse_f32pk pk0, sse_f32pk pk1) : m_pk0(pk0), m_pk1(pk1) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -355,7 +373,7 @@ namespace lsimd { namespace sse {
 			m_pk1 = mul(m_pk1, r.m_pk1);
 		}
 
-		LSIMD_ENSURE_INLINE sse_vec<f32, 2> transform(sse_vec<f32, 3> v) const
+		LSIMD_ENSURE_INLINE sse_vec<f32, 2> transform(sse_vec<f32, 4> v) const
 		{
 			sse_f32pk p1 = unpack_low(v.m_pk, v.m_pk);
 			sse_f32pk p2 = unpack_high(v.m_pk, v.m_pk);
@@ -398,6 +416,12 @@ namespace lsimd { namespace sse {
 		smat(sse_f32pk pk0, sse_f32pk pk1) : m_pk0(pk0), m_pk1(pk1) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -519,6 +543,12 @@ namespace lsimd { namespace sse {
 		: m_pk0(pk0), m_pk1(pk1), m_pk2(pk2) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ), m_pk2( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -609,6 +639,7 @@ namespace lsimd { namespace sse {
  		}
 
 	private:
+		LSIMD_ENSURE_INLINE
 		void _load_trans(const f32 *r0, const f32 *r1, const f32 *r2)
 		{
 			sse_f32pk p0, p1, p2;
@@ -647,6 +678,12 @@ namespace lsimd { namespace sse {
 		: m_pk0(pk0), m_pk1(pk1), m_pk2(pk2), m_pk3(pk3) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ), m_pk2( zero_t() ), m_pk3( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -757,6 +794,8 @@ namespace lsimd { namespace sse {
  		}
 
 	private:
+
+		LSIMD_ENSURE_INLINE
 		void _load_trans(const f32 *r0, const f32 *r1, const f32 *r2, const f32 *r3)
 		{
 			sse_f32pk p0, p1, p2, p3;
@@ -794,6 +833,12 @@ namespace lsimd { namespace sse {
 		smat(sse_f32pk pk0, sse_f32pk pk1) : m_pk0(pk0), m_pk1(pk1) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -918,6 +963,12 @@ namespace lsimd { namespace sse {
 		: m_pk0(pk0), m_pk1(pk1), m_pk2(pk2) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ), m_pk2( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -1009,6 +1060,8 @@ namespace lsimd { namespace sse {
  		}
 
 	private:
+
+		LSIMD_ENSURE_INLINE
 		void _load_trans(const f32 *r0, const f32 *r1, const f32 *r2, const f32 * r3)
 		{
 			sse_f32pk p0, p1, p2, p3;
@@ -1048,6 +1101,12 @@ namespace lsimd { namespace sse {
 		: m_pk0(pk0), m_pk1(pk1), m_pk2(pk2), m_pk3(pk3) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		smat() { }
+
+		LSIMD_ENSURE_INLINE
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ), m_pk2( zero_t() ) { }
+
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
 		{
@@ -1158,7 +1217,9 @@ namespace lsimd { namespace sse {
  		}
 
 	private:
+
 		template<typename AlignT>
+		LSIMD_ENSURE_INLINE
 		void _load_trans(const f32 *r0, const f32 *r1, const f32 *r2, const f32 *r3, AlignT)
 		{
 			sse_f32pk p0, p1, p2, p3;

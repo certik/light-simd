@@ -17,8 +17,6 @@
 
 namespace lsimd
 {
-
-	template<typename T, int M, int N> class _sse_mat;
 	template<typename T, int M, int N> class sse_mat;
 
 
@@ -38,6 +36,12 @@ namespace lsimd
 		sse_mat(sse::smat<T, M, N> a) : intern(a) { }
 
 	public:
+		LSIMD_ENSURE_INLINE
+		sse_mat() { }
+
+		LSIMD_ENSURE_INLINE
+		sse_mat( zero_t ) : intern( zero_t() ) { }
+
 		LSIMD_ENSURE_INLINE
 		sse_mat(const f32 *x, aligned_t)
 		{
@@ -175,7 +179,7 @@ namespace lsimd
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_vec<f32, 2> operator * (sse_vec<f32, 2> v) const
+		sse_vec<f32, M> operator * (sse_vec<f32, N> v) const
 		{
 			return intern.transform(v);
 		}
