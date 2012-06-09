@@ -179,9 +179,22 @@ namespace lsimd
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_vec<f32, M> operator * (sse_vec<f32, N> v) const
+		sse_vec<T, M> operator * (sse_vec<T, N> v) const
 		{
 			return intern.transform(v);
+		}
+
+	public:
+		LSIMD_ENSURE_INLINE
+		bool test_equal(const T *r) const
+		{
+			return intern.test_equal(r);
+		}
+
+		LSIMD_ENSURE_INLINE
+		void dump(const char *fmt) const
+		{
+			intern.dump(fmt);
 		}
 
 	};

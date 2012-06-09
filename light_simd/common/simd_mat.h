@@ -38,6 +38,12 @@ namespace lsimd
 		// constructors
 
 		LSIMD_ENSURE_INLINE
+		simd_mat() { }
+
+		LSIMD_ENSURE_INLINE
+		simd_mat( zero_t ) : impl( zero_t() ) { }
+
+		LSIMD_ENSURE_INLINE
 		simd_mat( impl_type imp ) : impl(imp) { }
 
 		LSIMD_ENSURE_INLINE

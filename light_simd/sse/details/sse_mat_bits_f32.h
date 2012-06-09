@@ -254,7 +254,9 @@ namespace lsimd { namespace sse {
 			p1 = mul(p1, m_pk0);
 			p2 = mul(p2, m_pk1);
 
+			p1 = add(p1, p2);
 			p1 = add(p1, p1.dup_low());
+
 			return p1.shift_front<2>();
 		}
 
@@ -407,6 +409,7 @@ namespace lsimd { namespace sse {
 			p1 = mul(p1, m_pk0);
 			p2 = mul(p2, m_pk1);
 
+			p1 = add(p1, p2);
 			p1 = add(p1, p1.dup_low());
 			return p1.shift_front<2>();
 		}
@@ -777,14 +780,13 @@ namespace lsimd { namespace sse {
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load_trans(const f32 *x, AlignT)
 		{
-			_load_trans(x, x + 3, x + 6, x + 9);
+			_load_trans(x, x + 4, x + 8, AlignT());
 		}
 
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load_trans(const f32 *x, int ldim, AlignT)
 		{
-			const f32 *x2 = x + 2 * ldim;
-			_load_trans(x, x + ldim, x2, x2 + ldim);
+			_load_trans(x, x + ldim, x + 2 * ldim, AlignT());
 		}
 
 		template<typename AlignT>
@@ -866,9 +868,10 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
 		{
-			return  m_pk0.test_equal(r[0], r[1], r[2], r[3]) &&
-					m_pk1.test_equal(r[4], r[5], r[6], r[7]) &&
-					m_pk2.test_equal(r[8], r[9], r[10], r[11]);
+			return  m_pk0.test_equal(r[0], r[1], r[2], 0.f) &&
+					m_pk1.test_equal(r[3], r[4], r[5], 0.f) &&
+					m_pk2.test_equal(r[6], r[7], r[8], 0.f) &&
+					m_pk3.test_equal(r[9], r[10], r[11], 0.f);
 		}
 
 		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
@@ -877,27 +880,29 @@ namespace lsimd { namespace sse {
 			std::printf("    m_pk0 = "); m_pk0.dump(fmt); std::printf("\n");
 			std::printf("    m_pk1 = "); m_pk1.dump(fmt); std::printf("\n");
 			std::printf("    m_pk2 = "); m_pk2.dump(fmt); std::printf("\n");
+			std::printf("    m_pk3 = "); m_pk3.dump(fmt); std::printf("\n");
 		}
 
 	private:
 
+		template<typename AlignT>
 		LSIMD_ENSURE_INLINE
-		void _load_trans(const f32 *r0, const f32 *r1, const f32 *r2, const f32 *r3)
+		void _load_trans(const f32 *r0, const f32 *r1, const f32 *r2, AlignT)
 		{
-			sse_f32pk p0, p1, p2, p3;
+			sse_f32pk p0(r0, AlignT());
+			sse_f32pk p1(r1, AlignT());
+			sse_f32pk p2(r2, AlignT());
+			sse_f32pk pz = zero_t();
 
-			p0.partial_load<2>(r0);
-			p1.partial_load<2>(r1);
-			p2.partial_load<2>(r2);
-			p3.partial_load<2>(r3);
+			sse_f32pk u0l = unpack_low(p0, p1);
+			sse_f32pk u0h = unpack_high(p0, p1);
+			sse_f32pk u1l = unpack_low(p2, pz);
+			sse_f32pk u1h = unpack_high(p2, pz);
 
-			p0 = unpack_low(p0, p1);
-			p2 = unpack_low(p2, p3);
-
-			m_pk0 = merge_low(p0, p2);
-			m_pk1 = merge_high(p0, p2);
-
-			m_pk2.set(r0[2], r1[2], r2[2], r3[2]);
+			m_pk0 = merge_low (u0l, u1l);
+			m_pk1 = merge_high(u0l, u1l);
+			m_pk2 = merge_low (u0h, u1h);
+			m_pk3 = merge_high(u0h, u1h);
 		}
 	};
 
@@ -1221,7 +1226,7 @@ namespace lsimd { namespace sse {
 		smat() { }
 
 		LSIMD_ENSURE_INLINE
-		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ), m_pk2( zero_t() ) { }
+		smat( zero_t ) : m_pk0( zero_t() ), m_pk1( zero_t() ), m_pk2( zero_t() ), m_pk3( zero_t() ) { }
 
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
@@ -1246,7 +1251,7 @@ namespace lsimd { namespace sse {
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load_trans(const f32 *x, AlignT)
 		{
-			_load_trans(x, x + 3, x + 6, x + 9, AlignT());
+			_load_trans(x, x + 4, x + 8, x + 12, AlignT());
 		}
 
 		template<typename AlignT>
