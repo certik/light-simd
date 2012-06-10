@@ -209,7 +209,7 @@ namespace lsimd { namespace sse {
 			p0h.partial_load<1>(x + 2);
 
 			p1l.load(x + ldim, AlignT());
-			p1h.partial_load<1>(x + ldim + 1);
+			p1h.partial_load<1>(x + ldim + 2);
 
 			m_pk0 = unpack_low(p0l, p1l);
 			m_pk1 = unpack_high(p0l, p1l);
@@ -358,12 +358,12 @@ namespace lsimd { namespace sse {
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load_trans(const f64 *x, int ldim, AlignT)
 		{
-			const f64 *x2 = x + 2 * ldim;
+			const f64 *x1 = x + ldim;
 
 			sse_f64pk p0l(x, AlignT());
-			sse_f64pk p0h(x + ldim, AlignT());
-			sse_f64pk p1l(x2, AlignT());
-			sse_f64pk p1h(x2 + ldim, AlignT());
+			sse_f64pk p0h(x + 2, AlignT());
+			sse_f64pk p1l(x1, AlignT());
+			sse_f64pk p1h(x1 + 2, AlignT());
 
 			m_pk0 = unpack_low (p0l, p1l);
 			m_pk1 = unpack_high(p0l, p1l);
@@ -442,7 +442,7 @@ namespace lsimd { namespace sse {
 			sse_f64pk p0 = mul(m_pk0, v.m_pk0.broadcast<0>());
 			sse_f64pk p1 = mul(m_pk1, v.m_pk0.broadcast<1>());
 			sse_f64pk p2 = mul(m_pk2, v.m_pk1.broadcast<0>());
-			sse_f64pk p3 = mul(m_pk2, v.m_pk1.broadcast<1>());
+			sse_f64pk p3 = mul(m_pk3, v.m_pk1.broadcast<1>());
 
 			p0 = add(p0, p1);
 			p2 = add(p2, p3);
@@ -798,7 +798,7 @@ namespace lsimd { namespace sse {
 			m_pk1l.store(x1, AlignT());
 			m_pk1h.partial_store<1>(x1 + 2);
 			m_pk2l.store(x2, AlignT());
-			m_pk2l.partial_store<1>(x2 + 2);
+			m_pk2h.partial_store<1>(x2 + 2);
 		}
 
 	public:
@@ -1017,9 +1017,9 @@ namespace lsimd { namespace sse {
 			m_pk1l.store(x1, AlignT());
 			m_pk1h.partial_store<1>(x1 + 2);
 			m_pk2l.store(x2, AlignT());
-			m_pk2l.partial_store<1>(x2 + 2);
-			m_pk2l.store(x3, AlignT());
-			m_pk2l.partial_store<1>(x3 + 2);
+			m_pk2h.partial_store<1>(x2 + 2);
+			m_pk3l.store(x3, AlignT());
+			m_pk3h.partial_store<1>(x3 + 2);
 		}
 
 	public:
@@ -1047,7 +1047,7 @@ namespace lsimd { namespace sse {
 					mul(m_pk0l, r.m_pk0l), mul(m_pk0h, r.m_pk0h),
 					mul(m_pk1l, r.m_pk1l), mul(m_pk1h, r.m_pk1h),
 					mul(m_pk2l, r.m_pk2l), mul(m_pk2h, r.m_pk2h),
-					mul(m_pk3l, r.m_pk2l), mul(m_pk3h, r.m_pk3h));
+					mul(m_pk3l, r.m_pk3l), mul(m_pk3h, r.m_pk3h));
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
@@ -1271,12 +1271,12 @@ namespace lsimd { namespace sse {
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void store(f64 *x, int ldim, AlignT) const
 		{
-			f64 *x2 = x + ldim * 2;
+			f64 *x1 = x + ldim;
 
 			m_pk0l.store(x, AlignT());
-			m_pk0h.store(x + ldim, AlignT());
-			m_pk1l.store(x2, AlignT());
-			m_pk1h.store(x2 + ldim, AlignT());
+			m_pk0h.store(x + 2, AlignT());
+			m_pk1l.store(x1, AlignT());
+			m_pk1h.store(x1 + 2, AlignT());
 		}
 
 	public:
@@ -1332,8 +1332,8 @@ namespace lsimd { namespace sse {
 			sse_f64pk p0h = mul(m_pk0h, v0);
 
 			sse_f64pk v1 = v.m_pk.broadcast<1>();
-			sse_f64pk p1l = mul(m_pk1l, v0);
-			sse_f64pk p1h = mul(m_pk1h, v0);
+			sse_f64pk p1l = mul(m_pk1l, v1);
+			sse_f64pk p1h = mul(m_pk1h, v1);
 
 			sse_f64pk pl = add(p0l, p1l);
 			sse_f64pk ph = add(p0h, p1h);
@@ -1742,9 +1742,9 @@ namespace lsimd { namespace sse {
 			m_pk1l.store(x1,     AlignT());
 			m_pk1h.store(x1 + 2, AlignT());
 			m_pk2l.store(x2,     AlignT());
-			m_pk2l.store(x2 + 2, AlignT());
-			m_pk2l.store(x3,     AlignT());
-			m_pk2l.store(x3 + 2, AlignT());
+			m_pk2h.store(x2 + 2, AlignT());
+			m_pk3l.store(x3,     AlignT());
+			m_pk3h.store(x3 + 2, AlignT());
 		}
 
 	public:
@@ -1772,7 +1772,7 @@ namespace lsimd { namespace sse {
 					mul(m_pk0l, r.m_pk0l), mul(m_pk0h, r.m_pk0h),
 					mul(m_pk1l, r.m_pk1l), mul(m_pk1h, r.m_pk1h),
 					mul(m_pk2l, r.m_pk2l), mul(m_pk2h, r.m_pk2h),
-					mul(m_pk3l, r.m_pk2l), mul(m_pk3h, r.m_pk3h));
+					mul(m_pk3l, r.m_pk3l), mul(m_pk3h, r.m_pk3h));
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)

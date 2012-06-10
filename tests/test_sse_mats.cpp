@@ -99,11 +99,7 @@ bool test_load()
 		for (int i = 0; i < M; ++i) br[i + j * M] = src[i + j * LDa];
 
 	simd_mat<T, M, N, sse_kind> ba(src, LDa, aligned_t());
-	if (!ba.impl.test_equal(br))
-	{
-		ba.impl.dump("%4g");
-		return false;
-	}
+	if (!ba.impl.test_equal(br)) return false;
 
 	for (int j = 0; j < N; ++j)
 		for (int i = 0; i < M; ++i) br[i + j * M] = src[1 + i + j * LDu];
@@ -281,10 +277,10 @@ bool do_tests()
 {
 	TEST_ITEM( zero )
 	TEST_ITEM( load )
-	// TEST_ITEM( store )
-	// TEST_ITEM( load_trans )
-	// TEST_ITEM( arith )
-	// TEST_ITEM( mtimes )
+	TEST_ITEM( store )
+	TEST_ITEM( load_trans )
+	TEST_ITEM( arith )
+	TEST_ITEM( mtimes )
 
 	return true;
 }
@@ -294,7 +290,6 @@ bool do_all_tests()
 {
 	bool passed = true;
 
-	/*
 	std::printf("Tests of f32 [2 x 2] \n");
 	std::printf("==============================\n");
 	passed &= do_tests<f32, 2, 2>();
@@ -339,7 +334,6 @@ bool do_all_tests()
 	std::printf("==============================\n");
 	passed &= do_tests<f32, 4, 4>();
 	std::printf("\n");
-*/
 
 
 	std::printf("Tests of f64 [2 x 2] \n");
