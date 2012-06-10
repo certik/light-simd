@@ -50,15 +50,13 @@ inline void bench(unsigned repeat_times)
 
 	double cpv = double(cs1) / (double(repeat_times) * double(num_vecs));
 
-	std::printf("\t%-10s:  %.1f cycles / vec\n", op1.name(), cpv);
+	std::printf("\tf%d x %d:  %.1f cycles / vec\n", (int)(sizeof(T) * 8), N, cpv);
 }
 
 
 template<typename T, int N>
 struct addcp_op
 {
-	static const unsigned int Len = arr_len / 4;
-
 	const char *name() const { return "add-copy"; }
 
 	LSIMD_ENSURE_INLINE
@@ -67,7 +65,7 @@ struct addcp_op
 		const T *src = data_s<T>::src();
 		T *dst = data_s<T>::dst();
 
-		for (unsigned i = 0; i < Len; ++i)
+		for (unsigned i = 0; i < num_vecs; ++i)
 		{
 			simd_vec<T, N, sse_kind> v(src + i * 4, aligned_t());
 			simd_vec<T, N, sse_kind> v2(dst + i * 4, aligned_t());
@@ -81,8 +79,6 @@ struct addcp_op
 template<typename T, int N>
 struct ldsum_op
 {
-	static const unsigned int Len = arr_len / 4;
-
 	const char *name() const { return "load-sum"; }
 
 	LSIMD_ENSURE_INLINE
@@ -90,7 +86,7 @@ struct ldsum_op
 	{
 		const T *src = data_s<T>::src();
 
-		for (unsigned i = 0; i < Len; ++i)
+		for (unsigned i = 0; i < num_vecs; ++i)
 		{
 			simd_vec<T, N, sse_kind> v(src + i * 4, aligned_t());
 
@@ -104,8 +100,6 @@ struct ldsum_op
 template<typename T, int N>
 struct lddot_op
 {
-	static const unsigned int Len = arr_len / 4;
-
 	const char *name() const { return "load-dot"; }
 
 	LSIMD_ENSURE_INLINE
@@ -113,7 +107,7 @@ struct lddot_op
 	{
 		const T *src = data_s<T>::src();
 
-		for (unsigned i = 0; i < Len; ++i)
+		for (unsigned i = 0; i < num_vecs; ++i)
 		{
 			simd_vec<T, N, sse_kind> v(src + i * 4, aligned_t());
 
@@ -125,17 +119,28 @@ struct lddot_op
 
 
 
-template<typename T, int N>
+template<template<typename U, int M> class OpT>
 void do_bench()
 {
-	const unsigned int rtimes = 4000000 / sizeof(T);
+	const unsigned int rt_f = 2000000;
+	const unsigned int rt_d = rt_f / 2;
 
-	std::printf("Benchmarks on f%lu x %d\n", sizeof(T) * 8, N);
+	OpT<f32,1> op0;
+
+	std::printf("Benchmarks on %s\n", op0.name());
 	std::printf("================================\n");
 
-	bench<T, N, addcp_op>(rtimes);
-	bench<T, N, ldsum_op>(rtimes);
-	bench<T, N, lddot_op>(rtimes);
+	bench<f32, 1, OpT>(rt_f);
+	bench<f32, 2, OpT>(rt_f);
+	bench<f32, 3, OpT>(rt_f);
+	bench<f32, 4, OpT>(rt_f);
+
+	std::printf("\t--------------------------\n");
+
+	bench<f64, 1, OpT>(rt_d);
+	bench<f64, 2, OpT>(rt_d);
+	bench<f64, 3, OpT>(rt_d);
+	bench<f64, 4, OpT>(rt_d);
 
 	std::printf("\n");
 }
@@ -146,16 +151,9 @@ int main(int argc, char *argv[])
 	fill_rand(arr_len, af, 0.f, 1.f);
 	fill_rand(arr_len, ad, 0.0, 1.0);
 
-	do_bench<f32, 1>();
-	do_bench<f32, 2>();
-	do_bench<f32, 3>();
-	do_bench<f32, 4>();
-
-	do_bench<f64, 1>();
-	do_bench<f64, 2>();
-	do_bench<f64, 3>();
-	do_bench<f64, 4>();
-
+	do_bench<addcp_op>();
+	do_bench<ldsum_op>();
+	do_bench<lddot_op>();
 }
 
 
