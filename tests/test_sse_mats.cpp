@@ -12,7 +12,7 @@
 using namespace lsimd;
 
 // explicit instantiation for thorough syntax check
-
+/*
 template class lsimd::sse_mat<f32, 2, 2>;
 template class lsimd::sse_mat<f32, 2, 3>;
 template class lsimd::sse_mat<f32, 2, 4>;
@@ -22,6 +22,17 @@ template class lsimd::sse_mat<f32, 3, 4>;
 template class lsimd::sse_mat<f32, 4, 2>;
 template class lsimd::sse_mat<f32, 4, 3>;
 template class lsimd::sse_mat<f32, 4, 4>;
+
+template class lsimd::sse_mat<f64, 2, 2>;
+template class lsimd::sse_mat<f64, 2, 3>;
+template class lsimd::sse_mat<f64, 2, 4>;
+template class lsimd::sse_mat<f64, 3, 2>;
+template class lsimd::sse_mat<f64, 3, 3>;
+template class lsimd::sse_mat<f64, 3, 4>;
+template class lsimd::sse_mat<f64, 4, 2>;
+template class lsimd::sse_mat<f64, 4, 3>;
+template class lsimd::sse_mat<f64, 4, 4>;
+
 
 template struct lsimd::simd_mat<f32, 2, 2, sse_kind>;
 template struct lsimd::simd_mat<f32, 2, 3, sse_kind>;
@@ -33,6 +44,16 @@ template struct lsimd::simd_mat<f32, 4, 2, sse_kind>;
 template struct lsimd::simd_mat<f32, 4, 3, sse_kind>;
 template struct lsimd::simd_mat<f32, 4, 4, sse_kind>;
 
+template struct lsimd::simd_mat<f64, 2, 2, sse_kind>;
+template struct lsimd::simd_mat<f64, 2, 3, sse_kind>;
+template struct lsimd::simd_mat<f64, 2, 4, sse_kind>;
+template struct lsimd::simd_mat<f64, 3, 2, sse_kind>;
+template struct lsimd::simd_mat<f64, 3, 3, sse_kind>;
+template struct lsimd::simd_mat<f64, 3, 4, sse_kind>;
+template struct lsimd::simd_mat<f64, 4, 2, sse_kind>;
+template struct lsimd::simd_mat<f64, 4, 3, sse_kind>;
+template struct lsimd::simd_mat<f64, 4, 4, sse_kind>;
+*/
 
 #define TEST_ITEM( name ) \
 	if ( test_##name<T, M, N>() ) { std::printf("Tests on %-16s: passed\n", #name);  } \
@@ -50,7 +71,7 @@ bool test_zero()
 	T r[MaxArrLen];
 	for (int i = 0; i < MaxArrLen; ++i) r[i] = T(0);
 
-	simd_mat<f32, M, N, sse_kind> a = zero_t();
+	simd_mat<T, M, N, sse_kind> a = zero_t();
 
 	if (!a.impl.test_equal(r)) return false;
 
@@ -65,10 +86,10 @@ bool test_load()
 	LSIMD_ALIGN_SSE T src[MaxArrLen];
 	for (int i = 0; i < MaxArrLen; ++i) src[i] = T(i+1);
 
-	simd_mat<f32, M, N, sse_kind> aa(src, aligned_t());
+	simd_mat<T, M, N, sse_kind> aa(src, aligned_t());
 	if (!aa.impl.test_equal(src)) return false;
 
-	simd_mat<f32, M, N, sse_kind> au(src + 1, unaligned_t());
+	simd_mat<T, M, N, sse_kind> au(src + 1, unaligned_t());
 	if (!au.impl.test_equal(src+1)) return false;
 
 
@@ -77,13 +98,17 @@ bool test_load()
 	for (int j = 0; j < N; ++j)
 		for (int i = 0; i < M; ++i) br[i + j * M] = src[i + j * LDa];
 
-	simd_mat<f32, M, N, sse_kind> ba(src, LDa, aligned_t());
-	if (!ba.impl.test_equal(br)) return false;
+	simd_mat<T, M, N, sse_kind> ba(src, LDa, aligned_t());
+	if (!ba.impl.test_equal(br))
+	{
+		ba.impl.dump("%4g");
+		return false;
+	}
 
 	for (int j = 0; j < N; ++j)
 		for (int i = 0; i < M; ++i) br[i + j * M] = src[1 + i + j * LDu];
 
-	simd_mat<f32, M, N, sse_kind> bu(src+1, LDu, unaligned_t());
+	simd_mat<T, M, N, sse_kind> bu(src+1, LDu, unaligned_t());
 	if (!bu.impl.test_equal(br)) return false;
 
 	return true;
@@ -100,7 +125,7 @@ bool test_store()
 	T dd[MaxArrLen];
 	T r[MaxArrLen];
 
-	simd_mat<f32, M, N, sse_kind> a(src, aligned_t());
+	simd_mat<T, M, N, sse_kind> a(src, aligned_t());
 	if (!a.impl.test_equal(src)) return false;
 
 	// store continuous align
@@ -156,7 +181,7 @@ bool test_load_trans()
 	for (int i = 0; i < MaxArrLen; ++i) src[i] = T(i+1);
 	T r[M * N];
 
-	simd_mat<f32, M, N, sse_kind> a;
+	simd_mat<T, M, N, sse_kind> a;
 
 	a.load_trans(src, aligned_t());
 
@@ -256,10 +281,10 @@ bool do_tests()
 {
 	TEST_ITEM( zero )
 	TEST_ITEM( load )
-	TEST_ITEM( store )
-	TEST_ITEM( load_trans )
-	TEST_ITEM( arith )
-	TEST_ITEM( mtimes )
+	// TEST_ITEM( store )
+	// TEST_ITEM( load_trans )
+	// TEST_ITEM( arith )
+	// TEST_ITEM( mtimes )
 
 	return true;
 }
@@ -269,6 +294,7 @@ bool do_all_tests()
 {
 	bool passed = true;
 
+	/*
 	std::printf("Tests of f32 [2 x 2] \n");
 	std::printf("==============================\n");
 	passed &= do_tests<f32, 2, 2>();
@@ -313,9 +339,57 @@ bool do_all_tests()
 	std::printf("==============================\n");
 	passed &= do_tests<f32, 4, 4>();
 	std::printf("\n");
+*/
+
+
+	std::printf("Tests of f64 [2 x 2] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 2, 2>();
+	std::printf("\n");
+
+	std::printf("Tests of f64 [2 x 3] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 2, 3>();
+	std::printf("\n");
+
+	std::printf("Tests of f64 [2 x 4] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 2, 4>();
+	std::printf("\n");
+
+	std::printf("Tests of f64 [3 x 2] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 3, 2>();
+	std::printf("\n");
+
+	std::printf("Tests of f64 [3 x 3] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 3, 3>();
+	std::printf("\n");
+
+	std::printf("Tests of f64 [3 x 4] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 3, 4>();
+	std::printf("\n");
+
+	std::printf("Tests of f64 [4 x 2] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 4, 2>();
+	std::printf("\n");
+
+	std::printf("Tests of f64 [4 x 3] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 4, 3>();
+	std::printf("\n");
+
+	std::printf("Tests of f64 [4 x 4] \n");
+	std::printf("==============================\n");
+	passed &= do_tests<f64, 4, 4>();
+	std::printf("\n");
 
 	return passed;
 }
+
 
 
 int main(int argc, char *argv[])

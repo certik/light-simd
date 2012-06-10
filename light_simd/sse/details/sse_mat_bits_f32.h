@@ -10,8 +10,8 @@
 #pragma once
 #endif
 
-#ifndef SSE_MAT_BITS_F32_H_
-#define SSE_MAT_BITS_F32_H_
+#ifndef LSIMD_SSE_MAT_BITS_F32_H_
+#define LSIMD_SSE_MAT_BITS_F32_H_
 
 #include "../sse_vec.h"
 

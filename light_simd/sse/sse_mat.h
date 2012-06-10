@@ -14,6 +14,7 @@
 #define LSIMD_SSE_MAT_H_
 
 #include "details/sse_mat_bits_f32.h"
+#include "details/sse_mat_bits_f64.h"
 
 namespace lsimd
 {
@@ -43,97 +44,97 @@ namespace lsimd
 		sse_mat( zero_t ) : intern( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		sse_mat(const f32 *x, aligned_t)
+		sse_mat(const T *x, aligned_t)
 		{
 			intern.load(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat(const f32 *x, unaligned_t)
+		sse_mat(const T *x, unaligned_t)
 		{
 			intern.load(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat(const f32 *x, int ldim, aligned_t)
+		sse_mat(const T *x, int ldim, aligned_t)
 		{
 			intern.load(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat(const f32 *x, int ldim, unaligned_t)
+		sse_mat(const T *x, int ldim, unaligned_t)
 		{
 			intern.load(x, ldim, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load(const f32 *x, aligned_t)
+		void load(const T *x, aligned_t)
 		{
 			intern.load(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load(const f32 *x, unaligned_t)
+		void load(const T *x, unaligned_t)
 		{
 			intern.load(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load(const f32 *x, int ldim, aligned_t)
+		void load(const T *x, int ldim, aligned_t)
 		{
 			intern.load(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load(const f32 *x, int ldim, unaligned_t)
+		void load(const T *x, int ldim, unaligned_t)
 		{
 			intern.load(x, ldim, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load_trans(const f32 *x, aligned_t)
+		void load_trans(const T *x, aligned_t)
 		{
 			intern.load_trans(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load_trans(const f32 *x, unaligned_t)
+		void load_trans(const T *x, unaligned_t)
 		{
 			intern.load_trans(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load_trans(const f32 *x, int ldim, aligned_t)
+		void load_trans(const T *x, int ldim, aligned_t)
 		{
 			intern.load_trans(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load_trans(const f32 *x, int ldim, unaligned_t)
+		void load_trans(const T *x, int ldim, unaligned_t)
 		{
 			intern.load_trans(x, ldim, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void store(f32 *x, aligned_t) const
+		void store(T *x, aligned_t) const
 		{
 			intern.store(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void store(f32 *x, unaligned_t) const
+		void store(T *x, unaligned_t) const
 		{
 			intern.store(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void store(f32 *x, int ldim, aligned_t) const
+		void store(T *x, int ldim, aligned_t) const
 		{
 			intern.store(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void store(f32 *x, int ldim, unaligned_t) const
+		void store(T *x, int ldim, unaligned_t) const
 		{
 			intern.store(x, ldim, unaligned_t());
 		}

@@ -536,20 +536,6 @@ namespace lsimd
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk merge_low(sse_f64pk a, sse_f64pk b)
-	{
-		return _mm_castps_pd(
-				_mm_movelh_ps(_mm_castpd_ps(a.v), _mm_castpd_ps(b.v)));
-	}
-
-	LSIMD_ENSURE_INLINE
-	inline sse_f64pk merge_high(sse_f64pk a, sse_f64pk b)
-	{
-		return _mm_castps_pd(
-				_mm_movehl_ps(_mm_castpd_ps(b.v), _mm_castpd_ps(a.v)));
-	}
-
-	LSIMD_ENSURE_INLINE
 	inline sse_f32pk unpack_low(sse_f32pk a, sse_f32pk b)
 	{
 		return _mm_unpacklo_ps(a.v, b.v);

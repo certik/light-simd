@@ -47,92 +47,92 @@ namespace lsimd
 		simd_mat( impl_type imp ) : impl(imp) { }
 
 		LSIMD_ENSURE_INLINE
-		simd_mat(const f32 *x, aligned_t)
+		simd_mat(const T *x, aligned_t)
 		: impl(x, aligned_t()) { }
 
 		LSIMD_ENSURE_INLINE
-		simd_mat(const f32 *x, unaligned_t)
+		simd_mat(const T *x, unaligned_t)
 		: impl(x, unaligned_t()) { }
 
 		LSIMD_ENSURE_INLINE
-		simd_mat(const f32 *x, int ldim, aligned_t)
+		simd_mat(const T *x, int ldim, aligned_t)
 		: impl(x, ldim, aligned_t()) { }
 
 		LSIMD_ENSURE_INLINE
-		simd_mat(const f32 *x, int ldim, unaligned_t)
+		simd_mat(const T *x, int ldim, unaligned_t)
 		: impl(x, ldim, unaligned_t()) { }
 
 
 		// load / store
 
 		LSIMD_ENSURE_INLINE
-		void load(const f32 *x, aligned_t)
+		void load(const T *x, aligned_t)
 		{
 			impl.load(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load(const f32 *x, unaligned_t)
+		void load(const T *x, unaligned_t)
 		{
 			impl.load(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load(const f32 *x, int ldim, aligned_t)
+		void load(const T *x, int ldim, aligned_t)
 		{
 			impl.load(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load(const f32 *x, int ldim, unaligned_t)
+		void load(const T *x, int ldim, unaligned_t)
 		{
 			impl.load(x, ldim, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load_trans(const f32 *x, aligned_t)
+		void load_trans(const T *x, aligned_t)
 		{
 			impl.load_trans(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load_trans(const f32 *x, unaligned_t)
+		void load_trans(const T *x, unaligned_t)
 		{
 			impl.load_trans(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load_trans(const f32 *x, int ldim, aligned_t)
+		void load_trans(const T *x, int ldim, aligned_t)
 		{
 			impl.load_trans(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void load_trans(const f32 *x, int ldim, unaligned_t)
+		void load_trans(const T *x, int ldim, unaligned_t)
 		{
 			impl.load_trans(x, ldim, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void store(f32 *x, aligned_t) const
+		void store(T *x, aligned_t) const
 		{
 			impl.store(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void store(f32 *x, unaligned_t) const
+		void store(T *x, unaligned_t) const
 		{
 			impl.store(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void store(f32 *x, int ldim, aligned_t) const
+		void store(T *x, int ldim, aligned_t) const
 		{
 			impl.store(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
-		void store(f32 *x, int ldim, unaligned_t) const
+		void store(T *x, int ldim, unaligned_t) const
 		{
 			impl.store(x, ldim, unaligned_t());
 		}
@@ -183,7 +183,7 @@ namespace lsimd
 		// linear algebra
 
 		LSIMD_ENSURE_INLINE
-		simd_vec<f32, M> operator * (simd_vec<f32, N> v) const
+		simd_vec<T, M> operator * (simd_vec<T, N> v) const
 		{
 			return impl * v.impl;
 		}
