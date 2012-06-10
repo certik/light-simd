@@ -51,7 +51,7 @@ inline void bench(unsigned repeat_times)
 
 	double cpv = double(cs1) / (double(repeat_times) * double(num_mats));
 
-	std::printf("\tf%d %d x %d:  %4.1f cycles / mat ==> %.2f scalar-op / cycle\n",
+	std::printf("\tf%d %d x %d:  %4.1f cycles / mat ==> %.1f scalar-op / cycle\n",
 			(int)(sizeof(T) * 8), M, N, cpv, op1.scalar_ops() / cpv);
 }
 
@@ -116,11 +116,11 @@ struct mtimes_op
 		const T *src = data_s<T>::src();
 		T *dst = data_s<T>::dst();
 
+		simd_mat<T, M, N, sse_kind> a;
+		a.load(src, aligned_t());
+
 		for (unsigned i = 0; i < num_mats; ++i)
 		{
-			simd_mat<T, M, N, sse_kind> a;
-			a.load(src + i * step_size, aligned_t());
-
 			simd_vec<T, N, sse_kind> v;
 			v.load(src + i * step_size, aligned_t());
 
@@ -152,7 +152,7 @@ void do_bench()
 	bench<f32, 4, 3, OpT>(rt_f);
 	bench<f32, 4, 4, OpT>(rt_f);
 
-	std::printf("\t--------------------------------------------------------\n");
+	std::printf("\t-------------------------------------------------------\n");
 
 	bench<f64, 2, 2, OpT>(rt_d);
 	bench<f64, 2, 3, OpT>(rt_d);
