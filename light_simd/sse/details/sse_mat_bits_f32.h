@@ -129,6 +129,12 @@ namespace lsimd { namespace sse {
 		}
 
 	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk.e[0] + m_pk.e[3];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
 		{
 			return m_pk.test_equal(r[0], r[1], r[2], r[3]);
@@ -267,6 +273,12 @@ namespace lsimd { namespace sse {
 			p1 = add(p1, p1.dup_low());
 
 			return p1.shift_front<2>();
+		}
+
+	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk0.e[0] + m_pk0.e[3];
 		}
 
 	public:
@@ -433,6 +445,12 @@ namespace lsimd { namespace sse {
 		}
 
 	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk0.e[0] + m_pk0.e[3];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
 		{
 			return  m_pk0.test_equal(r[0], r[1], r[2], r[3]) &&
@@ -592,6 +610,12 @@ namespace lsimd { namespace sse {
  		}
 
 	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
 		{
 			return  m_pk0.test_equal(r[0], r[1], r[2], 0.f) &&
@@ -732,6 +756,12 @@ namespace lsimd { namespace sse {
 			sse_f32pk p2 = mul(m_pk2, v.m_pk.broadcast<2>());
 			return add(add(p0, p1), p2);
  		}
+
+	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1] + m_pk2.e[2];
+		}
 
 	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
@@ -913,6 +943,12 @@ namespace lsimd { namespace sse {
  		}
 
 	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1] + m_pk2.e[2];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
 		{
 			return  m_pk0.test_equal(r[0], r[1], r[2], 0.f) &&
@@ -1090,6 +1126,12 @@ namespace lsimd { namespace sse {
  		}
 
 	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
 		{
 			return  m_pk0.test_equal(r[0], r[1], r[2], r[3]) &&
@@ -1231,6 +1273,12 @@ namespace lsimd { namespace sse {
 			sse_f32pk p2 = mul(m_pk2, v.m_pk.broadcast<2>());
 			return add(add(p0, p1), p2);
  		}
+
+	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1] + m_pk2.e[2];
+		}
 
 	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
@@ -1413,6 +1461,12 @@ namespace lsimd { namespace sse {
 
 			return add(add(p0, p1), add(p2, p3));
  		}
+
+	public:
+		LSIMD_ENSURE_INLINE f32 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1] + m_pk2.e[2] + m_pk3.e[3];
+		}
 
 	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const

@@ -188,6 +188,12 @@ namespace lsimd
 			return impl * v.impl;
 		}
 
+		LSIMD_ENSURE_INLINE
+		T trace() const
+		{
+			return impl.trace();
+		}
+
 	};
 
 }

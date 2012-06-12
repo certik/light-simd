@@ -244,6 +244,25 @@ GCASE2( mtimes )
 }
 
 
+GCASE2( trace )
+{
+	LSIMD_ALIGN_SSE T sa[MaxArrLen];
+	for (int i = 0; i < MaxArrLen; ++i) sa[i] = T(i+1);
+
+	T t(0);
+	int d = (M < N ? M : N);
+
+	for (int i = 0; i < d; ++i)
+	{
+		t += sa[i + i * M];
+	}
+
+	simd_mat<T, M, N, sse_kind> a(sa, aligned_t());
+	ASSERT_EQ( a.trace(), t );
+}
+
+
+
 template<template<typename T, int M, int N> class H>
 test_pack* make_tpack( const char *name )
 {
@@ -291,6 +310,7 @@ void lsimd::add_test_packs()
 	ADD_TEST( load_trans );
 	ADD_TEST( arith );
 	ADD_TEST( mtimes );
+	ADD_TEST( trace );
 }
 
 

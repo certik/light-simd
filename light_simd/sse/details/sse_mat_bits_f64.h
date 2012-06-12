@@ -140,6 +140,12 @@ namespace lsimd { namespace sse {
  		}
 
 	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
 		{
 			return  m_pk0.test_equal(r[0], r[1]) &&
@@ -297,6 +303,12 @@ namespace lsimd { namespace sse {
 			sse_f64pk p2 = mul(m_pk2, v.m_pk1.broadcast<0>());
 			return add(add(p0, p1), p2);
  		}
+
+	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1];
+		}
 
 	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
@@ -481,6 +493,12 @@ namespace lsimd { namespace sse {
  		}
 
 	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0.e[0] + m_pk1.e[1];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
 		{
 			return  m_pk0.test_equal(r[0], r[1]) &&
@@ -658,6 +676,12 @@ namespace lsimd { namespace sse {
 
 			return sse_vec<f64, 3>(pl, ph);
  		}
+
+	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0l.e[0] + m_pk1l.e[1];
+		}
 
 	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
@@ -929,6 +953,12 @@ namespace lsimd { namespace sse {
  		}
 
 	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0l.e[0] + m_pk1l.e[1] + m_pk2h.e[0];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
 		{
 			return  m_pk0l.test_equal(r[0], r[1]) &&
@@ -1183,6 +1213,12 @@ namespace lsimd { namespace sse {
  		}
 
 	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0l.e[0] + m_pk1l.e[1] + m_pk2h.e[0];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
 		{
 			return  m_pk0l.test_equal(r[0], r[1]) &&
@@ -1416,6 +1452,12 @@ namespace lsimd { namespace sse {
 
 			return sse_vec<f64, 4>(pl, ph);
  		}
+
+	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0l.e[0] + m_pk1l.e[1];
+		}
 
 	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
@@ -1689,6 +1731,12 @@ namespace lsimd { namespace sse {
  		}
 
 	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0l.e[0] + m_pk1l.e[1] + m_pk2h.e[0];
+		}
+
+	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
 		{
 			return  m_pk0l.test_equal(r[0], r[1]) &&
@@ -1942,6 +1990,12 @@ namespace lsimd { namespace sse {
 
 			return sse_vec<f64, 4>(pl, ph);
  		}
+
+	public:
+		LSIMD_ENSURE_INLINE f64 trace() const
+		{
+			return m_pk0l.e[0] + m_pk1l.e[1] + m_pk2h.e[0] + m_pk3h.e[1];
+		}
 
 	public:
 		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const

@@ -185,6 +185,12 @@ namespace lsimd
 			return intern.transform(v);
 		}
 
+		LSIMD_ENSURE_INLINE
+		T trace() const
+		{
+			return intern.trace();
+		}
+
 	public:
 		LSIMD_ENSURE_INLINE
 		bool test_equal(const T *r) const
