@@ -108,7 +108,7 @@ $(BIN)/test_sse_vecs: $(SSE_H) tests/test_sse_vecs.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_vecs.cpp $(TMAIN) -o $@
 	
 $(BIN)/test_sse_mats: $(SSE_H) tests/test_sse_mats.cpp
-	$(CXX) $(CXXFLAGS) tests/test_sse_mats.cpp -o $@
+	$(CXX) $(CXXFLAGS) tests/test_sse_mats.cpp $(TMAIN) -o $@
 		
 	
 bench_sse: \

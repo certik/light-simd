@@ -24,6 +24,14 @@
 
 namespace lsimd
 {
+
+	/********************************************
+	 *
+	 *  Test case bases
+	 *
+	 ********************************************/
+
+
 	extern ::ltest::test_suite lsimd_main_suite;
 	extern void add_test_packs();
 
@@ -61,6 +69,30 @@ namespace lsimd
 			return m_name;
 		}
 	};
+
+	template<typename T, int M, int N>
+	class tcase2_base : public ltest::test_case
+	{
+		char m_name[128];
+
+	public:
+		tcase2_base(const char *nam)
+		{
+			std::sprintf(m_name, "%s [f%d x %d x %d]", nam, int(8 * sizeof(T)), M, N);
+		}
+
+		const char *name() const
+		{
+			return m_name;
+		}
+	};
+
+
+	/********************************************
+	 *
+	 *  Array functions
+	 *
+	 ********************************************/
 
 
 	template<typename T>
@@ -285,6 +317,13 @@ namespace lsimd
 }
 
 
+/********************************************
+ *
+ *  TUseful macros for testing
+ *
+ ********************************************/
+
+
 #define ASSERT_SIMD_EQ( v, r ) \
 	if ( !(v).impl.test_equal(r) ) throw ::ltest::assertion_failure(__FILE__, __LINE__, #v " == " #r)
 
@@ -327,6 +366,17 @@ namespace lsimd
 	}; \
 	template<typename T> \
 	void tname##_tests<T, n>::run()
+
+#define GCASE2( tname ) \
+	template<typename T, int M, int N> \
+	class tname##_tests : public tcase2_base<T, M, N> { \
+	public: \
+		tname##_tests() : tcase2_base<T, M, N>( #tname ) { } \
+		void run(); \
+	}; \
+	template<typename T, int M, int N> \
+	void tname##_tests<T, M, N>::run()
+
 
 
 #endif /* TEST_AUX_H_ */
