@@ -260,6 +260,10 @@ namespace lsimd
 }
 
 
+#define ASSERT_SIMD_EQ( v, r ) \
+	if ( !(v).impl.test_equal(r) ) throw ::ltest::assertion_failure(__FILE__, __LINE__, #v " == " #r)
+
+
 #define GCASE( tname ) \
 	template<typename T> \
 	class tname##_tests : public tcase_base<T> { \

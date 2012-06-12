@@ -254,6 +254,11 @@ namespace lsimd
 			return e[0] == e0 && e[1] == e1 && e[2] == e2 && e[3] == e3;
 		}
 
+		LSIMD_ENSURE_INLINE bool test_equal(const f32 *r) const
+		{
+			return test_equal(r[0], r[1], r[2], r[3]);
+		}
+
 		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
 		{
 			std::printf("(");
@@ -488,6 +493,11 @@ namespace lsimd
 		LSIMD_ENSURE_INLINE bool test_equal(f64 e0, f64 e1) const
 		{
 			return e[0] == e0 && e[1] == e1;
+		}
+
+		LSIMD_ENSURE_INLINE bool test_equal(const f64 *r) const
+		{
+			return test_equal(r[0], r[1]);
 		}
 
 		LSIMD_ENSURE_INLINE void dump(const char *fmt) const
