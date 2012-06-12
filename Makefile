@@ -6,8 +6,8 @@
 UNAME := $(shell uname -s)
 MACH_TYPE := $(shell uname -m)
 
-ifneq ($(MACH_TYPE), x86_64)
-    $(error Only 64-bit platform is supported currently)
+ifndef LIGHT_TEST_HOME
+	$(error The environment variable LIGHT_TEST_HOME need to be set)
 endif
 
 
@@ -19,7 +19,7 @@ ifndef ICC_LIBPATH
 endif
 
 WARNING_FLAGS = -Wall -Wextra -Wconversion -Wformat -Wno-unused-parameter
-CPPFLAGS = -I. -L$(ICC_LIBPATH)
+CPPFLAGS = -I. -I$(LIGHT_TEST_HOME) -L$(ICC_LIBPATH)
 
 ifeq ($(UNAME), Linux)
 	CXX=g++
@@ -41,6 +41,8 @@ endif
 
 INC=light_simd
 BIN=bin
+
+TMAIN=tests/test_main.cpp
 
 
 #------ Header groups ----------
@@ -94,7 +96,7 @@ test_sse: \
 	$(BIN)/test_sse_mats
 	
 $(BIN)/test_sse_packs : $(SSE_H) tests/test_sse_packs.cpp
-	$(CXX) $(CXXFLAGS) tests/test_sse_packs.cpp -o $@
+	$(CXX) $(CXXFLAGS) tests/test_sse_packs.cpp $(TMAIN) -o $@
 
 $(BIN)/test_sse_arith:  $(SSE_H) tests/test_sse_arith.cpp
 	$(CXX) $(CXXFLAGS) -O2 tests/test_sse_arith.cpp -o $@

@@ -19,9 +19,32 @@
 #include <cmath>
 
 #include <light_simd/simd.h>
+#include <light_test/tests.h>
+
 
 namespace lsimd
 {
+	extern ::ltest::test_suite lsimd_main_suite;
+	extern void add_test_packs();
+
+	template<typename T>
+	class tcase_base : public ltest::test_case
+	{
+		char m_name[128];
+
+	public:
+		tcase_base(const char *nam)
+		{
+			std::sprintf(m_name, "%s [f%d]", nam, int(8 * sizeof(T)));
+		}
+
+		const char *name() const
+		{
+			return m_name;
+		}
+	};
+
+
 	template<typename T>
 	inline void clear_zeros(int n, T *a)
 	{
@@ -54,95 +77,6 @@ namespace lsimd
 		}
 		return true;
 	}
-
-
-
-	template<typename T, typename Kind>
-	struct simd_array
-	{
-	public:
-		typedef simd_pack<T, Kind> pack_t;
-		static const unsigned pack_width = simd<T, Kind>::pack_width;
-
-		simd_array(int n)
-		: m_n(n), m_nv(m_n / pack_width), m_data(alloc(n))
-		{ }
-
-		simd_array(const simd_array& a)
-		: m_n(a.m_n), m_nv(m_n / pack_width), m_data(alloc(a.m_n))
-		{
-			::memcpy(m_data, a.m_data, sizeof(T) * size_t(m_n));
-		}
-
-		~simd_array()
-		{
-			dealloc(m_data);
-		}
-
-		int nelems() const { return m_n; }
-
-		const T *data() const { return m_data; }
-
-		T *data() { return m_data; }
-
-		void set_zeros()
-		{
-			::memset(m_data, 0, sizeof(T) * size_t(m_n));
-		}
-
-		void set_rand(T lb, T ub)
-		{
-			fill_rand(m_n, m_data, lb, ub);
-		}
-
-		LSIMD_ENSURE_INLINE
-		T operator[] (int i) const { return m_data[i]; }
-
-		LSIMD_ENSURE_INLINE
-		T& operator[] (int i) { return m_data[i]; }
-
-		LSIMD_ENSURE_INLINE
-		pack_t get_pack(int i)
-		{
-			return pack_t(m_data + i * pack_width, aligned_t());
-		}
-
-		LSIMD_ENSURE_INLINE
-		void set_pack(int i, pack_t p)
-		{
-			p.store(m_data + i * pack_width, aligned_t());
-		}
-
-	private:
-		int m_n;
-		int m_nv;
-		T *m_data;
-
-	private:
-		simd_array& operator = (const simd_array& );
-
-		static T *alloc(int n)
-		{
-#if (LSIMD_COMPILER == LSIMD_MSVC)
-			return (T*)::_aligned_malloc(size_t(n) * sizeof(T), 64));
-
-#else
-			char* p = 0;
-			::posix_memalign((void**)(&p), 64, size_t(n) * sizeof(T));
-			return (T*)p;
-#endif
-		}
-
-		static void dealloc(T *p)
-		{
-#if (LSIMD_COMPILER == LSIMD_MSVC)
-			::_aligned_free(p);
-#else
-			::free(p);
-#endif
-		}
-
-	};
 
 
 	template<typename T, typename Kind, class Op>
@@ -241,19 +175,19 @@ namespace lsimd
 
 	template<typename T>
 	LSIMD_ENSURE_INLINE
-	void force_to_reg(const simd_pack<T, sse_kind> x)
+	inline void force_to_reg(const simd_pack<T, sse_kind> x)
 	{
 		asm volatile("" : : "x"(x.impl.v));
 	}
 
 	LSIMD_ENSURE_INLINE
-	void force_to_reg(const f32& x)
+	inline void force_to_reg(const f32& x)
 	{
 		asm volatile("" : : "x"(x));
 	}
 
 	LSIMD_ENSURE_INLINE
-	void force_to_reg(const f64& x)
+	inline void force_to_reg(const f64& x)
 	{
 		asm volatile("" : : "x"(x));
 	}
@@ -325,4 +259,28 @@ namespace lsimd
 	};
 }
 
+
+#define GCASE( tname ) \
+	template<typename T> \
+	class tname##_tests : public tcase_base<T> { \
+	public: \
+		tname##_tests() : tcase_base<T>( #tname ) { } \
+		void run(); \
+	}; \
+	template<typename T> \
+	void tname##_tests<T>::run()
+
+#define SCASE( tname, ty ) \
+	template<> \
+	class tname##_tests<ty> : public tcase_base<ty> { \
+	public: \
+		tname##_tests() : tcase_base<ty>( #tname ) { } \
+		void run(); \
+	}; \
+	void tname##_tests<ty>::run()
+
+
 #endif /* TEST_AUX_H_ */
+
+
+
