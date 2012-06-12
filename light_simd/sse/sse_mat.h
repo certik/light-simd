@@ -15,6 +15,7 @@
 
 #include "details/sse_mat_bits_f32.h"
 #include "details/sse_mat_bits_f64.h"
+#include "details/sse_mat_inv_bits.h"
 
 namespace lsimd
 {
@@ -205,6 +206,21 @@ namespace lsimd
 		}
 
 	};
+
+
+	template<typename T, int N>
+	LSIMD_ENSURE_INLINE
+	inline T det(const sse_mat<T, N, N>& a)
+	{
+		return sse::det(a.intern);
+	}
+
+	template<typename T, int N>
+	inline sse_mat<T, N, N> inv(const sse_mat<T, N, N>& a)
+	{
+		return sse::inv(a.intern);
+	}
+
 
 }
 

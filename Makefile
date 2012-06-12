@@ -93,7 +93,8 @@ test_sse: \
 	$(BIN)/test_sse_arith \
 	$(BIN)/test_sse_math_svml \
 	$(BIN)/test_sse_vecs \
-	$(BIN)/test_sse_mats
+	$(BIN)/test_sse_mats \
+	$(BIN)/test_sse_inv
 	
 $(BIN)/test_sse_packs : $(SSE_H) tests/test_sse_packs.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_packs.cpp $(TMAIN) -o $@
@@ -109,6 +110,9 @@ $(BIN)/test_sse_vecs: $(SSE_H) tests/test_sse_vecs.cpp
 	
 $(BIN)/test_sse_mats: $(SSE_H) tests/test_sse_mats.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_mats.cpp $(TMAIN) -o $@
+	
+$(BIN)/test_sse_inv: $(SSE_H) $(INC)/sse/details/sse_mat_inv_bits.h tests/test_sse_inv.cpp
+	$(CXX) $(CXXFLAGS) tests/test_sse_inv.cpp $(TMAIN) -o $@
 		
 	
 bench_sse: \
