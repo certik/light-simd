@@ -27,7 +27,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 2, 2>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0;
 		sse_f64pk m_pk1;
 
@@ -92,17 +92,26 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(add(m_pk0, r.m_pk0), add(m_pk1, r.m_pk1));
+			smat o;
+			o.m_pk0 = add(m_pk0, r.m_pk0);
+			o.m_pk1 = add(m_pk1, r.m_pk1);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(sub(m_pk0, r.m_pk0), sub(m_pk1, r.m_pk1));
+			smat o;
+			o.m_pk0 = sub(m_pk0, r.m_pk0);
+			o.m_pk1 = sub(m_pk1, r.m_pk1);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(mul(m_pk0, r.m_pk0), mul(m_pk1, r.m_pk1));
+			smat o;
+			o.m_pk0 = mul(m_pk0, r.m_pk0);
+			o.m_pk1 = mul(m_pk1, r.m_pk1);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
@@ -155,7 +164,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 2, 3>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0;
 		sse_f64pk m_pk1;
 		sse_f64pk m_pk2;
@@ -235,17 +244,29 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(add(m_pk0, r.m_pk0), add(m_pk1, r.m_pk1), add(m_pk2, r.m_pk2));
+			smat o;
+			o.m_pk0 = add(m_pk0, r.m_pk0);
+			o.m_pk1 = add(m_pk1, r.m_pk1);
+			o.m_pk2 = add(m_pk2, r.m_pk2);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(sub(m_pk0, r.m_pk0), sub(m_pk1, r.m_pk1), sub(m_pk2, r.m_pk2));
+			smat o;
+			o.m_pk0 = sub(m_pk0, r.m_pk0);
+			o.m_pk1 = sub(m_pk1, r.m_pk1);
+			o.m_pk2 = sub(m_pk2, r.m_pk2);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(mul(m_pk0, r.m_pk0), mul(m_pk1, r.m_pk1), mul(m_pk2, r.m_pk2));
+			smat o;
+			o.m_pk0 = mul(m_pk0, r.m_pk0);
+			o.m_pk1 = mul(m_pk1, r.m_pk1);
+			o.m_pk2 = mul(m_pk2, r.m_pk2);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
@@ -305,7 +326,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 2, 4>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0;
 		sse_f64pk m_pk1;
 		sse_f64pk m_pk2;
@@ -394,24 +415,34 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(
-					add(m_pk0, r.m_pk0), add(m_pk1, r.m_pk1),
-					add(m_pk2, r.m_pk2), add(m_pk3, r.m_pk3));
+			smat o;
+			o.m_pk0 = add(m_pk0, r.m_pk0);
+			o.m_pk1 = add(m_pk1, r.m_pk1);
+			o.m_pk2 = add(m_pk2, r.m_pk2);
+			o.m_pk3 = add(m_pk3, r.m_pk3);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(
-					sub(m_pk0, r.m_pk0), sub(m_pk1, r.m_pk1),
-					sub(m_pk2, r.m_pk2), sub(m_pk3, r.m_pk3));
+			smat o;
+			o.m_pk0 = sub(m_pk0, r.m_pk0);
+			o.m_pk1 = sub(m_pk1, r.m_pk1);
+			o.m_pk2 = sub(m_pk2, r.m_pk2);
+			o.m_pk3 = sub(m_pk3, r.m_pk3);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(
-					mul(m_pk0, r.m_pk0), mul(m_pk1, r.m_pk1),
-					mul(m_pk2, r.m_pk2), mul(m_pk3, r.m_pk3));
+			smat o;
+			o.m_pk0 = mul(m_pk0, r.m_pk0);
+			o.m_pk1 = mul(m_pk1, r.m_pk1);
+			o.m_pk2 = mul(m_pk2, r.m_pk2);
+			o.m_pk3 = mul(m_pk3, r.m_pk3);
+			return o;
 		}
+
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
 		{
@@ -478,7 +509,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 3, 2>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0l;
 		sse_f64pk m_pk0h;
 		sse_f64pk m_pk1l;
@@ -560,23 +591,32 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(
-					add(m_pk0l, r.m_pk0l), add(m_pk0h, r.m_pk0h),
-					add(m_pk1l, r.m_pk1l), add(m_pk1h, r.m_pk1h));
+			smat o;
+			o.m_pk0l = add(m_pk0l, r.m_pk0l);
+			o.m_pk0h = add(m_pk0h, r.m_pk0h);
+			o.m_pk1l = add(m_pk1l, r.m_pk1l);
+			o.m_pk1h = add(m_pk1h, r.m_pk1h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(
-					sub(m_pk0l, r.m_pk0l), sub(m_pk0h, r.m_pk0h),
-					sub(m_pk1l, r.m_pk1l), sub(m_pk1h, r.m_pk1h));
+			smat o;
+			o.m_pk0l = sub(m_pk0l, r.m_pk0l);
+			o.m_pk0h = sub(m_pk0h, r.m_pk0h);
+			o.m_pk1l = sub(m_pk1l, r.m_pk1l);
+			o.m_pk1h = sub(m_pk1h, r.m_pk1h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(
-					mul(m_pk0l, r.m_pk0l), mul(m_pk0h, r.m_pk0h),
-					mul(m_pk1l, r.m_pk1l), mul(m_pk1h, r.m_pk1h));
+			smat o;
+			o.m_pk0l = mul(m_pk0l, r.m_pk0l);
+			o.m_pk0h = mul(m_pk0h, r.m_pk0h);
+			o.m_pk1l = mul(m_pk1l, r.m_pk1l);
+			o.m_pk1h = mul(m_pk1h, r.m_pk1h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
@@ -669,7 +709,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 3, 3>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0l;
 		sse_f64pk m_pk0h;
 		sse_f64pk m_pk1l;
@@ -804,26 +844,38 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(
-					add(m_pk0l, r.m_pk0l), add(m_pk0h, r.m_pk0h),
-					add(m_pk1l, r.m_pk1l), add(m_pk1h, r.m_pk1h),
-					add(m_pk2l, r.m_pk2l), add(m_pk2h, r.m_pk2h));
+			smat o;
+			o.m_pk0l = add(m_pk0l, r.m_pk0l);
+			o.m_pk0h = add(m_pk0h, r.m_pk0h);
+			o.m_pk1l = add(m_pk1l, r.m_pk1l);
+			o.m_pk1h = add(m_pk1h, r.m_pk1h);
+			o.m_pk2l = add(m_pk2l, r.m_pk2l);
+			o.m_pk2h = add(m_pk2h, r.m_pk2h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(
-					sub(m_pk0l, r.m_pk0l), sub(m_pk0h, r.m_pk0h),
-					sub(m_pk1l, r.m_pk1l), sub(m_pk1h, r.m_pk1h),
-					sub(m_pk2l, r.m_pk2l), sub(m_pk2h, r.m_pk2h));
+			smat o;
+			o.m_pk0l = sub(m_pk0l, r.m_pk0l);
+			o.m_pk0h = sub(m_pk0h, r.m_pk0h);
+			o.m_pk1l = sub(m_pk1l, r.m_pk1l);
+			o.m_pk1h = sub(m_pk1h, r.m_pk1h);
+			o.m_pk2l = sub(m_pk2l, r.m_pk2l);
+			o.m_pk2h = sub(m_pk2h, r.m_pk2h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(
-					mul(m_pk0l, r.m_pk0l), mul(m_pk0h, r.m_pk0h),
-					mul(m_pk1l, r.m_pk1l), mul(m_pk1h, r.m_pk1h),
-					mul(m_pk2l, r.m_pk2l), mul(m_pk2h, r.m_pk2h));
+			smat o;
+			o.m_pk0l = mul(m_pk0l, r.m_pk0l);
+			o.m_pk0h = mul(m_pk0h, r.m_pk0h);
+			o.m_pk1l = mul(m_pk1l, r.m_pk1l);
+			o.m_pk1h = mul(m_pk1h, r.m_pk1h);
+			o.m_pk2l = mul(m_pk2l, r.m_pk2l);
+			o.m_pk2h = mul(m_pk2h, r.m_pk2h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
@@ -922,7 +974,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 3, 4>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0l;
 		sse_f64pk m_pk0h;
 		sse_f64pk m_pk1l;
@@ -1025,29 +1077,44 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(
-					add(m_pk0l, r.m_pk0l), add(m_pk0h, r.m_pk0h),
-					add(m_pk1l, r.m_pk1l), add(m_pk1h, r.m_pk1h),
-					add(m_pk2l, r.m_pk2l), add(m_pk2h, r.m_pk2h),
-					add(m_pk3l, r.m_pk3l), add(m_pk3h, r.m_pk3h));
+			smat o;
+			o.m_pk0l = add(m_pk0l, r.m_pk0l);
+			o.m_pk0h = add(m_pk0h, r.m_pk0h);
+			o.m_pk1l = add(m_pk1l, r.m_pk1l);
+			o.m_pk1h = add(m_pk1h, r.m_pk1h);
+			o.m_pk2l = add(m_pk2l, r.m_pk2l);
+			o.m_pk2h = add(m_pk2h, r.m_pk2h);
+			o.m_pk3l = add(m_pk3l, r.m_pk3l);
+			o.m_pk3h = add(m_pk3h, r.m_pk3h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(
-					sub(m_pk0l, r.m_pk0l), sub(m_pk0h, r.m_pk0h),
-					sub(m_pk1l, r.m_pk1l), sub(m_pk1h, r.m_pk1h),
-					sub(m_pk2l, r.m_pk2l), sub(m_pk2h, r.m_pk2h),
-					sub(m_pk3l, r.m_pk3l), sub(m_pk3h, r.m_pk3h));
+			smat o;
+			o.m_pk0l = sub(m_pk0l, r.m_pk0l);
+			o.m_pk0h = sub(m_pk0h, r.m_pk0h);
+			o.m_pk1l = sub(m_pk1l, r.m_pk1l);
+			o.m_pk1h = sub(m_pk1h, r.m_pk1h);
+			o.m_pk2l = sub(m_pk2l, r.m_pk2l);
+			o.m_pk2h = sub(m_pk2h, r.m_pk2h);
+			o.m_pk3l = sub(m_pk3l, r.m_pk3l);
+			o.m_pk3h = sub(m_pk3h, r.m_pk3h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(
-					mul(m_pk0l, r.m_pk0l), mul(m_pk0h, r.m_pk0h),
-					mul(m_pk1l, r.m_pk1l), mul(m_pk1h, r.m_pk1h),
-					mul(m_pk2l, r.m_pk2l), mul(m_pk2h, r.m_pk2h),
-					mul(m_pk3l, r.m_pk3l), mul(m_pk3h, r.m_pk3h));
+			smat o;
+			o.m_pk0l = mul(m_pk0l, r.m_pk0l);
+			o.m_pk0h = mul(m_pk0h, r.m_pk0h);
+			o.m_pk1l = mul(m_pk1l, r.m_pk1l);
+			o.m_pk1h = mul(m_pk1h, r.m_pk1h);
+			o.m_pk2l = mul(m_pk2l, r.m_pk2l);
+			o.m_pk2h = mul(m_pk2h, r.m_pk2h);
+			o.m_pk3l = mul(m_pk3l, r.m_pk3l);
+			o.m_pk3h = mul(m_pk3h, r.m_pk3h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
@@ -1196,7 +1263,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 4, 2>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0l;
 		sse_f64pk m_pk0h;
 		sse_f64pk m_pk1l;
@@ -1282,23 +1349,32 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(
-					add(m_pk0l, r.m_pk0l), add(m_pk0h, r.m_pk0h),
-					add(m_pk1l, r.m_pk1l), add(m_pk1h, r.m_pk1h));
+			smat o;
+			o.m_pk0l = add(m_pk0l, r.m_pk0l);
+			o.m_pk0h = add(m_pk0h, r.m_pk0h);
+			o.m_pk1l = add(m_pk1l, r.m_pk1l);
+			o.m_pk1h = add(m_pk1h, r.m_pk1h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(
-					sub(m_pk0l, r.m_pk0l), sub(m_pk0h, r.m_pk0h),
-					sub(m_pk1l, r.m_pk1l), sub(m_pk1h, r.m_pk1h));
+			smat o;
+			o.m_pk0l = sub(m_pk0l, r.m_pk0l);
+			o.m_pk0h = sub(m_pk0h, r.m_pk0h);
+			o.m_pk1l = sub(m_pk1l, r.m_pk1l);
+			o.m_pk1h = sub(m_pk1h, r.m_pk1h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(
-					mul(m_pk0l, r.m_pk0l), mul(m_pk0h, r.m_pk0h),
-					mul(m_pk1l, r.m_pk1l), mul(m_pk1h, r.m_pk1h));
+			smat o;
+			o.m_pk0l = mul(m_pk0l, r.m_pk0l);
+			o.m_pk0h = mul(m_pk0h, r.m_pk0h);
+			o.m_pk1l = mul(m_pk1l, r.m_pk1l);
+			o.m_pk1h = mul(m_pk1h, r.m_pk1h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
@@ -1389,7 +1465,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 4, 3>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0l;
 		sse_f64pk m_pk0h;
 		sse_f64pk m_pk1l;
@@ -1528,26 +1604,38 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(
-					add(m_pk0l, r.m_pk0l), add(m_pk0h, r.m_pk0h),
-					add(m_pk1l, r.m_pk1l), add(m_pk1h, r.m_pk1h),
-					add(m_pk2l, r.m_pk2l), add(m_pk2h, r.m_pk2h));
+			smat o;
+			o.m_pk0l = add(m_pk0l, r.m_pk0l);
+			o.m_pk0h = add(m_pk0h, r.m_pk0h);
+			o.m_pk1l = add(m_pk1l, r.m_pk1l);
+			o.m_pk1h = add(m_pk1h, r.m_pk1h);
+			o.m_pk2l = add(m_pk2l, r.m_pk2l);
+			o.m_pk2h = add(m_pk2h, r.m_pk2h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(
-					sub(m_pk0l, r.m_pk0l), sub(m_pk0h, r.m_pk0h),
-					sub(m_pk1l, r.m_pk1l), sub(m_pk1h, r.m_pk1h),
-					sub(m_pk2l, r.m_pk2l), sub(m_pk2h, r.m_pk2h));
+			smat o;
+			o.m_pk0l = sub(m_pk0l, r.m_pk0l);
+			o.m_pk0h = sub(m_pk0h, r.m_pk0h);
+			o.m_pk1l = sub(m_pk1l, r.m_pk1l);
+			o.m_pk1h = sub(m_pk1h, r.m_pk1h);
+			o.m_pk2l = sub(m_pk2l, r.m_pk2l);
+			o.m_pk2h = sub(m_pk2h, r.m_pk2h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(
-					mul(m_pk0l, r.m_pk0l), mul(m_pk0h, r.m_pk0h),
-					mul(m_pk1l, r.m_pk1l), mul(m_pk1h, r.m_pk1h),
-					mul(m_pk2l, r.m_pk2l), mul(m_pk2h, r.m_pk2h));
+			smat o;
+			o.m_pk0l = mul(m_pk0l, r.m_pk0l);
+			o.m_pk0h = mul(m_pk0h, r.m_pk0h);
+			o.m_pk1l = mul(m_pk1l, r.m_pk1l);
+			o.m_pk1h = mul(m_pk1h, r.m_pk1h);
+			o.m_pk2l = mul(m_pk2l, r.m_pk2l);
+			o.m_pk2h = mul(m_pk2h, r.m_pk2h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)
@@ -1646,7 +1734,7 @@ namespace lsimd { namespace sse {
 
 	template<> class smat<f64, 4, 4>
 	{
-	private:
+	public:
 		sse_f64pk m_pk0l;
 		sse_f64pk m_pk0h;
 		sse_f64pk m_pk1l;
@@ -1750,29 +1838,44 @@ namespace lsimd { namespace sse {
 	public:
 		LSIMD_ENSURE_INLINE smat madd(smat r) const
 		{
-			return smat(
-					add(m_pk0l, r.m_pk0l), add(m_pk0h, r.m_pk0h),
-					add(m_pk1l, r.m_pk1l), add(m_pk1h, r.m_pk1h),
-					add(m_pk2l, r.m_pk2l), add(m_pk2h, r.m_pk2h),
-					add(m_pk3l, r.m_pk3l), add(m_pk3h, r.m_pk3h));
+			smat o;
+			o.m_pk0l = add(m_pk0l, r.m_pk0l);
+			o.m_pk0h = add(m_pk0h, r.m_pk0h);
+			o.m_pk1l = add(m_pk1l, r.m_pk1l);
+			o.m_pk1h = add(m_pk1h, r.m_pk1h);
+			o.m_pk2l = add(m_pk2l, r.m_pk2l);
+			o.m_pk2h = add(m_pk2h, r.m_pk2h);
+			o.m_pk3l = add(m_pk3l, r.m_pk3l);
+			o.m_pk3h = add(m_pk3h, r.m_pk3h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat msub(smat r) const
 		{
-			return smat(
-					sub(m_pk0l, r.m_pk0l), sub(m_pk0h, r.m_pk0h),
-					sub(m_pk1l, r.m_pk1l), sub(m_pk1h, r.m_pk1h),
-					sub(m_pk2l, r.m_pk2l), sub(m_pk2h, r.m_pk2h),
-					sub(m_pk3l, r.m_pk3l), sub(m_pk3h, r.m_pk3h));
+			smat o;
+			o.m_pk0l = sub(m_pk0l, r.m_pk0l);
+			o.m_pk0h = sub(m_pk0h, r.m_pk0h);
+			o.m_pk1l = sub(m_pk1l, r.m_pk1l);
+			o.m_pk1h = sub(m_pk1h, r.m_pk1h);
+			o.m_pk2l = sub(m_pk2l, r.m_pk2l);
+			o.m_pk2h = sub(m_pk2h, r.m_pk2h);
+			o.m_pk3l = sub(m_pk3l, r.m_pk3l);
+			o.m_pk3h = sub(m_pk3h, r.m_pk3h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE smat mmul(smat r) const
 		{
-			return smat(
-					mul(m_pk0l, r.m_pk0l), mul(m_pk0h, r.m_pk0h),
-					mul(m_pk1l, r.m_pk1l), mul(m_pk1h, r.m_pk1h),
-					mul(m_pk2l, r.m_pk2l), mul(m_pk2h, r.m_pk2h),
-					mul(m_pk3l, r.m_pk3l), mul(m_pk3h, r.m_pk3h));
+			smat o;
+			o.m_pk0l = mul(m_pk0l, r.m_pk0l);
+			o.m_pk0h = mul(m_pk0h, r.m_pk0h);
+			o.m_pk1l = mul(m_pk1l, r.m_pk1l);
+			o.m_pk1h = mul(m_pk1h, r.m_pk1h);
+			o.m_pk2l = mul(m_pk2l, r.m_pk2l);
+			o.m_pk2h = mul(m_pk2h, r.m_pk2h);
+			o.m_pk3l = mul(m_pk3l, r.m_pk3l);
+			o.m_pk3h = mul(m_pk3h, r.m_pk3h);
+			return o;
 		}
 
 		LSIMD_ENSURE_INLINE void inplace_madd(smat r)

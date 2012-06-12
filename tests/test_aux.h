@@ -136,6 +136,13 @@ namespace lsimd
 	}
 
 
+
+	/********************************************
+	 *
+	 * Accuracy assessment
+	 *
+	 ********************************************/
+
 	template<typename T, typename Kind, class Op>
 	double eval_approx_accuracy(unsigned n, const T lb_a, const T ub_a)
 	{
@@ -221,7 +228,11 @@ namespace lsimd
 	}
 
 
-
+	/********************************************
+	 *
+	 *  Timing
+	 *
+	 ********************************************/
 
 	LSIMD_ENSURE_INLINE
 	inline uint64_t read_tsc(void) {

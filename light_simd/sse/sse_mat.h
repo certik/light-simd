@@ -30,7 +30,7 @@ namespace lsimd
 	template<typename T, int M, int N>
 	class sse_mat
 	{
-	private:
+	public:
 		sse::smat<T, M, N> intern;
 
 		LSIMD_ENSURE_INLINE

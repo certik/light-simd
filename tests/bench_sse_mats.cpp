@@ -80,6 +80,34 @@ struct addcp_op
 	}
 };
 
+
+template<typename T, int M, int N>
+struct addip_op
+{
+	const char *name() const { return "add-update"; }
+
+	int scalar_ops() const { return M * N; }
+
+	LSIMD_ENSURE_INLINE
+	void run()
+	{
+		const T *src = data_s<T>::src();
+		T *dst = data_s<T>::dst();
+
+		for (unsigned i = 0; i < num_mats; ++i)
+		{
+			simd_mat<T, M, N, sse_kind> a(src + i * step_size, aligned_t());
+			simd_mat<T, M, N, sse_kind> b(dst + i * step_size, aligned_t());
+
+			a += b;
+
+			a.store(dst + i * step_size, aligned_t());
+		}
+	}
+};
+
+
+
 template<typename T, int M, int N>
 struct transcp_op
 {
@@ -174,6 +202,7 @@ int main(int argc, char *argv[])
 	fill_rand(arr_len, ad, 0.0, 1.0);
 
 	do_bench<addcp_op>();
+	do_bench<addip_op>();
 	do_bench<transcp_op>();
 	do_bench<mtimes_op>();
 }

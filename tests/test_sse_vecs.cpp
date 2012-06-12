@@ -140,7 +140,6 @@ GCASE1( store )
 	ASSERT_VEC_EQ(5, dst, r2);
 }
 
-
 // arithmetic
 
 GCASE1( add )
