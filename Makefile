@@ -105,7 +105,7 @@ $(BIN)/test_sse_math_svml:  $(SSE_H) tests/test_sse_math.cpp
 	$(CXX) $(CXXFLAGS) -O2 -DLSIMD_USE_SVML tests/test_sse_math.cpp -lsvml -o $@
 	
 $(BIN)/test_sse_vecs: $(SSE_H) tests/test_sse_vecs.cpp
-	$(CXX) $(CXXFLAGS) tests/test_sse_vecs.cpp -o $@
+	$(CXX) $(CXXFLAGS) tests/test_sse_vecs.cpp $(TMAIN) -o $@
 	
 $(BIN)/test_sse_mats: $(SSE_H) tests/test_sse_mats.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_mats.cpp -o $@

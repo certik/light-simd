@@ -45,11 +45,36 @@ namespace lsimd
 	};
 
 
+	template<typename T, int N>
+	class tcase1_base : public ltest::test_case
+	{
+		char m_name[128];
+
+	public:
+		tcase1_base(const char *nam)
+		{
+			std::sprintf(m_name, "%s [f%d x %d]", nam, int(8 * sizeof(T)), N);
+		}
+
+		const char *name() const
+		{
+			return m_name;
+		}
+	};
+
+
 	template<typename T>
 	inline void clear_zeros(int n, T *a)
 	{
 		for (int i = 0; i < n; ++i) a[i] = T(0);
 	}
+
+	template<typename T>
+	inline void fill_const(int n, T *a, T v)
+	{
+		for (int i = 0; i < n; ++i) a[i] = v;
+	}
+
 
 	template<typename T>
 	inline T rand_val(const T lb, const T ub)
@@ -282,6 +307,26 @@ namespace lsimd
 		void run(); \
 	}; \
 	void tname##_tests<ty>::run()
+
+#define GCASE1( tname ) \
+	template<typename T, int N> \
+	class tname##_tests : public tcase1_base<T, N> { \
+	public: \
+		tname##_tests() : tcase1_base<T, N>( #tname ) { } \
+		void run(); \
+	}; \
+	template<typename T, int N> \
+	void tname##_tests<T, N>::run()
+
+#define SCASE1( tname, n ) \
+	template<typename T> \
+	class tname##_tests<T, n> : public tcase1_base<T, n> { \
+	public: \
+		tname##_tests() : tcase1_base<T, n>( #tname ) { } \
+		void run(); \
+	}; \
+	template<typename T> \
+	void tname##_tests<T, n>::run()
 
 
 #endif /* TEST_AUX_H_ */
