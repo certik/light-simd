@@ -42,7 +42,7 @@ void test_accuracy_b()
 
 
 template<typename T>
-struct add_s
+struct add_ts
 {
 	static const char *name() { return "add"; }
 
@@ -62,7 +62,7 @@ struct add_s
 
 
 template<typename T>
-struct sub_s
+struct sub_ts
 {
 	static const char *name() { return "sub"; }
 
@@ -82,7 +82,7 @@ struct sub_s
 
 
 template<typename T>
-struct mul_s
+struct mul_ts
 {
 	static const char *name() { return "mul"; }
 
@@ -102,7 +102,7 @@ struct mul_s
 
 
 template<typename T>
-struct div_s
+struct div_ts
 {
 	static const char *name() { return "div"; }
 
@@ -122,7 +122,7 @@ struct div_s
 
 
 template<typename T>
-struct neg_s
+struct neg_ts
 {
 	static const char *name() { return "neg"; }
 
@@ -139,7 +139,7 @@ struct neg_s
 
 
 template<typename T>
-struct abs_s
+struct abs_ts
 {
 	static const char *name() { return "abs"; }
 
@@ -156,7 +156,7 @@ struct abs_s
 
 
 template<typename T>
-struct min_s
+struct min_ts
 {
 	static const char *name() { return "min"; }
 
@@ -176,7 +176,7 @@ struct min_s
 
 
 template<typename T>
-struct max_s
+struct max_ts
 {
 	static const char *name() { return "max"; }
 
@@ -196,7 +196,7 @@ struct max_s
 
 
 template<typename T>
-struct sqr_s
+struct sqr_ts
 {
 	static const char *name() { return "sqr"; }
 
@@ -213,7 +213,7 @@ struct sqr_s
 
 
 template<typename T>
-struct sqrt_s
+struct sqrt_ts
 {
 	static const char *name() { return "sqrt"; }
 
@@ -230,7 +230,7 @@ struct sqrt_s
 
 
 template<typename T>
-struct rcp_s
+struct rcp_ts
 {
 	static const char *name() { return "rcp"; }
 
@@ -247,7 +247,7 @@ struct rcp_s
 
 
 template<typename T>
-struct rsqrt_s
+struct rsqrt_ts
 {
 	static const char *name() { return "rsqrt"; }
 
@@ -264,7 +264,7 @@ struct rsqrt_s
 
 
 template<typename T>
-struct rcp_a_s
+struct rcp_a_ts
 {
 	static const char *name() { return "rcp(a)"; }
 
@@ -281,7 +281,7 @@ struct rcp_a_s
 
 
 template<typename T>
-struct rsqrt_a_s
+struct rsqrt_a_ts
 {
 	static const char *name() { return "rsqrt(a)"; }
 
@@ -298,7 +298,7 @@ struct rsqrt_a_s
 
 
 template<typename T>
-struct cube_s
+struct cube_ts
 {
 	static const char *name() { return "cube"; }
 
@@ -315,7 +315,7 @@ struct cube_s
 
 
 template<typename T>
-struct floor_s
+struct floor_ts
 {
 	static const char *name() { return "floor"; }
 
@@ -331,7 +331,7 @@ struct floor_s
 };
 
 template<typename T>
-struct ceil_s
+struct ceil_ts
 {
 	static const char *name() { return "ceil"; }
 
@@ -347,7 +347,7 @@ struct ceil_s
 };
 
 template<typename T>
-struct floor2_s
+struct floor2_ts
 {
 	static const char *name() { return "floor(2)"; }
 
@@ -363,7 +363,7 @@ struct floor2_s
 };
 
 template<typename T>
-struct ceil2_s
+struct ceil2_ts
 {
 	static const char *name() { return "ceil(2)"; }
 
@@ -382,26 +382,26 @@ struct ceil2_s
 template<typename T>
 void test_all()
 {
-	test_accuracy_b<T, add_s>();
-	test_accuracy_b<T, sub_s>();
-	test_accuracy_b<T, mul_s>();
-	test_accuracy_b<T, div_s>();
+	test_accuracy_b<T, add_ts>();
+	test_accuracy_b<T, sub_ts>();
+	test_accuracy_b<T, mul_ts>();
+	test_accuracy_b<T, div_ts>();
 
-	test_accuracy_u<T, neg_s>();
-	test_accuracy_u<T, abs_s>();
-	test_accuracy_b<T, min_s>();
-	test_accuracy_b<T, max_s>();
+	test_accuracy_u<T, neg_ts>();
+	test_accuracy_u<T, abs_ts>();
+	test_accuracy_b<T, min_ts>();
+	test_accuracy_b<T, max_ts>();
 
-	test_accuracy_u<T, sqr_s>();
-	test_accuracy_u<T, sqrt_s>();
-	test_accuracy_u<T, rcp_s>();
-	test_accuracy_u<T, rsqrt_s>();
-	test_accuracy_u<T, cube_s>();
+	test_accuracy_u<T, sqr_ts>();
+	test_accuracy_u<T, sqrt_ts>();
+	test_accuracy_u<T, rcp_ts>();
+	test_accuracy_u<T, rsqrt_ts>();
+	test_accuracy_u<T, cube_ts>();
 
-	test_accuracy_u<T, floor_s>();
-	test_accuracy_u<T, ceil_s>();
-	test_accuracy_u<T, floor2_s>();
-	test_accuracy_u<T, ceil2_s>();
+	test_accuracy_u<T, floor_ts>();
+	test_accuracy_u<T, ceil_ts>();
+	test_accuracy_u<T, floor2_ts>();
+	test_accuracy_u<T, ceil2_ts>();
 }
 
 
@@ -411,8 +411,8 @@ int main(int argc, char *argv[])
 	std::printf("================================\n");
 	test_all<f32>();
 
-	test_accuracy_u<f32, rcp_a_s>();
-	test_accuracy_u<f32, rsqrt_a_s>();
+	test_accuracy_u<f32, rcp_a_ts>();
+	test_accuracy_u<f32, rsqrt_a_ts>();
 
 	std::printf("\n");
 

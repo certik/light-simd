@@ -78,6 +78,55 @@ namespace lsimd { namespace sse {
 		return r;
 	}
 
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk mm2x2_trace_p(smat<f32,2,2> a, smat<f32,2,2> b)
+	{
+		sse_f32pk p = mul(a.m_pk, b.m_pk.swizzle<0,2,1,3>());
+		p = add(p, p.dup_high());
+		return add_s(p, p.dup2_high());
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk mm2x2_trace_p(smat<f64,2,2> a, smat<f64,2,2> b)
+	{
+		sse_f64pk p = mul(a.m_pk0, unpack_low(b.m_pk0, b.m_pk1));
+		p = add(p, mul(a.m_pk1, unpack_high(b.m_pk0, b.m_pk1)));
+		return add_s(p, p.dup_high());
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline smat<f32,2,2> adjoint_signmask_f32()
+	{
+		sse_f32pk p = _mm_castsi128_ps(
+				_mm_setr_epi32(0, (int)0x80000000, (int)0x80000000, 0));
+		return p;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline smat<f32,2,2> adjoint_mat(smat<f32,2,2> a, smat<f32,2,2> mask)
+	{
+		sse_f32pk p = _mm_xor_ps(a.m_pk.swizzle<3,1,2,0>().v, mask.m_pk.v);
+		return p;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline smat<f64,2,2> adjoint_signmask_f64()
+	{
+		smat<f64,2,2> m;
+		m.m_pk0.v = _mm_setr_pd(0.0, -0.0);
+		m.m_pk1.v = _mm_setr_pd(-0.0, 0.0);
+		return m;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline smat<f64,2,2> adjoint_mat(smat<f64,2,2> a, smat<f64,2,2> mask)
+	{
+		smat<f64,2,2> r;
+		r.m_pk0.v = _mm_xor_pd(unpack_high(a.m_pk1, a.m_pk0).v, mask.m_pk0.v);
+		r.m_pk1.v = _mm_xor_pd(unpack_low (a.m_pk1, a.m_pk0).v, mask.m_pk1.v);
+		return r;
+	}
+
 
 	/**********************************
 	 *
@@ -345,18 +394,18 @@ namespace lsimd { namespace sse {
 
 		// adjoint matrices for a and d
 
-		__m128 sgn_toggle = _mm_castsi128_ps(_mm_setr_epi32(0, (int)0x80000000, (int)0x80000000, 0));
+		smat<f32,2,2> adj_mask = adjoint_signmask_f32();
 
-		sse_f32pk Aa = _mm_xor_ps(A.m_pk.swizzle<3,1,2,0>().v, sgn_toggle);
-		sse_f32pk Da = _mm_xor_ps(D.m_pk.swizzle<3,1,2,0>().v, sgn_toggle);
+		smat<f32,2,2> Aa = adjoint_mat(A, adj_mask);
+		smat<f32,2,2> Da = adjoint_mat(D, adj_mask);
 
 		// Q = A# * B * D# * C
 
 		smat<f32,2,2> AaB = mm2x2(Aa, B);
 		smat<f32,2,2> DaC = mm2x2(Da, C);
-		smat<f32,2,2> Q = mm2x2(AaB, DaC);
+		sse_f32pk qtr = mm2x2_trace_p(AaB, DaC);
 
-		return comb.to_scalar() - Q.trace();
+		return sub_s(comb, qtr).to_scalar();
 	}
 
 
@@ -391,26 +440,43 @@ namespace lsimd { namespace sse {
 
 		// adjoint matrices for a and d
 
-		__m128d stog0 = _mm_setr_pd(0.0, -0.0);
-		__m128d stog1 = _mm_setr_pd(-0.0, 0.0);
+		smat<f64,2,2> adj_mask = adjoint_signmask_f64();
 
-		smat<f64,2,2> Aa;
-		Aa.m_pk0 = _mm_xor_pd(unpack_high(A.m_pk1, A.m_pk0).v, stog0);
-		Aa.m_pk1 = _mm_xor_pd(unpack_low (A.m_pk1, A.m_pk0).v, stog1);
-
-		smat<f64,2,2> Da;
-		Da.m_pk0 = _mm_xor_pd(unpack_high(D.m_pk1, D.m_pk0).v, stog0);
-		Da.m_pk1 = _mm_xor_pd(unpack_low (D.m_pk1, D.m_pk0).v, stog1);
+		smat<f64,2,2> Aa = adjoint_mat(A, adj_mask);
+		smat<f64,2,2> Da = adjoint_mat(D, adj_mask);
 
 		// Q = A# * B * D# * C
 
 		smat<f64,2,2> AaB = mm2x2(Aa, B);
 		smat<f64,2,2> DaC = mm2x2(Da, C);
-		smat<f64,2,2> Q = mm2x2(AaB, DaC);
+		sse_f64pk qtr = mm2x2_trace_p(AaB, DaC);
 
-		return comb.to_scalar() - Q.trace();
+		return sub_s(comb, qtr).to_scalar();
 	}
 
+/*
+	inline smat<f32,4,4> inv(const smat<f32,4,4>& X)
+	{
+		// blocking and evaluate pre-determinant
+
+		smat<f32,2,2> A = merge_low (X.m_pk0, X.m_pk1);
+		smat<f32,2,2> C = merge_high(X.m_pk0, X.m_pk1);
+
+		sse_f32pk dA = pre_det(A);
+		sse_f32pk dC = pre_det(C);
+
+		smat<f32,2,2> B = merge_low (X.m_pk2, X.m_pk3);
+		smat<f32,2,2> D = merge_high(X.m_pk2, X.m_pk3);
+
+		sse_f32pk dB = pre_det(B);
+		sse_f32pk dD = pre_det(D);
+
+		// adjoint matrices
+
+		__m128 sgn_toggle = _mm_castsi128_ps(_mm_setr_epi32(0, (int)0x80000000, (int)0x80000000, 0));
+
+	}
+*/
 
 
 
