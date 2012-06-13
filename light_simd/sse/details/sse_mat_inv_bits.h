@@ -27,19 +27,19 @@ namespace lsimd { namespace sse {
 	LSIMD_ENSURE_INLINE
 	inline sse_f32pk hdiff(sse_f32pk p)
 	{
-		return _mm_sub_ss(p.v, sse::f32_dup2_high(p.v));
+		return sub_s(p, p.dup2_high());
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f64pk hdiff(sse_f64pk p)
 	{
-		return _mm_sub_sd(p.v, sse::f64_dup_high(p.v));
+		return sub_s(p, p.dup_high());
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f64pk rev_hdiff(sse_f64pk p)
 	{
-		return _mm_sub_sd(sse::f64_dup_high(p.v), p.v);
+		return sub_s(p.dup_high(), p);
 	}
 
 
@@ -112,7 +112,7 @@ namespace lsimd { namespace sse {
 	 **********************************/
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk det_p(const smat<f32, 3, 3>& a)
+	inline f32 det(const smat<f32, 3, 3>& a)
 	{
 		// generate product terms
 
@@ -129,11 +129,11 @@ namespace lsimd { namespace sse {
 		u1 = sub(u1.dup_high(), u1);
 		u1 = add(u1, u2);
 
-		return hdiff(u1);
+		return hdiff(u1).to_scalar();
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk det_p(const smat<f64, 3, 3>& a)
+	inline f64 det(const smat<f64, 3, 3>& a)
 	{
 		// generate product terms
 
@@ -152,14 +152,7 @@ namespace lsimd { namespace sse {
 		u1 = sub(u1, u2);
 		u1 = add(u1, u3);
 
-		return hdiff(u1);
-	}
-
-	template<typename T>
-	LSIMD_ENSURE_INLINE
-	inline T det(const smat<T, 3, 3>& a)
-	{
-		return det_p(a).to_scalar();
+		return hdiff(u1).to_scalar();
 	}
 
 
@@ -187,14 +180,14 @@ namespace lsimd { namespace sse {
 		c1 = sub(shuffle<0,3,0,3>(c2, d0), shuffle<1,2,1,2>(c2, d0));
 
 		c2 = mul(p0, p0.swizzle<3,2,1,0>());
-		c2.v = _mm_sub_ss(c2.shift_front<1>().v, c2.v);
+		c2 = sub_s(c2.shift_front<1>(), c2);
 
 		// calculate determinant
 
 		sse_f32pk detv = mul(c0, a.m_pk0);
-		__m128 v2 = _mm_mul_ss(c1.dup_high().v, a.m_pk0.dup_high().v);
+		sse_f32pk v2 = mul_s(c1.dup_high(), a.m_pk0.dup_high());
 
-		detv.v = _mm_add_ss(_mm_add_ss(detv.v, detv.dup2_high().v), v2);
+		detv = add_s(add_s(detv, detv.dup2_high()), v2);
 
 		// joint into adjoint matrix
 
@@ -208,8 +201,7 @@ namespace lsimd { namespace sse {
 
 		// multiply with the rcp(detv)
 
-		sse_f32pk sca = _mm_div_ss( _mm_set1_ps(1.0f), detv.v);
-		sca = sca.broadcast<0>();
+		sse_f32pk sca = rcp_s(detv).broadcast<0>();
 
 		r.m_pk0 = mul(r.m_pk0, sca);
 		r.m_pk1 = mul(r.m_pk1, sca);
@@ -269,15 +261,13 @@ namespace lsimd { namespace sse {
 
 		// calculate determinant
 
-		sse_f64pk detv;
-		detv.v = _mm_mul_sd( r.m_pk0l.v, a.m_pk0l.v );
-		detv.v = _mm_add_sd(detv.v, _mm_mul_sd(r.m_pk1l.v, a.m_pk0l.dup_high().v));
-		detv.v = _mm_add_sd(detv.v, _mm_mul_sd(r.m_pk2l.v, a.m_pk0h.v));
+		sse_f64pk detv = mul_s( r.m_pk0l, a.m_pk0l );
+		detv = add_s(detv, mul_s(r.m_pk1l, a.m_pk0l.dup_high()));
+		detv = add_s(detv, mul_s(r.m_pk2l, a.m_pk0h));
 
 		// multiply with rcp(det)
 
-		sse_f64pk sca = _mm_div_sd( _mm_set1_pd(1.0), detv.v );
-		sca = sca.broadcast<0>();
+		sse_f64pk sca = rcp_s(detv).broadcast<0>();
 
 		r.m_pk0l = mul(r.m_pk0l, sca);
 		r.m_pk0h = mul(r.m_pk0h, sca);
@@ -291,13 +281,31 @@ namespace lsimd { namespace sse {
 
 
 
-	/**********************************
+	/******************************************************
 	 *
 	 *  Matrix 4 x 4
 	 *
-	 **********************************/
+	 *  Let X = [A B; C D], then
+	 *
+	 *  |X| = |A| |D| + |B| |C| - tr(A# * B * D# * C)
+	 *  Here, A# and D# are adjoints of A and D
+	 *
+	 ******************************************************/
 
+/*
+	inline f32 det(const smat<f32, 4, 4>& X)
+	{
+		// blocking
 
+		sse_f32pk a = merge_low (X.m_pk0, X.m_pk1);
+		sse_f32pk c = merge_high(X.m_pk0, X.m_pk1);
+		sse_f32pk b = merge_low (X.m_pk2, X.m_pk3);
+		sse_f32pk d = merge_high(X.m_pk2, X.m_pk3);
+
+		//
+	}
+
+*/
 
 
 

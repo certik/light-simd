@@ -210,6 +210,86 @@ namespace lsimd
 
 	/********************************************
 	 *
+	 *  Single-scalar arithmetic
+	 *
+	 ********************************************/
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk add_s(const sse_f32pk a, const sse_f32pk b)
+	{
+		return _mm_add_ss(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk add_s(const sse_f64pk a, const sse_f64pk b)
+	{
+		return _mm_add_sd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk sub_s(const sse_f32pk a, const sse_f32pk b)
+	{
+		return _mm_sub_ss(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk sub_s(const sse_f64pk a, const sse_f64pk b)
+	{
+		return _mm_sub_sd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk mul_s(const sse_f32pk a, const sse_f32pk b)
+	{
+		return _mm_mul_ss(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk mul_s(const sse_f64pk a, const sse_f64pk b)
+	{
+		return _mm_mul_sd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk div_s(const sse_f32pk a, const sse_f32pk b)
+	{
+		return _mm_div_ss(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk div_s(const sse_f64pk a, const sse_f64pk b)
+	{
+		return _mm_div_sd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk rcp_s(const sse_f32pk a)
+	{
+		return _mm_div_ss(_mm_set_ss(1.0f), a.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk rcp_s(const sse_f64pk a)
+	{
+		return _mm_div_sd(_mm_set_sd(1.0), a.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk sqrt_s(const sse_f32pk a)
+	{
+		return _mm_sqrt_ss(a.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk sqrt_s(const sse_f64pk a)
+	{
+		return _mm_sqrt_sd(a.v, a.v);
+	}
+
+
+
+	/********************************************
+	 *
 	 *  Rounding functions
 	 *
 	 ********************************************/
