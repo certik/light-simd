@@ -74,6 +74,9 @@ GCASE1( inv )
 	T E[N * N];
 	T E0[N * N];
 
+	fill_const(N * N, E, T(-1));
+
+	fill_const(N * N, E0, T(0));
 	for (int i = 0; i < N; ++i) E0[i + i * N] = T(1);
 
 	simple_mat<T,N,N> am(av);
@@ -82,7 +85,6 @@ GCASE1( inv )
 	ref_mm(am, bm, cm);
 
 	T tol = sizeof(T) == 4 ? T(1.0e-6) : T(1.0e-12);
-
 	ASSERT_VEC_APPROX(N*N, E, E0, tol);
 }
 

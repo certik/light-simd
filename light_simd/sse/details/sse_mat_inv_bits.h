@@ -20,6 +20,25 @@ namespace lsimd { namespace sse {
 
 	/**********************************
 	 *
+	 *  Auxiliary functions
+	 *
+	 **********************************/
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk hdiff(sse_f32pk p)
+	{
+		return _mm_sub_ss(p.v, sse::f32_dup2_high(p.v));
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk hdiff(sse_f64pk p)
+	{
+		return _mm_sub_sd(p.v, sse::f64_dup_high(p.v));
+	}
+
+
+	/**********************************
+	 *
 	 *  Matrix 2 x 2
 	 *
 	 **********************************/
@@ -29,7 +48,7 @@ namespace lsimd { namespace sse {
 	{
 		sse_f32pk p = a.m_pk.swizzle<3,2,1,0>();
 		p = mul(a.m_pk, p);
-		return _mm_sub_ss(p.v, sse::f32_dup2_high(p.v));
+		return hdiff(p);
 	}
 
 	LSIMD_ENSURE_INLINE
@@ -37,7 +56,7 @@ namespace lsimd { namespace sse {
 	{
 		sse_f64pk p = a.m_pk1.swizzle<1,0>();
 		p = mul(a.m_pk0, p);
-		return _mm_sub_sd(p.v, sse::f64_dup_high(p.v));
+		return hdiff(p);
 	}
 
 	template<typename T>
@@ -89,39 +108,45 @@ namespace lsimd { namespace sse {
 	LSIMD_ENSURE_INLINE
 	inline sse_f32pk det_p(const smat<f32, 3, 3>& a)
 	{
-		sse_f32pk u = shuffle<1,0,0,1>(a.m_pk0, a.m_pk1);
-		u = mul(u, a.m_pk2.swizzle<0,1,1,0>());
-		u = mul(u, shuffle<2,2,2,2>(a.m_pk1, a.m_pk0));
+		// generate product terms
 
-		sse_f32pk v = a.m_pk0;
-		v = mul(v, a.m_pk1.swizzle<1,0,1,0>());
-		v = mul(v, a.m_pk2.broadcast<2>());
+		sse_f32pk b = shuffle<1,0,1,0>(a.m_pk2, a.m_pk1);
 
-		u = add(u, u.dup_high());
-		u = add(u, v);
+		sse_f32pk u1 = mul(a.m_pk0.dup_low(), b);
+		sse_f32pk u2 = mul(a.m_pk1, b);
 
-		return _mm_sub_ss(u.v, sse::f32_dup2_high(u.v));
+		u1 = mul(u1, shuffle<2,2,2,2>(a.m_pk1, a.m_pk2));
+		u2 = mul(u2, shuffle<2,2,2,2>(a.m_pk0, a.m_pk0));
+
+		// aggregate the terms
+
+		u1 = sub(u1.dup_high(), u1);
+		u1 = add(u1, u2);
+
+		return hdiff(u1);
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f64pk det_p(const smat<f64, 3, 3>& a)
 	{
-		sse_f64pk u1 = a.m_pk0l.swizzle<1,0>();
-		u1 = mul(u1, a.m_pk2l);
-		u1 = mul(u1, a.m_pk1h.dup_low());
+		// generate product terms
 
-		sse_f64pk u2 = a.m_pk1l;
-		u2 = mul(u2, a.m_pk2l.swizzle<1,0>());
-		u2 = mul(u2, a.m_pk0h.dup_low());
+		sse_f64pk c = a.m_pk2l.swizzle<1,0>();
 
-		sse_f64pk u3 = a.m_pk0l;
-		u3 = mul(u3, a.m_pk1l.swizzle<1,0>());
-		u3 = mul(u3, a.m_pk2h.dup_low());
+		sse_f64pk u1 = mul(a.m_pk0l, a.m_pk1l.swizzle<1,0>());
+		sse_f64pk u2 = mul(a.m_pk0l, c);
+		sse_f64pk u3 = mul(a.m_pk1l, c);
 
-		u1 = add(u1, u2);
+		u1 = mul(u1, a.m_pk2h.broadcast<0>());
+		u2 = mul(u2, a.m_pk1h.broadcast<0>());
+		u3 = mul(u3, a.m_pk0h.broadcast<0>());
+
+		// aggregate the terms
+
+		u1 = sub(u1, u2);
 		u1 = add(u1, u3);
 
-		return _mm_sub_sd(u1.v, sse::f64_dup_high(u1.v));
+		return hdiff(u1);
 	}
 
 	template<typename T>
