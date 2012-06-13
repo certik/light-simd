@@ -78,34 +78,34 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return sse_vec(_mm_add_ss(m_pk.v, rhs.m_pk.v));
+			return sse_vec(add_s(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return sse_vec(_mm_sub_ss(m_pk.v, rhs.m_pk.v));
+			return sse_vec(sub_s(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return sse_vec(_mm_mul_ss(m_pk.v, rhs.m_pk.v));
+			return sse_vec(mul_s(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
 		{
-			m_pk.v = _mm_add_ss(m_pk.v, rhs.m_pk.v);
+			m_pk = add_s(m_pk, rhs.m_pk);
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator -= (sse_vec rhs)
 		{
-			m_pk.v = _mm_sub_ss(m_pk.v, rhs.m_pk.v);
+			m_pk = sub_s(m_pk, rhs.m_pk);
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator %= (sse_vec rhs)
 		{
-			m_pk.v = _mm_mul_ss(m_pk.v, rhs.m_pk.v);
+			m_pk = mul_s(m_pk, rhs.m_pk);
 			return *this;
 		}
 
@@ -522,34 +522,34 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return sse_vec(_mm_add_sd(m_pk.v, rhs.m_pk.v));
+			return sse_vec(add_s(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return sse_vec(_mm_sub_sd(m_pk.v, rhs.m_pk.v));
+			return sse_vec(sub_s(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return sse_vec(_mm_mul_sd(m_pk.v, rhs.m_pk.v));
+			return sse_vec(mul_s(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
 		{
-			m_pk.v = _mm_add_sd(m_pk.v, rhs.m_pk.v);
+			m_pk = add_s(m_pk, rhs.m_pk);
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator -= (sse_vec rhs)
 		{
-			m_pk.v = _mm_sub_sd(m_pk.v, rhs.m_pk.v);
+			m_pk = sub_s(m_pk, rhs.m_pk);
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator %= (sse_vec rhs)
 		{
-			m_pk.v = _mm_mul_sd(m_pk.v, rhs.m_pk.v);
+			m_pk = mul_s(m_pk, rhs.m_pk);
 			return *this;
 		}
 
@@ -741,37 +741,37 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return sse_vec(add(m_pk0, rhs.m_pk0), _mm_add_sd(m_pk1.v, rhs.m_pk1.v));
+			return sse_vec(add(m_pk0, rhs.m_pk0), add_s(m_pk1, rhs.m_pk1));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return sse_vec(sub(m_pk0, rhs.m_pk0), _mm_sub_sd(m_pk1.v, rhs.m_pk1.v));
+			return sse_vec(sub(m_pk0, rhs.m_pk0), sub_s(m_pk1, rhs.m_pk1));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return sse_vec(mul(m_pk0, rhs.m_pk0), _mm_mul_sd(m_pk1.v, rhs.m_pk1.v));
+			return sse_vec(mul(m_pk0, rhs.m_pk0), mul_s(m_pk1, rhs.m_pk1));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
 		{
 			m_pk0 = add(m_pk0, rhs.m_pk0);
-			m_pk1 = _mm_add_sd(m_pk1.v, rhs.m_pk1.v);
+			m_pk1 = add_s(m_pk1, rhs.m_pk1);
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator -= (sse_vec rhs)
 		{
 			m_pk0 = sub(m_pk0, rhs.m_pk0);
-			m_pk1 = _mm_sub_sd(m_pk1.v, rhs.m_pk1.v);
+			m_pk1 = sub_s(m_pk1, rhs.m_pk1);
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator %= (sse_vec rhs)
 		{
 			m_pk0 = mul(m_pk0, rhs.m_pk0);
-			m_pk1 = _mm_mul_sd(m_pk1.v, rhs.m_pk1.v);
+			m_pk1 = mul_s(m_pk1, rhs.m_pk1);
 			return *this;
 		}
 
