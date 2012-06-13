@@ -60,6 +60,7 @@ SSE_H = $(COMMON_H) \
 	$(INC)/sse/details/sse_pack_bits.h \
 	$(INC)/sse/details/sse_mat_bits_f32.h \
 	$(INC)/sse/details/sse_mat_bits_f64.h \
+	$(INC)/sse/details/sse_mat_inv_bits.h \
 	$(INC)/sse/sse_base.h \
 	$(INC)/sse/sse_pack.h \
 	$(INC)/sse/sse_arith.h \
@@ -111,7 +112,7 @@ $(BIN)/test_sse_vecs: $(SSE_H) tests/test_sse_vecs.cpp
 $(BIN)/test_sse_mats: $(SSE_H) tests/test_sse_mats.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_mats.cpp $(TMAIN) -o $@
 	
-$(BIN)/test_sse_inv: $(SSE_H) $(INC)/sse/details/sse_mat_inv_bits.h tests/test_sse_inv.cpp
+$(BIN)/test_sse_inv: $(SSE_H) tests/test_sse_inv.cpp
 	$(CXX) $(CXXFLAGS) tests/test_sse_inv.cpp $(TMAIN) -o $@
 		
 	
