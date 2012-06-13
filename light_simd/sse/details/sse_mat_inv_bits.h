@@ -149,36 +149,30 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat<f32, 2, 2> inv(const smat<f32, 2, 2>& a)
+	inline f32 inv(const smat<f32, 2, 2>& a, smat<f32, 2, 2>& r)
 	{
-		smat<f32, 2, 2> r;
+		r = adjoint_mat(a, adjoint_signmask_f32());
 
-		sse_f32pk dv = hdiff(pre_det(a)).broadcast<0>();
-		sse_f32pk c = div( sse_f32pk(1.f, -1.f, -1.f, 1.f), dv );
+		sse_f32pk detv = hdiff(pre_det(a));
+		sse_f32pk rdetv = rcp_s(detv).broadcast<0>();
 
-		r.m_pk = mul(a.m_pk.swizzle<3,1,2,0>(), c);
-		return r;
+		r.m_pk = mul(r.m_pk, rdetv);
+		return detv.to_scalar();
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat<f64, 2, 2> inv(const smat<f64, 2, 2>& a)
+	inline f64 inv(const smat<f64, 2, 2>& a, smat<f64, 2, 2>& r)
 	{
-		smat<f64, 2, 2> r;
+		r = adjoint_mat(a, adjoint_signmask_f64());
 
-		sse_f64pk dv = hdiff(pre_det(a)).broadcast<0>();
+		sse_f64pk detv = hdiff(pre_det(a));
+		sse_f64pk rdetv = rcp_s(detv).broadcast<0>();
 
-		sse_f64pk c0 = div( sse_f64pk(1.f, -1.f), dv );
-		sse_f64pk c1 = c0.swizzle<1,0>();
+		r.m_pk0 = mul(r.m_pk0, rdetv);
+		r.m_pk1 = mul(r.m_pk1, rdetv);
 
-		r.m_pk0 = unpack_high(a.m_pk1, a.m_pk0);
-		r.m_pk1 = unpack_low (a.m_pk1, a.m_pk0);
-
-		r.m_pk0 = mul(r.m_pk0, c0);
-		r.m_pk1 = mul(r.m_pk1, c1);
-
-		return r;
+		return detv.to_scalar();
 	}
-
 
 
 	/**********************************
@@ -232,7 +226,7 @@ namespace lsimd { namespace sse {
 	}
 
 
-	inline smat<f32, 3, 3> inv(const smat<f32, 3, 3>& a)
+	inline f32 inv(const smat<f32, 3, 3>& a, smat<f32, 3, 3>& r)
 	{
 		// calculate co-factor matrix
 
@@ -270,7 +264,6 @@ namespace lsimd { namespace sse {
 		__m128 msk = _mm_castsi128_ps(
 				_mm_setr_epi32((int)(0xffffffff), (int)(0xffffffff), (int)(0xffffffff), 0));
 
-		smat<f32, 3, 3> r;
 		r.m_pk0.v = _mm_and_ps(shuffle<0, 2, 0, 0>(c0, c1).v, msk);
 		r.m_pk1.v = _mm_and_ps(shuffle<1, 3, 1, 1>(c0, c1).v, msk);
 		r.m_pk2.v = _mm_and_ps(shuffle<2, 3, 0, 0>(c1, c2).v, msk);
@@ -283,14 +276,12 @@ namespace lsimd { namespace sse {
 		r.m_pk1 = mul(r.m_pk1, sca);
 		r.m_pk2 = mul(r.m_pk2, sca);
 
-		return r;
+		return detv.to_scalar();
 	}
 
 
-	inline smat<f64, 3, 3> inv(const smat<f64, 3, 3>& a)
+	inline f64 inv(const smat<f64, 3, 3>& a, smat<f64, 3, 3>& r)
 	{
-		smat<f64, 3, 3> r;
-
 		// calculate co-factors
 
 		// row 0
@@ -343,16 +334,16 @@ namespace lsimd { namespace sse {
 
 		// multiply with rcp(det)
 
-		sse_f64pk sca = rcp_s(detv).broadcast<0>();
+		sse_f64pk rdetv = rcp_s(detv).broadcast<0>();
 
-		r.m_pk0l = mul(r.m_pk0l, sca);
-		r.m_pk0h = mul(r.m_pk0h, sca);
-		r.m_pk1l = mul(r.m_pk1l, sca);
-		r.m_pk1h = mul(r.m_pk1h, sca);
-		r.m_pk2l = mul(r.m_pk2l, sca);
-		r.m_pk2h = mul(r.m_pk2h, sca);
+		r.m_pk0l = mul(r.m_pk0l, rdetv);
+		r.m_pk0h = mul(r.m_pk0h, rdetv);
+		r.m_pk1l = mul(r.m_pk1l, rdetv);
+		r.m_pk1h = mul(r.m_pk1h, rdetv);
+		r.m_pk2l = mul(r.m_pk2l, rdetv);
+		r.m_pk2h = mul(r.m_pk2h, rdetv);
 
-		return r;
+		return detv.to_scalar();
 	}
 
 
@@ -455,7 +446,7 @@ namespace lsimd { namespace sse {
 	}
 
 
-	inline smat<f32,4,4> inv(const smat<f32,4,4>& X)
+	inline f32 inv(const smat<f32,4,4>& X, smat<f32,4,4>& Y)
 	{
 		// blocking and evaluate pre-determinant
 
@@ -508,17 +499,16 @@ namespace lsimd { namespace sse {
 
 		// assemble into the inverse matrix
 
-		smat<f32,4,4> Y;
 		Y.m_pk0 = mul(merge_low (IA.m_pk, IC.m_pk), rdetv);
 		Y.m_pk1 = mul(merge_high(IA.m_pk, IC.m_pk), rdetv);
 		Y.m_pk2 = mul(merge_low (IB.m_pk, ID.m_pk), rdetv);
 		Y.m_pk3 = mul(merge_high(IB.m_pk, ID.m_pk), rdetv);
 
-		return Y;
+		return detv.to_scalar();
 	}
 
 
-	inline smat<f64,4,4> inv(const smat<f64,4,4>& X)
+	inline f64 inv(const smat<f64,4,4>& X, smat<f64,4,4>& Y)
 	{
 		// blocking and evaluate pre-determinant
 
@@ -575,7 +565,6 @@ namespace lsimd { namespace sse {
 
 		// assemble into the inverse matrix
 
-		smat<f64,4,4> Y;
 		Y.m_pk0l = mul(IA.m_pk0, rdetv);
 		Y.m_pk0h = mul(IC.m_pk0, rdetv);
 		Y.m_pk1l = mul(IA.m_pk1, rdetv);
@@ -585,7 +574,7 @@ namespace lsimd { namespace sse {
 		Y.m_pk3l = mul(IB.m_pk1, rdetv);
 		Y.m_pk3h = mul(ID.m_pk1, rdetv);
 
-		return Y;
+		return detv.to_scalar();
 	}
 
 } }

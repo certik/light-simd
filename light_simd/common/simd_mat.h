@@ -196,6 +196,26 @@ namespace lsimd
 
 	};
 
+
+	template<typename Kind, typename T, int N>
+	LSIMD_ENSURE_INLINE
+	inline T det(const simd_mat<T, N, N, Kind>& a)
+	{
+		return det(a.impl);
+	}
+
+	template<typename Kind, typename T, int N>
+	inline simd_mat<T, N, N, Kind> inv(const simd_mat<T, N, N, Kind>& a)
+	{
+		return inv(a.impl);
+	}
+
+	template<typename Kind, typename T, int N>
+	inline T inv_and_det(const simd_mat<T, N, N, Kind>& a, simd_mat<T, N, N, Kind>& r)
+	{
+		return inv_and_det(a.impl, r.impl);
+	}
+
 }
 
 #endif /* SIMD_MAT_H_ */

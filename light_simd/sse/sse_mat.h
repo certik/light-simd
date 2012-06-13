@@ -218,9 +218,16 @@ namespace lsimd
 	template<typename T, int N>
 	inline sse_mat<T, N, N> inv(const sse_mat<T, N, N>& a)
 	{
-		return sse::inv(a.intern);
+		sse_mat<T, N, N> r;
+		sse::inv(a.intern, r.intern);
+		return r;
 	}
 
+	template<typename T, int N>
+	inline T inv_and_det(const sse_mat<T, N, N>& a, sse_mat<T, N, N>& r)
+	{
+		return sse::inv(a.intern, r.intern);
+	}
 
 }
 

@@ -49,7 +49,7 @@ GCASE1( det )
 	LSIMD_ALIGN_SSE T src[N * N];
 	special_fill_mat(N, src);
 
-	sse_mat<T, N, N> a(src, aligned_t());
+	simd_mat<T, N, N, sse_kind> a(src, aligned_t());
 
 	simple_mat<T, N, N> a0(src);
 
@@ -66,8 +66,8 @@ GCASE1( inv )
 	LSIMD_ALIGN_SSE T bv[N * N];
 	special_fill_mat(N, av);
 
-	sse_mat<T,N,N> a(av, aligned_t());
-	sse_mat<T,N,N> inv_a = inv(a);
+	simd_mat<T, N, N, sse_kind> a(av, aligned_t());
+	simd_mat<T, N, N, sse_kind> inv_a = inv(a);
 	inv_a.store(bv, aligned_t());
 
 	T E[N * N];
@@ -84,6 +84,17 @@ GCASE1( inv )
 	ref_mm(am, bm, cm);
 
 	T tol = sizeof(T) == 4 ? T(1.0e-5) : T(1.0e-12);
+	ASSERT_VEC_APPROX(N*N, E, E0, tol);
+
+	simd_mat<T, N, N, sse_kind> inv_a2;
+	T detv = inv_and_det(a, inv_a2);
+
+	T detv0 = special_det<T, N>();
+
+	ASSERT_EQ( detv, detv0 );
+
+	inv_a2.store(bv, aligned_t());
+	ref_mm(am, bm, cm);
 	ASSERT_VEC_APPROX(N*N, E, E0, tol);
 }
 
