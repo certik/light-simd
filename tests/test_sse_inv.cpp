@@ -83,14 +83,7 @@ GCASE1( inv )
 	simple_mat<T,N,N> cm(E);
 	ref_mm(am, bm, cm);
 
-	if (N == 4)
-	{
-		std::printf("\n");
-		bm.print("%5g ");
-		std::printf("\n");
-	}
-
-	T tol = sizeof(T) == 4 ? T(1.0e-6) : T(1.0e-12);
+	T tol = sizeof(T) == 4 ? T(1.0e-5) : T(1.0e-12);
 	ASSERT_VEC_APPROX(N*N, E, E0, tol);
 }
 
@@ -120,6 +113,9 @@ test_pack* inv_tpack()
 
 	tp->add( new inv_tests<f32, 3>() );
 	tp->add( new inv_tests<f64, 3>() );
+
+	tp->add( new inv_tests<f32, 4>() );
+	tp->add( new inv_tests<f64, 4>() );
 
 	return tp;
 }

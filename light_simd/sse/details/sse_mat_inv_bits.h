@@ -128,33 +128,6 @@ namespace lsimd { namespace sse {
 	}
 
 
-	// scalar = dA * dD - dB * dC
-	LSIMD_ENSURE_INLINE
-	inline sse_f32pk combine_detp(sse_f32pk dA, sse_f32pk dB, sse_f32pk dC, sse_f32pk dD)
-	{
-		sse_f32pk u1 = merge_low( dA, dB );
-		sse_f32pk u2 = merge_low( dD, dC );
-		sse_f32pk comb = sub(shuffle<0,2,0,2>(u1, u2), shuffle<1,3,1,3>(u1, u2));
-		comb = mul(comb, comb.dup_high());
-		return add_s(comb, comb.dup2_high());
-	}
-
-	LSIMD_ENSURE_INLINE
-	inline sse_f64pk combine_detp(sse_f64pk dA, sse_f64pk dB, sse_f64pk dC, sse_f64pk dD)
-	{
-		sse_f64pk ab_p = unpack_low (dA, dB);
-		sse_f64pk ab_n = unpack_high(dA, dB);
-		sse_f64pk dc_p = unpack_low (dD, dC);
-		sse_f64pk dc_n = unpack_high(dD, dC);
-
-		ab_p = sub(ab_p, ab_n);
-		dc_p = sub(dc_p, dc_n);
-
-		sse_f64pk comb = mul(ab_p, dc_p);
-		return add_s(comb, comb.dup_high());
-	}
-
-
 	/**********************************
 	 *
 	 *  Matrix 2 x 2
@@ -413,7 +386,11 @@ namespace lsimd { namespace sse {
 
 		// combine terms
 
-		sse_f32pk comb = combine_detp(dA, dB, dC, dD);
+		sse_f32pk u1 = merge_low( dA, dB );
+		sse_f32pk u2 = merge_low( dD, dC );
+		sse_f32pk comb = sub(shuffle<0,2,0,2>(u1, u2), shuffle<1,3,1,3>(u1, u2));
+		comb = mul(comb, comb.dup_high());
+		comb = add_s(comb, comb.dup2_high());
 
 		// adjoint matrices for a and d
 
@@ -450,7 +427,16 @@ namespace lsimd { namespace sse {
 
 		// combine terms
 
-		sse_f64pk comb = combine_detp(dA, dB, dC, dD);
+		sse_f64pk ab_p = unpack_low (dA, dB);
+		sse_f64pk ab_n = unpack_high(dA, dB);
+		sse_f64pk dc_p = unpack_low (dD, dC);
+		sse_f64pk dc_n = unpack_high(dD, dC);
+
+		ab_p = sub(ab_p, ab_n);
+		dc_p = sub(dc_p, dc_n);
+
+		sse_f64pk comb = mul(ab_p, dc_p);
+		comb = add_s(comb, comb.dup_high());
 
 		// adjoint matrices for a and d
 
@@ -468,7 +454,7 @@ namespace lsimd { namespace sse {
 		return sub_s(comb, qtr).to_scalar();
 	}
 
-	/*
+
 	inline smat<f32,4,4> inv(const smat<f32,4,4>& X)
 	{
 		// blocking and evaluate pre-determinant
@@ -476,14 +462,14 @@ namespace lsimd { namespace sse {
 		smat<f32,2,2> A = merge_low (X.m_pk0, X.m_pk1);
 		smat<f32,2,2> C = merge_high(X.m_pk0, X.m_pk1);
 
-		sse_f32pk dA = pre_det(A);
-		sse_f32pk dC = pre_det(C);
+		sse_f32pk dA = hdiff(pre_det(A));
+		sse_f32pk dC = hdiff(pre_det(C));
 
 		smat<f32,2,2> B = merge_low (X.m_pk2, X.m_pk3);
 		smat<f32,2,2> D = merge_high(X.m_pk2, X.m_pk3);
 
-		sse_f32pk dB = pre_det(B);
-		sse_f32pk dD = pre_det(D);
+		sse_f32pk dB = hdiff(pre_det(B));
+		sse_f32pk dD = hdiff(pre_det(D));
 
 		// adjoint matrices
 
@@ -494,7 +480,7 @@ namespace lsimd { namespace sse {
 		smat<f32,2,2> Ca = adjoint_mat(C, adj_mask);
 		smat<f32,2,2> Da = adjoint_mat(D, adj_mask);
 
-		// partial inverses
+		// incomplete partial inverses
 
 		smat<f32,2,2> IA = mm2x2(B, mm2x2(Da, C));
 		smat<f32,2,2> IB = mm2x2(D, mm2x2(Ba, A));
@@ -503,12 +489,104 @@ namespace lsimd { namespace sse {
 
 		// determinant
 
+		sse_f32pk comb = add_s(mul_s(dA, dD), mul_s(dB, dC));
+		sse_f32pk qtr = mm2x2_trace_p(Aa, IA);
+		sse_f32pk detv = sub_s(comb, qtr);
+		sse_f32pk rdetv = rcp_s(detv).broadcast<0>();
 
+		// complete partial inverses
 
+		A.m_pk = mul(A.m_pk, dD.broadcast<0>());
+		B.m_pk = mul(B.m_pk, dC.broadcast<0>());
+		C.m_pk = mul(C.m_pk, dB.broadcast<0>());
+		D.m_pk = mul(D.m_pk, dA.broadcast<0>());
+
+		IA = adjoint_mat(A.msub(IA), adj_mask);
+		IB = adjoint_mat(C.msub(IB), adj_mask);
+		IC = adjoint_mat(B.msub(IC), adj_mask);
+		ID = adjoint_mat(D.msub(ID), adj_mask);
+
+		// assemble into the inverse matrix
+
+		smat<f32,4,4> Y;
+		Y.m_pk0 = mul(merge_low (IA.m_pk, IC.m_pk), rdetv);
+		Y.m_pk1 = mul(merge_high(IA.m_pk, IC.m_pk), rdetv);
+		Y.m_pk2 = mul(merge_low (IB.m_pk, ID.m_pk), rdetv);
+		Y.m_pk3 = mul(merge_high(IB.m_pk, ID.m_pk), rdetv);
+
+		return Y;
 	}
-*/
 
 
+	inline smat<f64,4,4> inv(const smat<f64,4,4>& X)
+	{
+		// blocking and evaluate pre-determinant
+
+		smat<f64,2,2> A( X.m_pk0l, X.m_pk1l );
+		smat<f64,2,2> C( X.m_pk0h, X.m_pk1h );
+
+		sse_f64pk dA = hdiff(pre_det(A)).broadcast<0>();
+		sse_f64pk dC = hdiff(pre_det(C)).broadcast<0>();
+
+		smat<f64,2,2> B( X.m_pk2l, X.m_pk3l );
+		smat<f64,2,2> D( X.m_pk2h, X.m_pk3h );
+
+		sse_f64pk dB = hdiff(pre_det(B)).broadcast<0>();
+		sse_f64pk dD = hdiff(pre_det(D)).broadcast<0>();
+
+		// adjoint matrices
+
+		smat<f64,2,2> adj_mask = adjoint_signmask_f64();
+
+		smat<f64,2,2> Aa = adjoint_mat(A, adj_mask);
+		smat<f64,2,2> Ba = adjoint_mat(B, adj_mask);
+		smat<f64,2,2> Ca = adjoint_mat(C, adj_mask);
+		smat<f64,2,2> Da = adjoint_mat(D, adj_mask);
+
+		// incomplete partial inverses
+
+		smat<f64,2,2> IA = mm2x2(B, mm2x2(Da, C));
+		smat<f64,2,2> IB = mm2x2(D, mm2x2(Ba, A));
+		smat<f64,2,2> IC = mm2x2(A, mm2x2(Ca, D));
+		smat<f64,2,2> ID = mm2x2(C, mm2x2(Aa, B));
+
+		// determinant
+
+		sse_f64pk comb = add_s(mul_s(dA, dD), mul_s(dB, dC));
+		sse_f64pk qtr = mm2x2_trace_p(Aa, IA);
+		sse_f64pk detv = sub_s(comb, qtr);
+		sse_f64pk rdetv = rcp_s(detv).broadcast<0>();
+
+		// complete partial inverses
+
+		A.m_pk0 = mul(A.m_pk0, dD);
+		A.m_pk1 = mul(A.m_pk1, dD);
+		B.m_pk0 = mul(B.m_pk0, dC);
+		B.m_pk1 = mul(B.m_pk1, dC);
+		C.m_pk0 = mul(C.m_pk0, dB);
+		C.m_pk1 = mul(C.m_pk1, dB);
+		D.m_pk0 = mul(D.m_pk0, dA);
+		D.m_pk1 = mul(D.m_pk1, dA);
+
+		IA = adjoint_mat(A.msub(IA), adj_mask);
+		IB = adjoint_mat(C.msub(IB), adj_mask);
+		IC = adjoint_mat(B.msub(IC), adj_mask);
+		ID = adjoint_mat(D.msub(ID), adj_mask);
+
+		// assemble into the inverse matrix
+
+		smat<f64,4,4> Y;
+		Y.m_pk0l = mul(IA.m_pk0, rdetv);
+		Y.m_pk0h = mul(IC.m_pk0, rdetv);
+		Y.m_pk1l = mul(IA.m_pk1, rdetv);
+		Y.m_pk1h = mul(IC.m_pk1, rdetv);
+		Y.m_pk2l = mul(IB.m_pk0, rdetv);
+		Y.m_pk2h = mul(ID.m_pk0, rdetv);
+		Y.m_pk3l = mul(IB.m_pk1, rdetv);
+		Y.m_pk3h = mul(ID.m_pk1, rdetv);
+
+		return Y;
+	}
 
 } }
 
