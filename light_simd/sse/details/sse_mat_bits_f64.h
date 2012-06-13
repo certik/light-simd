@@ -136,7 +136,7 @@ namespace lsimd { namespace sse {
 		{
 			sse_f64pk p0 = mul(m_pk0, v.m_pk.broadcast<0>());
 			sse_f64pk p1 = mul(m_pk1, v.m_pk.broadcast<1>());
-			return add(p0, p1);
+			return sse_vec<f64, 2>(add(p0, p1));
  		}
 
 	public:
@@ -301,7 +301,7 @@ namespace lsimd { namespace sse {
 			sse_f64pk p0 = mul(m_pk0, v.m_pk0.broadcast<0>());
 			sse_f64pk p1 = mul(m_pk1, v.m_pk0.broadcast<1>());
 			sse_f64pk p2 = mul(m_pk2, v.m_pk1.broadcast<0>());
-			return add(add(p0, p1), p2);
+			return sse_vec<f64, 2>(add(add(p0, p1), p2));
  		}
 
 	public:
@@ -489,7 +489,7 @@ namespace lsimd { namespace sse {
 
 			p0 = add(p0, p1);
 			p2 = add(p2, p3);
-			return add(p0, p2);
+			return sse_vec<f64, 2>(add(p0, p2));
  		}
 
 	public:

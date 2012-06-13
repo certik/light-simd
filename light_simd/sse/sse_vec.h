@@ -31,8 +31,8 @@ namespace lsimd
 	template<> class sse_vec<f32, 1>
 	{
 	public:
-		LSIMD_ENSURE_INLINE sse_vec(__m128 p) : m_pk(p) { }
-		LSIMD_ENSURE_INLINE sse_vec(sse_f32pk p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(__m128 p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(sse_f32pk p) : m_pk(p) { }
 
 	public:
 		LSIMD_ENSURE_INLINE sse_vec() { }
@@ -78,17 +78,17 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return _mm_add_ss(m_pk.v, rhs.m_pk.v);
+			return sse_vec(_mm_add_ss(m_pk.v, rhs.m_pk.v));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return _mm_sub_ss(m_pk.v, rhs.m_pk.v);
+			return sse_vec(_mm_sub_ss(m_pk.v, rhs.m_pk.v));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return _mm_mul_ss(m_pk.v, rhs.m_pk.v);
+			return sse_vec(_mm_mul_ss(m_pk.v, rhs.m_pk.v));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
@@ -140,8 +140,8 @@ namespace lsimd
 	template<> class sse_vec<f32, 2>
 	{
 	public:
-		LSIMD_ENSURE_INLINE sse_vec(__m128 p) : m_pk(p) { }
-		LSIMD_ENSURE_INLINE sse_vec(sse_f32pk p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(__m128 p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(sse_f32pk p) : m_pk(p) { }
 
 	public:
 		LSIMD_ENSURE_INLINE sse_vec() { }
@@ -187,17 +187,17 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return add(m_pk, rhs.m_pk);
+			return sse_vec(add(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return sub(m_pk, rhs.m_pk);
+			return sse_vec(sub(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return mul(m_pk, rhs.m_pk);
+			return sse_vec(mul(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
@@ -249,8 +249,8 @@ namespace lsimd
 	template<> class sse_vec<f32, 3>
 	{
 	public:
-		LSIMD_ENSURE_INLINE sse_vec(__m128 p) : m_pk(p) { }
-		LSIMD_ENSURE_INLINE sse_vec(sse_f32pk p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(__m128 p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(sse_f32pk p) : m_pk(p) { }
 
 	public:
 		LSIMD_ENSURE_INLINE sse_vec() { }
@@ -296,17 +296,17 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return add(m_pk, rhs.m_pk);
+			return sse_vec(add(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return sub(m_pk, rhs.m_pk);
+			return sse_vec(sub(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return mul(m_pk, rhs.m_pk);
+			return sse_vec(mul(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
@@ -359,8 +359,8 @@ namespace lsimd
 	template<> class sse_vec<f32, 4>
 	{
 	public:
-		LSIMD_ENSURE_INLINE sse_vec(__m128 p) : m_pk(p) { }
-		LSIMD_ENSURE_INLINE sse_vec(sse_f32pk p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(__m128 p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(sse_f32pk p) : m_pk(p) { }
 
 	public:
 		LSIMD_ENSURE_INLINE sse_vec() { }
@@ -406,17 +406,17 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return add(m_pk, rhs.m_pk);
+			return sse_vec(add(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return sub(m_pk, rhs.m_pk);
+			return sse_vec(sub(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return mul(m_pk, rhs.m_pk);
+			return sse_vec(mul(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
@@ -475,8 +475,8 @@ namespace lsimd
 	template<> class sse_vec<f64, 1>
 	{
 	public:
-		LSIMD_ENSURE_INLINE sse_vec(__m128d p) : m_pk(p) { }
-		LSIMD_ENSURE_INLINE sse_vec(sse_f64pk p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(__m128d p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(sse_f64pk p) : m_pk(p) { }
 
 	public:
 		LSIMD_ENSURE_INLINE sse_vec() { }
@@ -522,17 +522,17 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return _mm_add_sd(m_pk.v, rhs.m_pk.v);
+			return sse_vec(_mm_add_sd(m_pk.v, rhs.m_pk.v));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return _mm_sub_sd(m_pk.v, rhs.m_pk.v);
+			return sse_vec(_mm_sub_sd(m_pk.v, rhs.m_pk.v));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return _mm_mul_sd(m_pk.v, rhs.m_pk.v);
+			return sse_vec(_mm_mul_sd(m_pk.v, rhs.m_pk.v));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
@@ -584,8 +584,8 @@ namespace lsimd
 	template<> class sse_vec<f64, 2>
 	{
 	public:
-		LSIMD_ENSURE_INLINE sse_vec(__m128d p) : m_pk(p) { }
-		LSIMD_ENSURE_INLINE sse_vec(sse_f64pk p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(__m128d p) : m_pk(p) { }
+		LSIMD_ENSURE_INLINE explicit sse_vec(sse_f64pk p) : m_pk(p) { }
 
 	public:
 		LSIMD_ENSURE_INLINE sse_vec() { }
@@ -631,17 +631,17 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE sse_vec operator + (sse_vec rhs) const
 		{
-			return add(m_pk, rhs.m_pk);
+			return sse_vec(add(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator - (sse_vec rhs) const
 		{
-			return sub(m_pk, rhs.m_pk);
+			return sse_vec(sub(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec operator % (sse_vec rhs) const
 		{
-			return mul(m_pk, rhs.m_pk);
+			return sse_vec(mul(m_pk, rhs.m_pk));
 		}
 
 		LSIMD_ENSURE_INLINE sse_vec& operator += (sse_vec rhs)
@@ -693,7 +693,7 @@ namespace lsimd
 	template<> class sse_vec<f64, 3>
 	{
 	public:
-		LSIMD_ENSURE_INLINE sse_vec(sse_f64pk pk0, sse_f64pk pk1)
+		LSIMD_ENSURE_INLINE explicit sse_vec(sse_f64pk pk0, sse_f64pk pk1)
 		: m_pk0(pk0), m_pk1(pk1) { }
 
 	public:
@@ -826,7 +826,7 @@ namespace lsimd
 	template<> class sse_vec<f64, 4>
 	{
 	public:
-		LSIMD_ENSURE_INLINE sse_vec(sse_f64pk pk0, sse_f64pk pk1)
+		LSIMD_ENSURE_INLINE explicit sse_vec(sse_f64pk pk0, sse_f64pk pk1)
 		: m_pk0(pk0), m_pk1(pk1) { }
 
 	public:
