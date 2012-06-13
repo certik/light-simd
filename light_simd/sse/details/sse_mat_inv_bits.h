@@ -128,6 +128,33 @@ namespace lsimd { namespace sse {
 	}
 
 
+	// scalar = dA * dD - dB * dC
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk combine_detp(sse_f32pk dA, sse_f32pk dB, sse_f32pk dC, sse_f32pk dD)
+	{
+		sse_f32pk u1 = merge_low( dA, dB );
+		sse_f32pk u2 = merge_low( dD, dC );
+		sse_f32pk comb = sub(shuffle<0,2,0,2>(u1, u2), shuffle<1,3,1,3>(u1, u2));
+		comb = mul(comb, comb.dup_high());
+		return add_s(comb, comb.dup2_high());
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f64pk combine_detp(sse_f64pk dA, sse_f64pk dB, sse_f64pk dC, sse_f64pk dD)
+	{
+		sse_f64pk ab_p = unpack_low (dA, dB);
+		sse_f64pk ab_n = unpack_high(dA, dB);
+		sse_f64pk dc_p = unpack_low (dD, dC);
+		sse_f64pk dc_n = unpack_high(dD, dC);
+
+		ab_p = sub(ab_p, ab_n);
+		dc_p = sub(dc_p, dc_n);
+
+		sse_f64pk comb = mul(ab_p, dc_p);
+		return add_s(comb, comb.dup_high());
+	}
+
+
 	/**********************************
 	 *
 	 *  Matrix 2 x 2
@@ -386,11 +413,7 @@ namespace lsimd { namespace sse {
 
 		// combine terms
 
-		sse_f32pk u1 = merge_low( dA, dB );
-		sse_f32pk u2 = merge_low( dD, dC );
-		sse_f32pk comb = sub(shuffle<0,2,0,2>(u1, u2), shuffle<1,3,1,3>(u1, u2));
-		comb = mul(comb, comb.dup_high());
-		comb = add_s(comb, comb.dup2_high());
+		sse_f32pk comb = combine_detp(dA, dB, dC, dD);
 
 		// adjoint matrices for a and d
 
@@ -427,16 +450,7 @@ namespace lsimd { namespace sse {
 
 		// combine terms
 
-		sse_f64pk ab_p = unpack_low (dA, dB);
-		sse_f64pk ab_n = unpack_high(dA, dB);
-		sse_f64pk dc_p = unpack_low (dD, dC);
-		sse_f64pk dc_n = unpack_high(dD, dC);
-
-		ab_p = sub(ab_p, ab_n);
-		dc_p = sub(dc_p, dc_n);
-
-		sse_f64pk comb = mul(ab_p, dc_p);
-		comb = add_s(comb, comb.dup_high());
+		sse_f64pk comb = combine_detp(dA, dB, dC, dD);
 
 		// adjoint matrices for a and d
 
@@ -454,7 +468,7 @@ namespace lsimd { namespace sse {
 		return sub_s(comb, qtr).to_scalar();
 	}
 
-/*
+	/*
 	inline smat<f32,4,4> inv(const smat<f32,4,4>& X)
 	{
 		// blocking and evaluate pre-determinant
@@ -473,7 +487,23 @@ namespace lsimd { namespace sse {
 
 		// adjoint matrices
 
-		__m128 sgn_toggle = _mm_castsi128_ps(_mm_setr_epi32(0, (int)0x80000000, (int)0x80000000, 0));
+		smat<f32,2,2> adj_mask = adjoint_signmask_f32();
+
+		smat<f32,2,2> Aa = adjoint_mat(A, adj_mask);
+		smat<f32,2,2> Ba = adjoint_mat(B, adj_mask);
+		smat<f32,2,2> Ca = adjoint_mat(C, adj_mask);
+		smat<f32,2,2> Da = adjoint_mat(D, adj_mask);
+
+		// partial inverses
+
+		smat<f32,2,2> IA = mm2x2(B, mm2x2(Da, C));
+		smat<f32,2,2> IB = mm2x2(D, mm2x2(Ba, A));
+		smat<f32,2,2> IC = mm2x2(A, mm2x2(Ca, D));
+		smat<f32,2,2> ID = mm2x2(C, mm2x2(Aa, B));
+
+		// determinant
+
+
 
 	}
 */
