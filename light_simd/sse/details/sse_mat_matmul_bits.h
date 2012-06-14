@@ -323,6 +323,109 @@ namespace lsimd { namespace sse {
 	};
 
 
+	/******************************************************
+	 *
+	 *  Specialized implementation for (3x2) * (2xN)
+	 *
+	 ******************************************************/
+
+	template<>
+	struct mtimes_op<f32, 3, 2, 2>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 3, 2>& A,
+				const smat_core<f32, 2, 2>& B,
+				      smat_core<f32, 3, 2>& C)
+		{
+			C.col0 = A.col0 * B.col01_pk.bsx<0>() + A.col1 * B.col01_pk.bsx<1>();
+			C.col1 = A.col0 * B.col01_pk.bsx<2>() + A.col1 * B.col01_pk.bsx<3>();
+		}
+	};
+
+	template<>
+	struct mtimes_op<f32, 3, 2, 3>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 3, 2>& A,
+				const smat_core<f32, 2, 3>& B,
+				      smat_core<f32, 3, 3>& C)
+		{
+			C.col0 = A.col0 * B.col01_pk.bsx<0>() + A.col1 * B.col01_pk.bsx<1>();
+			C.col1 = A.col0 * B.col01_pk.bsx<2>() + A.col1 * B.col01_pk.bsx<3>();
+			C.col2 = A.col0 * B.col2z_pk.bsx<0>() + A.col1 * B.col2z_pk.bsx<1>();
+		}
+	};
+
+	template<>
+	struct mtimes_op<f32, 3, 2, 4>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 3, 2>& A,
+				const smat_core<f32, 2, 4>& B,
+				      smat_core<f32, 3, 4>& C)
+		{
+			C.col0 = A.col0 * B.col01_pk.bsx<0>() + A.col1 * B.col01_pk.bsx<1>();
+			C.col1 = A.col0 * B.col01_pk.bsx<2>() + A.col1 * B.col01_pk.bsx<3>();
+			C.col2 = A.col0 * B.col23_pk.bsx<0>() + A.col1 * B.col23_pk.bsx<1>();
+			C.col3 = A.col0 * B.col23_pk.bsx<2>() + A.col1 * B.col23_pk.bsx<3>();
+		}
+	};
+
+
+	/******************************************************
+	 *
+	 *  Specialized implementation for (3x2) * (2xN)
+	 *
+	 ******************************************************/
+
+	template<>
+	struct mtimes_op<f32, 4, 2, 2>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 4, 2>& A,
+				const smat_core<f32, 2, 2>& B,
+				      smat_core<f32, 4, 2>& C)
+		{
+			C.col0 = A.col0 * B.col01_pk.bsx<0>() + A.col1 * B.col01_pk.bsx<1>();
+			C.col1 = A.col0 * B.col01_pk.bsx<2>() + A.col1 * B.col01_pk.bsx<3>();
+		}
+	};
+
+	template<>
+	struct mtimes_op<f32, 4, 2, 3>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 4, 2>& A,
+				const smat_core<f32, 2, 3>& B,
+				      smat_core<f32, 4, 3>& C)
+		{
+			C.col0 = A.col0 * B.col01_pk.bsx<0>() + A.col1 * B.col01_pk.bsx<1>();
+			C.col1 = A.col0 * B.col01_pk.bsx<2>() + A.col1 * B.col01_pk.bsx<3>();
+			C.col2 = A.col0 * B.col2z_pk.bsx<0>() + A.col1 * B.col2z_pk.bsx<1>();
+		}
+	};
+
+	template<>
+	struct mtimes_op<f32, 4, 2, 4>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 4, 2>& A,
+				const smat_core<f32, 2, 4>& B,
+				      smat_core<f32, 4, 4>& C)
+		{
+			C.col0 = A.col0 * B.col01_pk.bsx<0>() + A.col1 * B.col01_pk.bsx<1>();
+			C.col1 = A.col0 * B.col01_pk.bsx<2>() + A.col1 * B.col01_pk.bsx<3>();
+			C.col2 = A.col0 * B.col23_pk.bsx<0>() + A.col1 * B.col23_pk.bsx<1>();
+			C.col3 = A.col0 * B.col23_pk.bsx<2>() + A.col1 * B.col23_pk.bsx<3>();
+		}
+	};
+
 
 } }
 

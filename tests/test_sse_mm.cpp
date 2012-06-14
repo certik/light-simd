@@ -51,9 +51,9 @@ public:
 
 		// use SIMD
 
-		sse_mat<T, M, K> a( arr_a, aligned_t() );
-		sse_mat<T, K, N> b( arr_b, aligned_t() );
-		sse_mat<T, M, N> c = a * b;
+		simd_mat<T, M, K, sse_kind> a( arr_a, aligned_t() );
+		simd_mat<T, K, N, sse_kind> b( arr_b, aligned_t() );
+		simd_mat<T, M, N, sse_kind> c = a * b;
 
 		c.store( arr_cr, aligned_t() );
 
@@ -92,6 +92,29 @@ void add_cases_to_matmul_tpack(test_pack* tp)
 	tp->add( new matmul_tests<T, 2, 4, 3>() );
 	tp->add( new matmul_tests<T, 2, 4, 4>() );
 
+	tp->add( new matmul_tests<T, 3, 2, 2>() );
+	tp->add( new matmul_tests<T, 3, 2, 3>() );
+	tp->add( new matmul_tests<T, 3, 2, 4>() );
+
+	tp->add( new matmul_tests<T, 3, 3, 2>() );
+	tp->add( new matmul_tests<T, 3, 3, 3>() );
+	tp->add( new matmul_tests<T, 3, 3, 4>() );
+
+	tp->add( new matmul_tests<T, 3, 4, 2>() );
+	tp->add( new matmul_tests<T, 3, 4, 3>() );
+	tp->add( new matmul_tests<T, 3, 4, 4>() );
+
+	tp->add( new matmul_tests<T, 4, 2, 2>() );
+	tp->add( new matmul_tests<T, 4, 2, 3>() );
+	tp->add( new matmul_tests<T, 4, 2, 4>() );
+
+	tp->add( new matmul_tests<T, 4, 3, 2>() );
+	tp->add( new matmul_tests<T, 4, 3, 3>() );
+	tp->add( new matmul_tests<T, 4, 3, 4>() );
+
+	tp->add( new matmul_tests<T, 4, 4, 2>() );
+	tp->add( new matmul_tests<T, 4, 4, 3>() );
+	tp->add( new matmul_tests<T, 4, 4, 4>() );
 }
 
 

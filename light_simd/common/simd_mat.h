@@ -210,6 +210,17 @@ namespace lsimd
 	};
 
 
+	template<typename Kind, typename T, int M, int K, int N>
+	inline simd_mat<T, M, N, Kind> operator * (
+			const simd_mat<T, M, K, Kind>& a,
+			const simd_mat<T, K, N, Kind>& b)
+	{
+		simd_mat<T, M, N, Kind> c;
+		c.impl = a.impl * b.impl;
+		return c;
+	}
+
+
 	template<typename Kind, typename T, int N>
 	LSIMD_ENSURE_INLINE
 	inline T det(const simd_mat<T, N, N, Kind>& a)
