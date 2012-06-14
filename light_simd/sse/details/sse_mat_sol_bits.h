@@ -1,7 +1,7 @@
 /*
- * @file sse_mat_inv_bits.h
+ * @file sse_mat_sol_bits.h
  *
- * The internal implementation of matrix determinant & inverse
+ * The internal implementation of matrix inverse & equation solving
  *
  * @author Dahua Lin
  */
@@ -10,8 +10,8 @@
 #pragma once
 #endif
 
-#ifndef LSIMD_SSE_MAT_INV_BITS_H_
-#define LSIMD_SSE_MAT_INV_BITS_H_
+#ifndef LSIMD_SSE_MAT_SOL_BITS_H_
+#define LSIMD_SSE_MAT_SOL_BITS_H_
 
 #include "sse_mat_comp_bits.h"
 

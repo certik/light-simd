@@ -1,7 +1,7 @@
 /*
- * @file test_sse_inv.cpp
+ * @file test_sse_sol.cpp
  *
- * Unit testing of matrix inverse
+ * Unit testing of matrix inverse and equaltion solving
  *
  * @author Dahua Lin
  */

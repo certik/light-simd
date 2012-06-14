@@ -15,7 +15,7 @@
 
 #include "details/sse_mat_comp_bits.h"
 #include "details/sse_mat_matmul_bits.h"
-#include "details/sse_mat_inv_bits.h"
+#include "details/sse_mat_sol_bits.h"
 
 namespace lsimd
 {
