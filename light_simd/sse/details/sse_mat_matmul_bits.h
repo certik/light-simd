@@ -139,13 +139,17 @@ namespace lsimd { namespace sse {
 				const smat_core<f32, 3, 2>& B,
 				      smat_core<f32, 2, 2>& C)
 		{
+			sse_f32pk ac0 = A.col01_pk.dup_low();
+			sse_f32pk ac1 = A.col01_pk.dup_high();
+			sse_f32pk ac2 = A.col2z_pk.dup_low();
+
 			sse_f32pk bc0 = B.col0.m_pk;
 			sse_f32pk bc1 = B.col1.m_pk;
 
 			C.col01_pk =
-					(A.col01_pk.dup_low()  * shuffle<0,0,0,0>(bc0, bc1)) +
-					(A.col01_pk.dup_high() * shuffle<1,1,1,1>(bc0, bc1)) +
-					(A.col2z_pk.dup_low()  * shuffle<2,2,2,2>(bc0, bc1));
+					(ac0 * shuffle<0,0,0,0>(bc0, bc1)) +
+					(ac1 * shuffle<1,1,1,1>(bc0, bc1)) +
+					(ac2 * shuffle<2,2,2,2>(bc0, bc1));
 		}
 	};
 
@@ -210,6 +214,113 @@ namespace lsimd { namespace sse {
 		}
 	};
 
+
+
+	/******************************************************
+	 *
+	 *  Specialized implementation for (2x4) * (4xN)
+	 *
+	 ******************************************************/
+
+	template<>
+	struct mtimes_op<f32, 2, 4, 2>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 2, 4>& A,
+				const smat_core<f32, 4, 2>& B,
+				      smat_core<f32, 2, 2>& C)
+		{
+			sse_f32pk ac0 = A.col01_pk.dup_low();
+			sse_f32pk ac1 = A.col01_pk.dup_high();
+			sse_f32pk ac2 = A.col23_pk.dup_low();
+			sse_f32pk ac3 = A.col23_pk.dup_high();
+
+			sse_f32pk bc0 = B.col0.m_pk;
+			sse_f32pk bc1 = B.col1.m_pk;
+
+			sse_f32pk p11 = (ac0 * shuffle<0,0,0,0>(bc0, bc1)) +
+							(ac1 * shuffle<1,1,1,1>(bc0, bc1));
+
+			sse_f32pk p12 = (ac2 * shuffle<2,2,2,2>(bc0, bc1)) +
+							(ac3 * shuffle<3,3,3,3>(bc0, bc1));
+
+			C.col01_pk = p11 + p12;
+		}
+	};
+
+	template<>
+	struct mtimes_op<f32, 2, 4, 3>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 2, 4>& A,
+				const smat_core<f32, 4, 3>& B,
+				      smat_core<f32, 2, 3>& C)
+		{
+			sse_f32pk ac0 = A.col01_pk.dup_low();
+			sse_f32pk ac1 = A.col01_pk.dup_high();
+			sse_f32pk ac2 = A.col23_pk.dup_low();
+			sse_f32pk ac3 = A.col23_pk.dup_high();
+
+			sse_f32pk bc0 = B.col0.m_pk;
+			sse_f32pk bc1 = B.col1.m_pk;
+			sse_f32pk bc2 = B.col2.m_pk;
+			sse_f32pk z = zero_t();
+
+			sse_f32pk p11 = (ac0 * shuffle<0,0,0,0>(bc0, bc1)) +
+							(ac1 * shuffle<1,1,1,1>(bc0, bc1));
+
+			sse_f32pk p12 = (ac2 * shuffle<2,2,2,2>(bc0, bc1)) +
+							(ac3 * shuffle<3,3,3,3>(bc0, bc1));
+
+			sse_f32pk p21 = (ac0 * shuffle<0,0,0,0>(bc2, z)) +
+							(ac1 * shuffle<1,1,1,1>(bc2, z));
+
+			sse_f32pk p22 = (ac2 * shuffle<2,2,2,2>(bc2, z)) +
+							(ac3 * shuffle<3,3,3,3>(bc2, z));
+
+			C.col01_pk = p11 + p12;
+			C.col2z_pk = p21 + p22;
+		}
+	};
+
+
+	template<>
+	struct mtimes_op<f32, 2, 4, 4>
+	{
+		LSIMD_ENSURE_INLINE
+		static void run(
+				const smat_core<f32, 2, 4>& A,
+				const smat_core<f32, 4, 4>& B,
+				      smat_core<f32, 2, 4>& C)
+		{
+			sse_f32pk ac0 = A.col01_pk.dup_low();
+			sse_f32pk ac1 = A.col01_pk.dup_high();
+			sse_f32pk ac2 = A.col23_pk.dup_low();
+			sse_f32pk ac3 = A.col23_pk.dup_high();
+
+			sse_f32pk bc0 = B.col0.m_pk;
+			sse_f32pk bc1 = B.col1.m_pk;
+			sse_f32pk bc2 = B.col2.m_pk;
+			sse_f32pk bc3 = B.col3.m_pk;
+
+			sse_f32pk p11 = (ac0 * shuffle<0,0,0,0>(bc0, bc1)) +
+							(ac1 * shuffle<1,1,1,1>(bc0, bc1));
+
+			sse_f32pk p12 = (ac2 * shuffle<2,2,2,2>(bc0, bc1)) +
+							(ac3 * shuffle<3,3,3,3>(bc0, bc1));
+
+			sse_f32pk p21 = (ac0 * shuffle<0,0,0,0>(bc2, bc3)) +
+							(ac1 * shuffle<1,1,1,1>(bc2, bc3));
+
+			sse_f32pk p22 = (ac2 * shuffle<2,2,2,2>(bc2, bc3)) +
+							(ac3 * shuffle<3,3,3,3>(bc2, bc3));
+
+			C.col01_pk = p11 + p12;
+			C.col23_pk = p21 + p22;
+		}
+	};
 
 
 

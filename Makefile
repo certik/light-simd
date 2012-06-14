@@ -60,6 +60,7 @@ SSE_H = $(COMMON_H) \
 	$(INC)/sse/details/sse_pack_bits.h \
 	$(INC)/sse/details/sse_mat_bits.h \
 	$(INC)/sse/details/sse_mat_comp_bits.h \
+	$(INC)/sse/details/sse_mat_matmul_bits.h \
 	$(INC)/sse/details/sse_mat_inv_bits.h \
 	$(INC)/sse/sse_base.h \
 	$(INC)/sse/sse_pack.h \

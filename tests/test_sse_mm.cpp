@@ -88,6 +88,10 @@ void add_cases_to_matmul_tpack(test_pack* tp)
 	tp->add( new matmul_tests<T, 2, 3, 3>() );
 	tp->add( new matmul_tests<T, 2, 3, 4>() );
 
+	tp->add( new matmul_tests<T, 2, 4, 2>() );
+	tp->add( new matmul_tests<T, 2, 4, 3>() );
+	tp->add( new matmul_tests<T, 2, 4, 4>() );
+
 }
 
 
