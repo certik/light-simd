@@ -13,8 +13,8 @@
 #ifndef LSIMD_SSE_MAT_H_
 #define LSIMD_SSE_MAT_H_
 
-#include "details/sse_mat_bits.h"
 #include "details/sse_mat_comp_bits.h"
+#include "details/sse_mat_matmul_bits.h"
 #include "details/sse_mat_inv_bits.h"
 
 namespace lsimd
@@ -222,6 +222,14 @@ namespace lsimd
 		}
 
 	};
+
+	template<typename T, int M, int K, int N>
+	inline sse_mat<T, M, N> operator * (const sse_mat<T, M, K>& a, const sse_mat<T, K, N>& b)
+	{
+		sse_mat<T, M, N> c;
+		sse::mtimes_op<T, M, K, N>::run(a.core, b.core, c.core);
+		return c;
+	}
 
 
 	template<typename T, int N>
