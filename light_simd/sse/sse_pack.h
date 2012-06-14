@@ -142,7 +142,7 @@ namespace lsimd
 		}
 
 		template<int I>
-		LSIMD_ENSURE_INLINE sse_pack broadcast() const
+		LSIMD_ENSURE_INLINE sse_pack bsx() const
 		{
 			return _mm_shuffle_ps(v, v, _MM_SHUFFLE(I, I, I, I));
 		}
@@ -393,7 +393,7 @@ namespace lsimd
 		}
 
 		template<int I>
-		LSIMD_ENSURE_INLINE sse_pack broadcast() const
+		LSIMD_ENSURE_INLINE sse_pack bsx() const
 		{
 			return _mm_shuffle_pd(v, v, _MM_SHUFFLE2(I, I));
 		}

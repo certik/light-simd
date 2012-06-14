@@ -21,40 +21,115 @@ namespace lsimd
 {
 	// Arithmetic functions
 
+
+	// Operators overloading
+
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> add(const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator + (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
 	{
-		return add(a.impl, b.impl);
+		return a.impl + b.impl;
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> sub(const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator + (const simd_pack<T, Kind> a, const T b)
 	{
-		return sub(a.impl, b.impl);
+		typedef typename simd<T, Kind>::impl_type impl_t;
+		return a.impl + impl_t(b);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> mul(const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator + (const T a, const simd_pack<T, Kind> b)
 	{
-		return mul(a.impl, b.impl);
+		typedef typename simd<T, Kind>::impl_type impl_t;
+		return impl_t(a) + b.impl;
+	}
+
+
+	template<typename T, typename Kind>
+	LSIMD_ENSURE_INLINE
+	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	{
+		return a.impl - b.impl;
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> div(const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a, const T b)
 	{
-		return div(a.impl, b.impl);
+		typedef typename simd<T, Kind>::impl_type impl_t;
+		return a.impl - impl_t(b);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> neg(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> operator - (const T a, const simd_pack<T, Kind> b)
 	{
-		return neg(a.impl);
+		typedef typename simd<T, Kind>::impl_type impl_t;
+		return impl_t(a) - b.impl;
 	}
+
+
+
+	template<typename T, typename Kind>
+	LSIMD_ENSURE_INLINE
+	inline simd_pack<T, Kind> operator * (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	{
+		return a.impl * b.impl;
+	}
+
+	template<typename T, typename Kind>
+	LSIMD_ENSURE_INLINE
+	inline simd_pack<T, Kind> operator * (const simd_pack<T, Kind> a, const T b)
+	{
+		typedef typename simd<T, Kind>::impl_type impl_t;
+		return a.impl * impl_t(b);
+	}
+
+	template<typename T, typename Kind>
+	LSIMD_ENSURE_INLINE
+	inline simd_pack<T, Kind> operator * (const T a, const simd_pack<T, Kind> b)
+	{
+		typedef typename simd<T, Kind>::impl_type impl_t;
+		return impl_t(a) * b.impl;
+	}
+
+
+	template<typename T, typename Kind>
+	LSIMD_ENSURE_INLINE
+	inline simd_pack<T, Kind> operator / (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	{
+		return a.impl / b.impl;
+	}
+
+	template<typename T, typename Kind>
+	LSIMD_ENSURE_INLINE
+	inline simd_pack<T, Kind> operator / (const simd_pack<T, Kind> a, const T b)
+	{
+		typedef typename simd<T, Kind>::impl_type impl_t;
+		return a.impl / impl_t(b);
+	}
+
+	template<typename T, typename Kind>
+	LSIMD_ENSURE_INLINE
+	inline simd_pack<T, Kind> operator / (const T a, const simd_pack<T, Kind> b)
+	{
+		typedef typename simd<T, Kind>::impl_type impl_t;
+		return impl_t(a) / b.impl;
+	}
+
+
+	template<typename T, typename Kind>
+	LSIMD_ENSURE_INLINE
+	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a)
+	{
+		return - a.impl;
+	}
+
+
+	// Other arithmetic functions
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
@@ -76,116 +151,6 @@ namespace lsimd
 	{
 		return vmax(a.impl, b.impl);
 	}
-
-
-	// Operators overloading
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator + (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
-	{
-		return add(a.impl, b.impl);
-	}
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator + (const simd_pack<T, Kind> a, const T b)
-	{
-		typedef typename simd<T, Kind>::impl_type impl_t;
-		return add(a.impl, impl_t(b));
-	}
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator + (const T a, const simd_pack<T, Kind> b)
-	{
-		typedef typename simd<T, Kind>::impl_type impl_t;
-		return add(impl_t(a), b.impl);
-	}
-
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
-	{
-		return sub(a.impl, b.impl);
-	}
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a, const T b)
-	{
-		typedef typename simd<T, Kind>::impl_type impl_t;
-		return sub(a.impl, impl_t(b));
-	}
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator - (const T a, const simd_pack<T, Kind> b)
-	{
-		typedef typename simd<T, Kind>::impl_type impl_t;
-		return sub(impl_t(a), b.impl);
-	}
-
-
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator * (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
-	{
-		return mul(a.impl, b.impl);
-	}
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator * (const simd_pack<T, Kind> a, const T b)
-	{
-		typedef typename simd<T, Kind>::impl_type impl_t;
-		return mul(a.impl, impl_t(b));
-	}
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator * (const T a, const simd_pack<T, Kind> b)
-	{
-		typedef typename simd<T, Kind>::impl_type impl_t;
-		return mul(impl_t(a), b.impl);
-	}
-
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator / (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
-	{
-		return div(a.impl, b.impl);
-	}
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator / (const simd_pack<T, Kind> a, const T b)
-	{
-		typedef typename simd<T, Kind>::impl_type impl_t;
-		return div(a.impl, impl_t(b));
-	}
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator / (const T a, const simd_pack<T, Kind> b)
-	{
-		typedef typename simd<T, Kind>::impl_type impl_t;
-		return div(impl_t(a), b.impl);
-	}
-
-
-	template<typename T, typename Kind>
-	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a)
-	{
-		return neg(a.impl);
-	}
-
-
-	// Derived arithmetic functions
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE

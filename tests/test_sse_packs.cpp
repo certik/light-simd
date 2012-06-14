@@ -289,16 +289,16 @@ SCASE( broadcast, f32 )
 	simd_pack<f32, sse_kind> a(s, aligned_t());
 
 	LSIMD_ALIGN_SSE f32 r0[4] = {s[0], s[0], s[0], s[0]};
-	ASSERT_SIMD_EQ( a.broadcast<0>(), r0 );
+	ASSERT_SIMD_EQ( a.bsx<0>(), r0 );
 
 	LSIMD_ALIGN_SSE f32 r1[4] = {s[1], s[1], s[1], s[1]};
-	ASSERT_SIMD_EQ( a.broadcast<1>(), r1 );
+	ASSERT_SIMD_EQ( a.bsx<1>(), r1 );
 
 	LSIMD_ALIGN_SSE f32 r2[4] = {s[2], s[2], s[2], s[2]};
-	ASSERT_SIMD_EQ( a.broadcast<2>(), r2 );
+	ASSERT_SIMD_EQ( a.bsx<2>(), r2 );
 
 	LSIMD_ALIGN_SSE f32 r3[4] = {s[3], s[3], s[3], s[3]};
-	ASSERT_SIMD_EQ( a.broadcast<3>(), r3 );
+	ASSERT_SIMD_EQ( a.bsx<3>(), r3 );
 }
 
 
@@ -309,10 +309,10 @@ SCASE( broadcast, f64 )
 	simd_pack<f64, sse_kind> a(s, aligned_t());
 
 	LSIMD_ALIGN_SSE f64 r0[4] = {s[0], s[0]};
-	ASSERT_SIMD_EQ( a.broadcast<0>(), r0 );
+	ASSERT_SIMD_EQ( a.bsx<0>(), r0 );
 
 	LSIMD_ALIGN_SSE f64 r1[4] = {s[1], s[1]};
-	ASSERT_SIMD_EQ( a.broadcast<1>(), r1 );
+	ASSERT_SIMD_EQ( a.bsx<1>(), r1 );
 }
 
 

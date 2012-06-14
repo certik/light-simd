@@ -14,7 +14,7 @@ using namespace ltest;
 
 // explicit instantiation for thorough syntax check
 
-/*
+
 template class lsimd::sse_vec<f32, 1>;
 template class lsimd::sse_vec<f32, 2>;
 template class lsimd::sse_vec<f32, 3>;
@@ -34,7 +34,7 @@ template struct lsimd::simd_vec<f64, 1, sse_kind>;
 template struct lsimd::simd_vec<f64, 2, sse_kind>;
 template struct lsimd::simd_vec<f64, 3, sse_kind>;
 template struct lsimd::simd_vec<f64, 4, sse_kind>;
-*/
+
 
 
 const int MaxVLen = 4;
@@ -140,6 +140,94 @@ GCASE1( store )
 	ASSERT_VEC_EQ(5, dst, r2);
 }
 
+
+// set
+
+template<typename T, int N> class bsxp_tests;
+
+SCASE1( bsxp, 1 )
+{
+	T a[1] = { T(1.1) };
+	const int w = (int)simd<T, sse_kind>::pack_width;
+
+	sse_vec<T, 1> v(a[0]);
+
+	T r[w];
+
+	fill_const(w, r, a[0]);
+	sse_pack<T> p = v.template bsx_pk<0>();
+	ASSERT_TRUE( p.test_equal(r) );
+}
+
+
+SCASE1( bsxp, 2 )
+{
+	T a[2] = { T(1.1), T(2.2) };
+	const int w = (int)simd<T, sse_kind>::pack_width;
+
+	sse_vec<T, 2> v(a[0], a[1]);
+
+	T r[w];
+
+	fill_const(w, r, a[0]);
+	sse_pack<T> p0 = v.template bsx_pk<0>();
+	ASSERT_TRUE( p0.test_equal(r) );
+
+	fill_const(w, r, a[1]);
+	sse_pack<T> p1 = v.template bsx_pk<1>();
+	ASSERT_TRUE( p1.test_equal(r) );
+}
+
+SCASE1( bsxp, 3 )
+{
+	T a[3] = { T(1.1), T(2.2), T(3.3) };
+	const int w = (int)simd<T, sse_kind>::pack_width;
+
+	sse_vec<T, 3> v(a[0], a[1], a[2]);
+
+	T r[w];
+
+	fill_const(w, r, a[0]);
+	sse_pack<T> p0 = v.template bsx_pk<0>();
+	ASSERT_TRUE( p0.test_equal(r) );
+
+	fill_const(w, r, a[1]);
+	sse_pack<T> p1 = v.template bsx_pk<1>();
+	ASSERT_TRUE( p1.test_equal(r) );
+
+	fill_const(w, r, a[2]);
+	sse_pack<T> p2 = v.template bsx_pk<2>();
+	ASSERT_TRUE( p2.test_equal(r) );
+}
+
+SCASE1( bsxp, 4 )
+{
+	T a[4] = { T(1.1), T(2.2), T(3.3), T(4.4) };
+	const int w = (int)simd<T, sse_kind>::pack_width;
+
+	sse_vec<T, 4> v(a[0], a[1], a[2], a[3]);
+
+	T r[w];
+
+	fill_const(w, r, a[0]);
+	sse_pack<T> p0 = v.template bsx_pk<0>();
+	ASSERT_TRUE( p0.test_equal(r) );
+
+	fill_const(w, r, a[1]);
+	sse_pack<T> p1 = v.template bsx_pk<1>();
+	ASSERT_TRUE( p1.test_equal(r) );
+
+	fill_const(w, r, a[2]);
+	sse_pack<T> p2 = v.template bsx_pk<2>();
+	ASSERT_TRUE( p2.test_equal(r) );
+
+	fill_const(w, r, a[3]);
+	sse_pack<T> p3 = v.template bsx_pk<3>();
+	ASSERT_TRUE( p3.test_equal(r) );
+}
+
+
+
 // arithmetic
 
 GCASE1( add )
@@ -196,6 +284,26 @@ GCASE1( mul )
 }
 
 
+GCASE1( scale )
+{
+	LSIMD_ALIGN_SSE T a[MaxVLen] = { T(1), T(2), T(3), T(4) };
+	T b = 2.5;
+	simd_pack<T, sse_kind> bv( b );
+
+	T r[N];
+	for (int i = 0; i < N; ++i) r[i] = a[i] * b;
+
+	simd_vec<T, N, sse_kind> va(a, aligned_t());
+
+	ASSERT_SIMD_EQ( va * bv, r );
+
+	va *= bv;
+	ASSERT_SIMD_EQ( va, r);
+}
+
+
+
+
 GCASE1( sum )
 {
 	LSIMD_ALIGN_SSE T a[MaxVLen] = { T(1), T(2), T(3), T(4) };
@@ -249,13 +357,16 @@ void lsimd::add_test_packs()
 	ADD_TEST( set );
 	ADD_TEST( load );
 	ADD_TEST( store );
+	ADD_TEST( bsxp );
 
 	ADD_TEST( add );
 	ADD_TEST( sub );
 	ADD_TEST( mul );
+	ADD_TEST( scale );
 
 	ADD_TEST( sum );
 	ADD_TEST( dot );
+
 }
 
 

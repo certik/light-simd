@@ -141,41 +141,54 @@ namespace lsimd
 		// arithmetic
 
 		LSIMD_ENSURE_INLINE
-		simd_mat operator + (simd_mat r) const
+		simd_mat operator + (const simd_mat& r) const
 		{
 			return impl + r.impl;
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat operator - (simd_mat r) const
+		simd_mat operator - (const simd_mat& r) const
 		{
 			return impl - r.impl;
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat operator % (simd_mat r) const
+		simd_mat operator % (const simd_mat& r) const
 		{
 			return impl % r.impl;
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat& operator += (simd_mat r)
+		simd_mat operator * (const simd_pack<T, Kind> s) const
+		{
+			return impl * s.impl;
+		}
+
+		LSIMD_ENSURE_INLINE
+		simd_mat& operator += (const simd_mat& r)
 		{
 			impl += r.impl;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat& operator -= (simd_mat r)
+		simd_mat& operator -= (const simd_mat& r)
 		{
 			impl -= r.impl;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat& operator %= (simd_mat r)
+		simd_mat& operator %= (const simd_mat& r)
 		{
 			impl %= r.impl;
+			return *this;
+		}
+
+		LSIMD_ENSURE_INLINE
+		simd_mat& operator *= (const simd_pack<T, Kind> s)
+		{
+			impl *= s.impl;
 			return *this;
 		}
 

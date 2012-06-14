@@ -13,12 +13,14 @@
 #ifndef LSIMD_SSE_MAT_H_
 #define LSIMD_SSE_MAT_H_
 
-#include "details/sse_mat_bits_f32.h"
-#include "details/sse_mat_bits_f64.h"
+#include "details/sse_mat_bits.h"
+#include "details/sse_mat_comp_bits.h"
 #include "details/sse_mat_inv_bits.h"
 
 namespace lsimd
 {
+
+
 	template<typename T, int M, int N> class sse_mat;
 
 
@@ -28,181 +30,195 @@ namespace lsimd
 	 *
 	 ********************************************/
 
+
 	template<typename T, int M, int N>
 	class sse_mat
 	{
 	public:
-		sse::smat<T, M, N> intern;
+		sse::smat_core<T, M, N> core;
 
 		LSIMD_ENSURE_INLINE
-		sse_mat(sse::smat<T, M, N> a) : intern(a) { }
+		sse_mat(sse::smat_core<T, M, N> a) : core(a) { }
 
 	public:
 		LSIMD_ENSURE_INLINE
 		sse_mat() { }
 
 		LSIMD_ENSURE_INLINE
-		sse_mat( zero_t ) : intern( zero_t() ) { }
+		sse_mat( zero_t ) : core( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
 		sse_mat(const T *x, aligned_t)
 		{
-			intern.load(x, aligned_t());
+			core.load(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_mat(const T *x, unaligned_t)
 		{
-			intern.load(x, unaligned_t());
+			core.load(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_mat(const T *x, int ldim, aligned_t)
 		{
-			intern.load(x, ldim, aligned_t());
+			core.load(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_mat(const T *x, int ldim, unaligned_t)
 		{
-			intern.load(x, ldim, unaligned_t());
+			core.load(x, ldim, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void load(const T *x, aligned_t)
 		{
-			intern.load(x, aligned_t());
+			core.load(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void load(const T *x, unaligned_t)
 		{
-			intern.load(x, unaligned_t());
+			core.load(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void load(const T *x, int ldim, aligned_t)
 		{
-			intern.load(x, ldim, aligned_t());
+			core.load(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void load(const T *x, int ldim, unaligned_t)
 		{
-			intern.load(x, ldim, unaligned_t());
+			core.load(x, ldim, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void load_trans(const T *x, aligned_t)
 		{
-			intern.load_trans(x, aligned_t());
+			core.load_trans(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void load_trans(const T *x, unaligned_t)
 		{
-			intern.load_trans(x, unaligned_t());
+			core.load_trans(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void load_trans(const T *x, int ldim, aligned_t)
 		{
-			intern.load_trans(x, ldim, aligned_t());
+			core.load_trans(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void load_trans(const T *x, int ldim, unaligned_t)
 		{
-			intern.load_trans(x, ldim, unaligned_t());
+			core.load_trans(x, ldim, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void store(T *x, aligned_t) const
 		{
-			intern.store(x, aligned_t());
+			core.store(x, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void store(T *x, unaligned_t) const
 		{
-			intern.store(x, unaligned_t());
+			core.store(x, unaligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void store(T *x, int ldim, aligned_t) const
 		{
-			intern.store(x, ldim, aligned_t());
+			core.store(x, ldim, aligned_t());
 		}
 
 		LSIMD_ENSURE_INLINE
 		void store(T *x, int ldim, unaligned_t) const
 		{
-			intern.store(x, ldim, unaligned_t());
+			core.store(x, ldim, unaligned_t());
 		}
 
 	public:
 		LSIMD_ENSURE_INLINE
 		sse_mat operator + (sse_mat r) const
 		{
-			return intern.madd(r.intern);
+			return core + r.core;
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_mat operator - (sse_mat r) const
 		{
-			return intern.msub(r.intern);
+			return core - r.core;
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_mat operator % (sse_mat r) const
 		{
-			return intern.mmul(r.intern);
+			return core % r.core;
+		}
+
+		LSIMD_ENSURE_INLINE
+		sse_mat operator * (sse_pack<T> s) const
+		{
+			return core * s;
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_mat& operator += (sse_mat r)
 		{
-			intern.inplace_madd(r.intern);
+			core += r.core;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_mat& operator -= (sse_mat r)
 		{
-			intern.inplace_msub(r.intern);
+			core -= r.core;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_mat& operator %= (sse_mat r)
 		{
-			intern.inplace_mmul(r.intern);
+			core %= r.core;
+			return *this;
+		}
+
+		LSIMD_ENSURE_INLINE
+		sse_mat& operator *= (sse_pack<T> s)
+		{
+			core *= s;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
 		sse_vec<T, M> operator * (sse_vec<T, N> v) const
 		{
-			return intern.transform(v);
+			return transform(core, v);
 		}
 
 		LSIMD_ENSURE_INLINE
 		T trace() const
 		{
-			return intern.trace();
+			return core.trace();
 		}
 
 	public:
 		LSIMD_ENSURE_INLINE
 		bool test_equal(const T *r) const
 		{
-			return intern.test_equal(r);
+			return core.test_equal(r);
 		}
 
 		LSIMD_ENSURE_INLINE
 		void dump(const char *fmt) const
 		{
-			intern.dump(fmt);
+			core.dump(fmt);
 		}
 
 	};
@@ -212,21 +228,21 @@ namespace lsimd
 	LSIMD_ENSURE_INLINE
 	inline T det(const sse_mat<T, N, N>& a)
 	{
-		return sse::det(a.intern);
+		return sse::det(a.core);
 	}
 
 	template<typename T, int N>
 	inline sse_mat<T, N, N> inv(const sse_mat<T, N, N>& a)
 	{
 		sse_mat<T, N, N> r;
-		sse::inv(a.intern, r.intern);
+		sse::inv(a.core, r.core);
 		return r;
 	}
 
 	template<typename T, int N>
 	inline T inv_and_det(const sse_mat<T, N, N>& a, sse_mat<T, N, N>& r)
 	{
-		return sse::inv(a.intern, r.intern);
+		return sse::inv(a.core, r.core);
 	}
 
 }

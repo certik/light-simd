@@ -23,54 +23,62 @@ namespace lsimd
 	 *
 	 ********************************************/
 
-
-	// basic arithmetic
-
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk add(const sse_f32pk a, const sse_f32pk b)
+	inline sse_f32pk operator + (const sse_f32pk a, const sse_f32pk b)
 	{
 		return _mm_add_ps(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk add(const sse_f64pk a, const sse_f64pk b)
+	inline sse_f64pk operator + (const sse_f64pk a, const sse_f64pk b)
 	{
 		return _mm_add_pd(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk sub(const sse_f32pk a, const sse_f32pk b)
+	inline sse_f32pk operator - (const sse_f32pk a, const sse_f32pk b)
 	{
 		return _mm_sub_ps(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk sub(const sse_f64pk a, const sse_f64pk b)
+	inline sse_f64pk operator - (const sse_f64pk a, const sse_f64pk b)
 	{
 		return _mm_sub_pd(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk mul(const sse_f32pk a, const sse_f32pk b)
+	inline sse_f32pk operator * (const sse_f32pk a, const sse_f32pk b)
 	{
 		return _mm_mul_ps(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk mul(const sse_f64pk a, const sse_f64pk b)
+	inline sse_f64pk operator * (const sse_f64pk a, const sse_f64pk b)
 	{
 		return _mm_mul_pd(a.v, b.v);
 	}
 
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk operator / (const sse_f32pk a, const sse_f32pk b)
+	{
+		return _mm_div_ps(a.v, b.v);
+	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk neg(const sse_f32pk a)
+	inline sse_f64pk operator / (const sse_f64pk a, const sse_f64pk b)
+	{
+		return _mm_div_pd(a.v, b.v);
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline sse_f32pk operator - (const sse_f32pk a)
 	{
 		return _mm_xor_ps(_mm_set1_ps(-0.f), a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk neg(const sse_f64pk a)
+	inline sse_f64pk operator - (const sse_f64pk a)
 	{
 		return _mm_xor_pd(_mm_set1_pd(-0.0), a.v);
 	}
@@ -113,25 +121,11 @@ namespace lsimd
 	}
 
 
-
 	/********************************************
 	 *
-	 *  Floating-point only arithmetic functions
+	 *  Other arithmetic functions
 	 *
 	 ********************************************/
-
-
-	LSIMD_ENSURE_INLINE
-	inline sse_f32pk div(const sse_f32pk a, const sse_f32pk b)
-	{
-		return _mm_div_ps(a.v, b.v);
-	}
-
-	LSIMD_ENSURE_INLINE
-	inline sse_f64pk div(const sse_f64pk a, const sse_f64pk b)
-	{
-		return _mm_div_pd(a.v, b.v);
-	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f32pk sqrt(const sse_f32pk a)

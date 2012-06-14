@@ -56,11 +56,6 @@ template struct lsimd::simd_mat<f64, 4, 3, sse_kind>;
 template struct lsimd::simd_mat<f64, 4, 4, sse_kind>;
 */
 
-#define TEST_ITEM( name ) \
-	if ( test_##name<T, M, N>() ) { std::printf("Tests on %-16s: passed\n", #name);  } \
-	else { std::printf("Tests on %-16s: failed\n", #name); return false; }
-
-
 const int MaxArrLen = 36;
 const int LDa = 8;
 const int LDu = 5;
@@ -208,17 +203,51 @@ GCASE2( arith )
 	T r[M * N];
 
 	simd_mat<T, M, N, sse_kind> a(sa, aligned_t());
+	simd_mat<T, M, N, sse_kind> a2;
 	simd_mat<T, M, N, sse_kind> b(sb, aligned_t());
 
 	for (int i = 0; i < M * N; ++i) r[i] = sa[i] + sb[i];
 	ASSERT_SIMD_EQ(a + b, r);
 
+	a2 = a;
+	a2 += b;
+	ASSERT_SIMD_EQ(a2, r);
+
 	for (int i = 0; i < M * N; ++i) r[i] = sa[i] - sb[i];
 	ASSERT_SIMD_EQ(a - b, r);
 
+	a2 = a;
+	a2 -= b;
+	ASSERT_SIMD_EQ(a2, r);
+
 	for (int i = 0; i < M * N; ++i) r[i] = sa[i] * sb[i];
 	ASSERT_SIMD_EQ(a % b, r);
+
+	a2 = a;
+	a2 %= b;
+	ASSERT_SIMD_EQ(a2, r);
 }
+
+
+GCASE2( scale )
+{
+	LSIMD_ALIGN_SSE T sa[MaxArrLen];
+	for (int i = 0; i < MaxArrLen; ++i) sa[i] = T(i+1);
+
+	T b = T(2.5);
+	simd_pack<T, sse_kind> bp(b);
+
+	T r[M * N];
+
+	simd_mat<T, M, N, sse_kind> a(sa, aligned_t());
+
+	for (int i = 0; i < M * N; ++i) r[i] = sa[i] * b;
+	ASSERT_SIMD_EQ(a * bp, r);
+
+	a *= bp;
+	ASSERT_SIMD_EQ(a, r);
+}
+
 
 
 GCASE2( mtimes )
@@ -309,6 +338,7 @@ void lsimd::add_test_packs()
 	ADD_TEST( store );
 	ADD_TEST( load_trans );
 	ADD_TEST( arith );
+	ADD_TEST( scale );
 	ADD_TEST( mtimes );
 	ADD_TEST( trace );
 }

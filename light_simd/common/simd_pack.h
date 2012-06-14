@@ -152,9 +152,9 @@ namespace lsimd
 		}
 
 		template<int I>
-		LSIMD_ENSURE_INLINE simd_pack broadcast() const
+		LSIMD_ENSURE_INLINE simd_pack bsx() const
 		{
-			return impl.broadcast<I>();
+			return impl.bsx<I>();
 		}
 
 		template<int I>

@@ -107,6 +107,17 @@ namespace lsimd
 			return *this;
 		}
 
+		LSIMD_ENSURE_INLINE simd_vec operator * (simd_pack<T, Kind> s) const
+		{
+			return impl * s.impl;
+		}
+
+		LSIMD_ENSURE_INLINE simd_vec& operator *= (simd_pack<T, Kind> s)
+		{
+			impl *= s.impl;
+			return *this;
+		}
+
 		// stats
 
 		LSIMD_ENSURE_INLINE T sum() const

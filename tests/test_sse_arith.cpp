@@ -56,7 +56,7 @@ struct add_ts
 
 	static simd_pack<T, sse_kind> eval_vector(const simd_pack<T, sse_kind> x, const simd_pack<T, sse_kind> y)
 	{
-		return add(x, y);
+		return x + y;
 	}
 };
 
@@ -76,7 +76,7 @@ struct sub_ts
 
 	static simd_pack<T, sse_kind> eval_vector(const simd_pack<T, sse_kind> x, const simd_pack<T, sse_kind> y)
 	{
-		return sub(x, y);
+		return x - y;
 	}
 };
 
@@ -96,7 +96,7 @@ struct mul_ts
 
 	static simd_pack<T, sse_kind> eval_vector(const simd_pack<T, sse_kind> x, const simd_pack<T, sse_kind> y)
 	{
-		return mul(x, y);
+		return x * y;
 	}
 };
 
@@ -116,7 +116,7 @@ struct div_ts
 
 	static simd_pack<T, sse_kind> eval_vector(const simd_pack<T, sse_kind> x, const simd_pack<T, sse_kind> y)
 	{
-		return div(x, y);
+		return x / y;
 	}
 };
 
@@ -133,7 +133,7 @@ struct neg_ts
 
 	static simd_pack<T, sse_kind> eval_vector(const simd_pack<T, sse_kind> x)
 	{
-		return neg(x);
+		return - x;
 	}
 };
 
