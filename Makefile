@@ -74,8 +74,7 @@ SSE_H = $(COMMON_H) \
 #---------- Target groups -------------------
 
 .PHONY: all
-#all: test bench
-all: $(BIN)/test_sse_sol
+all: test bench
 
 .PHONY: test
 test: test_sse
