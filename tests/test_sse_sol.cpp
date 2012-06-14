@@ -99,6 +99,53 @@ GCASE1( inv )
 }
 
 
+GCASE1( solve )
+{
+	T tol = sizeof(T) == 4 ? T(5.0e-5) : T(1.0e-12);
+
+	LSIMD_ALIGN_SSE T av[N * N];
+	LSIMD_ALIGN_SSE T bv[N];
+	LSIMD_ALIGN_SSE T yv[N];
+
+	special_fill_mat(N, av);
+	for (int i = 0; i < N * 4; ++i) bv[i] = T(i+1);
+
+	simd_mat<T, N, N, sse_kind> A(av, aligned_t());
+
+	simd_vec<T, N, sse_kind> b(bv, aligned_t());
+	simd_vec<T, N, sse_kind> x = solve(A, b);
+
+	fill_const(N, yv, T(-1));
+	(A * x).store(yv, aligned_t());
+
+	ASSERT_VEC_APPROX(N, yv, bv, tol);
+}
+
+
+GCASE2( solve_mat )
+{
+	T tol = sizeof(T) == 4 ? T(5.0e-4) : T(1.0e-12);
+
+	LSIMD_ALIGN_SSE T av[M * M];
+	LSIMD_ALIGN_SSE T bv[M * N];
+	LSIMD_ALIGN_SSE T yv[M * N];
+
+	special_fill_mat(M, av);
+	for (int i = 0; i < M * N; ++i) bv[i] = T(i+1);
+
+	simd_mat<T, M, M, sse_kind> A(av, aligned_t());
+
+	simd_mat<T, M, N, sse_kind> B(bv, aligned_t());
+	simd_mat<T, M, N, sse_kind> X = solve(A, B);
+
+	fill_const(M * N, yv, T(-1));
+	(A * X).store(yv, aligned_t());
+
+	ASSERT_VEC_APPROX(M * N, yv, bv, tol);
+}
+
+
+
 test_pack* det_tpack()
 {
 	test_pack *tp = new test_pack( "det" );
@@ -131,11 +178,61 @@ test_pack* inv_tpack()
 	return tp;
 }
 
+test_pack* solve_tpack()
+{
+	test_pack *tp = new test_pack( "solve" );
+
+	tp->add( new solve_tests<f32, 2>() );
+	tp->add( new solve_tests<f64, 2>() );
+
+	tp->add( new solve_tests<f32, 3>() );
+	tp->add( new solve_tests<f64, 3>() );
+
+	tp->add( new solve_tests<f32, 4>() );
+	tp->add( new solve_tests<f64, 4>() );
+
+	return tp;
+}
+
+
+test_pack* solve_mat_tpack()
+{
+	test_pack *tp = new test_pack( "solve_mat" );
+
+	tp->add( new solve_mat_tests<f32, 2, 2>() );
+	tp->add( new solve_mat_tests<f32, 2, 3>() );
+	tp->add( new solve_mat_tests<f32, 2, 4>() );
+
+	tp->add( new solve_mat_tests<f64, 2, 2>() );
+	tp->add( new solve_mat_tests<f64, 2, 3>() );
+	tp->add( new solve_mat_tests<f64, 2, 4>() );
+
+	tp->add( new solve_mat_tests<f32, 3, 2>() );
+	tp->add( new solve_mat_tests<f32, 3, 3>() );
+	tp->add( new solve_mat_tests<f32, 3, 4>() );
+
+	tp->add( new solve_mat_tests<f64, 3, 2>() );
+	tp->add( new solve_mat_tests<f64, 3, 3>() );
+	tp->add( new solve_mat_tests<f64, 3, 4>() );
+
+	tp->add( new solve_mat_tests<f32, 4, 2>() );
+	tp->add( new solve_mat_tests<f32, 4, 3>() );
+	tp->add( new solve_mat_tests<f32, 4, 4>() );
+
+	tp->add( new solve_mat_tests<f64, 4, 2>() );
+	tp->add( new solve_mat_tests<f64, 4, 3>() );
+	tp->add( new solve_mat_tests<f64, 4, 4>() );
+
+	return tp;
+}
+
 
 void lsimd::add_test_packs()
 {
 	lsimd_main_suite.add( det_tpack() );
 	lsimd_main_suite.add( inv_tpack() );
+	lsimd_main_suite.add( solve_tpack() );
+	lsimd_main_suite.add( solve_mat_tpack() );
 }
 
 

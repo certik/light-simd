@@ -253,6 +253,22 @@ namespace lsimd
 		return sse::inv(a.core, r.core);
 	}
 
+	template<typename T, int N>
+	inline sse_vec<T, N> solve(const sse_mat<T, N, N>& A, sse_vec<T, N> b)
+	{
+		sse_vec<T, N> x;
+		sse::solve(A.core, b, x);
+		return x;
+	}
+
+	template<typename T, int N, int N2>
+	inline sse_mat<T, N, N2> solve(const sse_mat<T, N, N>& A, const sse_mat<T, N, N2>& B)
+	{
+		sse_mat<T, N, N2> X;
+		sse::solve(A.core, B.core, X.core);
+		return X;
+	}
+
 }
 
 #endif 

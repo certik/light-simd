@@ -240,6 +240,18 @@ namespace lsimd
 		return inv_and_det(a.impl, r.impl);
 	}
 
+	template<typename Kind, typename T, int N>
+	inline simd_vec<T, N, Kind> solve(const simd_mat<T, N, N, Kind>& A, simd_vec<T, N, Kind> b)
+	{
+		return solve(A.impl, b.impl);
+	}
+
+	template<typename Kind, typename T, int N, int N2>
+	inline simd_mat<T, N, N2, Kind> solve(const simd_mat<T, N, N, Kind>& A, const simd_mat<T, N, N2, Kind>& B)
+	{
+		return solve(A.impl, B.impl);
+	}
+
 }
 
 #endif /* SIMD_MAT_H_ */

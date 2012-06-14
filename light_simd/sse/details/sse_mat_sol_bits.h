@@ -13,7 +13,7 @@
 #ifndef LSIMD_SSE_MAT_SOL_BITS_H_
 #define LSIMD_SSE_MAT_SOL_BITS_H_
 
-#include "sse_mat_comp_bits.h"
+#include "sse_mat_matmul_bits.h"
 
 namespace lsimd { namespace sse {
 
@@ -22,6 +22,20 @@ namespace lsimd { namespace sse {
 	 *  Auxiliary functions
 	 *
 	 **********************************/
+
+	LSIMD_ENSURE_INLINE
+	inline __m128 low2_mask_f32()
+	{
+		return _mm_castsi128_ps(
+				_mm_setr_epi32((int)0xffffffff, (int)0xffffffff, 0, 0));
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline __m128 low3_mask_f32()
+	{
+		return _mm_castsi128_ps(
+				_mm_setr_epi32((int)0xffffffff, (int)0xffffffff, (int)0xffffffff, 0));
+	}
 
 	LSIMD_ENSURE_INLINE
 	inline sse_f32pk hdiff(sse_f32pk p)
@@ -140,27 +154,19 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline f32 inv(const smat_core<f32, 2, 2>& a, smat_core<f32, 2, 2>& r)
+	inline sse_f32pk adjoint(const smat_core<f32, 2, 2>& a, smat_core<f32, 2, 2>& r)
 	{
 		r = adjoint_mat(a, adjoint_signmask_f32());
 
-		sse_f32pk detv = hdiff(pre_det(a));
-		sse_f32pk rdetv = rcp_s(detv).bsx<0>();
-
-		r *= rdetv;
-		return detv.to_scalar();
+		return hdiff(pre_det(a));
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline f64 inv(const smat_core<f64, 2, 2>& a, smat_core<f64, 2, 2>& r)
+	inline sse_f64pk adjoint(const smat_core<f64, 2, 2>& a, smat_core<f64, 2, 2>& r)
 	{
 		r = adjoint_mat(a, adjoint_signmask_f64());
 
-		sse_f64pk detv = hdiff(pre_det(a));
-		sse_f64pk rdetv = rcp_s(detv).bsx<0>();
-
-		r *= rdetv;
-		return detv.to_scalar();
+		return hdiff(pre_det(a));
 	}
 
 
@@ -215,7 +221,7 @@ namespace lsimd { namespace sse {
 	}
 
 
-	inline f32 inv(const smat_core<f32, 3, 3>& a, smat_core<f32, 3, 3>& r)
+	inline sse_f32pk adjoint(const smat_core<f32, 3, 3>& a, smat_core<f32, 3, 3>& r)
 	{
 		// calculate co-factor matrix
 
@@ -257,16 +263,11 @@ namespace lsimd { namespace sse {
 		r.col1.m_pk.v = _mm_and_ps(shuffle<1, 3, 1, 1>(c0, c1).v, msk);
 		r.col2.m_pk.v = _mm_and_ps(shuffle<2, 3, 0, 0>(c1, c2).v, msk);
 
-		// multiply with the rcp(detv)
-
-		sse_f32pk rdetv = rcp_s(detv).bsx<0>();
-		r *= rdetv;
-
-		return detv.to_scalar();
+		return detv;
 	}
 
 
-	inline f64 inv(const smat_core<f64, 3, 3>& a, smat_core<f64, 3, 3>& r)
+	inline sse_f64pk adjoint(const smat_core<f64, 3, 3>& a, smat_core<f64, 3, 3>& r)
 	{
 		// calculate co-factors
 
@@ -318,12 +319,7 @@ namespace lsimd { namespace sse {
 		detv = add_s(detv, mul_s(r.col1.m_pk0, a.col0.m_pk0.dup_high()));
 		detv = add_s(detv, mul_s(r.col2.m_pk0, a.col0.m_pk1));
 
-		// multiply with rcp(det)
-
-		sse_f64pk rdetv = rcp_s(detv).bsx<0>();
-		r *= rdetv;
-
-		return detv.to_scalar();
+		return detv;
 	}
 
 
@@ -432,7 +428,7 @@ namespace lsimd { namespace sse {
 	}
 
 
-	inline f32 inv(const smat_core<f32,4,4>& X, smat_core<f32,4,4>& Y)
+	inline sse_f32pk adjoint(const smat_core<f32,4,4>& X, smat_core<f32,4,4>& Y)
 	{
 		// blocking and evaluate pre-determinant
 
@@ -469,7 +465,6 @@ namespace lsimd { namespace sse {
 		sse_f32pk comb = add_s(mul_s(dA, dD), mul_s(dB, dC));
 		sse_f32pk qtr = mm2x2_trace_p(Aa, IA);
 		sse_f32pk detv = sub_s(comb, qtr);
-		sse_f32pk rdetv = rcp_s(detv).bsx<0>();
 
 		// complete partial inverses
 
@@ -485,16 +480,16 @@ namespace lsimd { namespace sse {
 
 		// assemble into the inverse matrix
 
-		Y.col0.m_pk = merge_low (IA.col01_pk, IC.col01_pk) * rdetv;
-		Y.col1.m_pk = merge_high(IA.col01_pk, IC.col01_pk) * rdetv;
-		Y.col2.m_pk = merge_low (IB.col01_pk, ID.col01_pk) * rdetv;
-		Y.col3.m_pk = merge_high(IB.col01_pk, ID.col01_pk) * rdetv;
+		Y.col0.m_pk = merge_low (IA.col01_pk, IC.col01_pk);
+		Y.col1.m_pk = merge_high(IA.col01_pk, IC.col01_pk);
+		Y.col2.m_pk = merge_low (IB.col01_pk, ID.col01_pk);
+		Y.col3.m_pk = merge_high(IB.col01_pk, ID.col01_pk);
 
-		return detv.to_scalar();
+		return detv;
 	}
 
 
-	inline f64 inv(const smat_core<f64,4,4>& X, smat_core<f64,4,4>& Y)
+	inline sse_f64pk adjoint(const smat_core<f64,4,4>& X, smat_core<f64,4,4>& Y)
 	{
 		// blocking and evaluate pre-determinant
 
@@ -537,7 +532,6 @@ namespace lsimd { namespace sse {
 		sse_f64pk comb = add_s(mul_s(dA, dD), mul_s(dB, dC));
 		sse_f64pk qtr = mm2x2_trace_p(Aa, IA);
 		sse_f64pk detv = sub_s(comb, qtr);
-		sse_f64pk rdetv = rcp_s(detv).bsx<0>();
 
 		// complete partial inverses
 
@@ -553,16 +547,245 @@ namespace lsimd { namespace sse {
 
 		// assemble into the inverse matrix
 
-		Y.col0.m_pk0 = IA.col0.m_pk * rdetv;
-		Y.col0.m_pk1 = IC.col0.m_pk * rdetv;
-		Y.col1.m_pk0 = IA.col1.m_pk * rdetv;
-		Y.col1.m_pk1 = IC.col1.m_pk * rdetv;
-		Y.col2.m_pk0 = IB.col0.m_pk * rdetv;
-		Y.col2.m_pk1 = ID.col0.m_pk * rdetv;
-		Y.col3.m_pk0 = IB.col1.m_pk * rdetv;
-		Y.col3.m_pk1 = ID.col1.m_pk * rdetv;
+		Y.col0.m_pk0 = IA.col0.m_pk;
+		Y.col0.m_pk1 = IC.col0.m_pk;
+		Y.col1.m_pk0 = IA.col1.m_pk;
+		Y.col1.m_pk1 = IC.col1.m_pk;
+		Y.col2.m_pk0 = IB.col0.m_pk;
+		Y.col2.m_pk1 = ID.col0.m_pk;
+		Y.col3.m_pk0 = IB.col1.m_pk;
+		Y.col3.m_pk1 = ID.col1.m_pk;
+
+		return detv;
+	}
+
+
+	/**********************************
+	 *
+	 *  Generic inverse function
+	 *
+	 **********************************/
+
+	template<typename T, int N>
+	inline T inv(const smat_core<T, N, N>& A, smat_core<T, N, N>& R)
+	{
+		sse_pack<T> detv = adjoint(A, R);
+
+		sse_pack<T> rdetv = rcp_s(detv).template bsx<0>();
+		R *= rdetv;
 
 		return detv.to_scalar();
+	}
+
+
+	/*******************************************
+	 *
+	 *  Generic solving function (for 2x2)
+	 *
+	 *******************************************/
+
+	template<typename T, int N>
+	inline void solve(const smat_core<T, N, N>& A, sse_vec<T, N> b, sse_vec<T, N>& x)
+	{
+		smat_core<T, N, N> R;
+		sse_pack<T> detv = adjoint(A, R);
+
+		sse_pack<T> rdetv = rcp_s(detv).template bsx<0>();
+		sse_vec<T, N> scaled_b = b * rdetv;
+
+		x = transform(R, scaled_b);
+	}
+
+	template<typename T, int N, int N2>
+	inline void solve(const smat_core<T, N, N>& A, const smat_core<T, N, N2>& B, smat_core<T, N, N2>& X)
+	{
+		smat_core<T, N, N> R;
+		sse_pack<T> detv = adjoint(A, R);
+
+		sse_pack<T> rdetv = rcp_s(detv).template bsx<0>();
+
+		if (N2 < N)
+		{
+			smat_core<T, N, N2> scaled_B = B * rdetv;
+			mtimes_op<T, N, N, N2>::run(R, scaled_B, X);
+		}
+		else
+		{
+			R *= rdetv;
+			mtimes_op<T, N, N, N2>::run(R, B, X);
+		}
+	}
+
+
+	/*******************************************
+	 *
+	 *  Specialized solving function (for 2x2)
+	 *
+	 *******************************************/
+
+	LSIMD_ENSURE_INLINE
+	inline void solve(smat_core<f32, 2, 2> A, sse_vec<f32, 2> b, sse_vec<f32, 2>& x)
+	{
+		sse_f32pk ac = A.col01_pk.swizzle<3,0,2,1>();
+
+		sse_f32pk px = b.m_pk.swizzle<0,1,1,0>() * ac;
+		px = px - px.dup_high();
+
+		sse_f32pk detv = hdiff(pre_det(A));
+
+		__m128 msk = low2_mask_f32();
+		sse_f32pk rdetv = rcp_s(detv).bsx<0>();
+		rdetv.v = _mm_and_ps(rdetv.v, msk);
+
+		x.m_pk = px * rdetv;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline void solve(smat_core<f32, 2, 2> A, smat_core<f32, 2, 2> B, smat_core<f32, 2, 2>& X)
+	{
+		sse_f32pk ac = A.col01_pk.swizzle<3,0,2,1>();
+
+		sse_f32pk px0 = B.col01_pk.swizzle<0,1,1,0>() * ac;
+		sse_f32pk px1 = B.col01_pk.swizzle<2,3,3,2>() * ac;
+
+		px0 = px0 - px0.dup_high();
+		px1 = px1 - px1.dup_high();
+
+		sse_f32pk detv = hdiff(pre_det(A));
+		sse_f32pk rdetv = rcp_s(detv).bsx<0>();
+
+		X.col01_pk = merge_low(px0, px1) * rdetv;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline void solve(smat_core<f32, 2, 2> A, smat_core<f32, 2, 3> B, smat_core<f32, 2, 3>& X)
+	{
+		sse_f32pk ac = A.col01_pk.swizzle<3,0,2,1>();
+
+		sse_f32pk px0 = B.col01_pk.swizzle<0,1,1,0>() * ac;
+		sse_f32pk px1 = B.col01_pk.swizzle<2,3,3,2>() * ac;
+		sse_f32pk px2 = B.col2z_pk.swizzle<0,1,1,0>() * ac;
+
+		px0 = px0 - px0.dup_high();
+		px1 = px1 - px1.dup_high();
+		px2 = px2 - px2.dup_high();
+
+		__m128 msk = low2_mask_f32();
+		sse_f32pk detv = hdiff(pre_det(A));
+		sse_f32pk rdetv = rcp_s(detv).bsx<0>();
+
+		X.col01_pk = merge_low(px0, px1) * rdetv;
+
+		rdetv.v = _mm_and_ps(rdetv.v, msk);
+		X.col2z_pk = px2 * rdetv;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline void solve(smat_core<f32, 2, 2> A, smat_core<f32, 2, 4> B, smat_core<f32, 2, 4>& X)
+	{
+		sse_f32pk ac = A.col01_pk.swizzle<3,0,2,1>();
+
+		sse_f32pk px0 = B.col01_pk.swizzle<0,1,1,0>() * ac;
+		sse_f32pk px1 = B.col01_pk.swizzle<2,3,3,2>() * ac;
+		sse_f32pk px2 = B.col23_pk.swizzle<0,1,1,0>() * ac;
+		sse_f32pk px3 = B.col23_pk.swizzle<2,3,3,2>() * ac;
+
+		px0 = px0 - px0.dup_high();
+		px1 = px1 - px1.dup_high();
+		px2 = px2 - px2.dup_high();
+		px3 = px3 - px3.dup_high();
+
+		sse_f32pk detv = hdiff(pre_det(A));
+		sse_f32pk rdetv = rcp_s(detv).bsx<0>();
+
+		X.col01_pk = merge_low(px0, px1) * rdetv;
+		X.col23_pk = merge_low(px2, px3) * rdetv;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline void solve(smat_core<f64, 2, 2> A, sse_vec<f64, 2> b, sse_vec<f64, 2>& x)
+	{
+		sse_f64pk ac_p = shuffle<1,0>(A.col1.m_pk, A.col0.m_pk);
+		sse_f64pk ac_n = shuffle<1,0>(A.col0.m_pk, A.col1.m_pk);
+
+		sse_f64pk detv = hdiff(pre_det(A));
+		sse_f64pk rdetv = rcp_s(detv).bsx<0>();
+
+		sse_f64pk x_p = ac_p * b.m_pk;
+		sse_f64pk x_n = (ac_n * b.m_pk).swizzle<1,0>();
+
+		x.m_pk = (x_p - x_n) * rdetv;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline void solve(smat_core<f64, 2, 2> A, smat_core<f64, 2, 2> B, smat_core<f64, 2, 2>& X)
+	{
+		sse_f64pk ac_p = shuffle<1,0>(A.col1.m_pk, A.col0.m_pk);
+		sse_f64pk ac_n = shuffle<1,0>(A.col0.m_pk, A.col1.m_pk);
+
+		sse_f64pk x0_p = ac_p * B.col0.m_pk;
+		sse_f64pk x0_n = (ac_n * B.col0.m_pk).swizzle<1,0>();
+
+		sse_f64pk x1_p = ac_p * B.col1.m_pk;
+		sse_f64pk x1_n = (ac_n * B.col1.m_pk).swizzle<1,0>();
+
+		sse_f64pk detv = hdiff(pre_det(A));
+		sse_f64pk rdetv = rcp_s(detv).bsx<0>();
+
+		X.col0.m_pk = (x0_p - x0_n) * rdetv;
+		X.col1.m_pk = (x1_p - x1_n) * rdetv;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline void solve(smat_core<f64, 2, 2> A, smat_core<f64, 2, 3> B, smat_core<f64, 2, 3>& X)
+	{
+		sse_f64pk ac_p = shuffle<1,0>(A.col1.m_pk, A.col0.m_pk);
+		sse_f64pk ac_n = shuffle<1,0>(A.col0.m_pk, A.col1.m_pk);
+
+		sse_f64pk detv = hdiff(pre_det(A));
+		sse_f64pk rdetv = rcp_s(detv).bsx<0>();
+
+		sse_f64pk x0_p = ac_p * B.col0.m_pk;
+		sse_f64pk x0_n = (ac_n * B.col0.m_pk).swizzle<1,0>();
+
+		sse_f64pk x1_p = ac_p * B.col1.m_pk;
+		sse_f64pk x1_n = (ac_n * B.col1.m_pk).swizzle<1,0>();
+
+		X.col0.m_pk = (x0_p - x0_n) * rdetv;
+		X.col1.m_pk = (x1_p - x1_n) * rdetv;
+
+		sse_f64pk x2_p = ac_p * B.col2.m_pk;
+		sse_f64pk x2_n = (ac_n * B.col2.m_pk).swizzle<1,0>();
+
+		X.col2.m_pk = (x2_p - x2_n) * rdetv;
+	}
+
+	LSIMD_ENSURE_INLINE
+	inline void solve(smat_core<f64, 2, 2> A, smat_core<f64, 2, 4> B, smat_core<f64, 2, 4>& X)
+	{
+		sse_f64pk ac_p = shuffle<1,0>(A.col1.m_pk, A.col0.m_pk);
+		sse_f64pk ac_n = shuffle<1,0>(A.col0.m_pk, A.col1.m_pk);
+
+		sse_f64pk detv = hdiff(pre_det(A));
+		sse_f64pk rdetv = rcp_s(detv).bsx<0>();
+
+		sse_f64pk x0_p = ac_p * B.col0.m_pk;
+		sse_f64pk x0_n = (ac_n * B.col0.m_pk).swizzle<1,0>();
+
+		sse_f64pk x1_p = ac_p * B.col1.m_pk;
+		sse_f64pk x1_n = (ac_n * B.col1.m_pk).swizzle<1,0>();
+
+		X.col0.m_pk = (x0_p - x0_n) * rdetv;
+		X.col1.m_pk = (x1_p - x1_n) * rdetv;
+
+		sse_f64pk x2_p = ac_p * B.col2.m_pk;
+		sse_f64pk x2_n = (ac_n * B.col2.m_pk).swizzle<1,0>();
+
+		sse_f64pk x3_p = ac_p * B.col3.m_pk;
+		sse_f64pk x3_n = (ac_n * B.col3.m_pk).swizzle<1,0>();
+
+		X.col2.m_pk = (x2_p - x2_n) * rdetv;
+		X.col3.m_pk = (x3_p - x3_n) * rdetv;
 	}
 
 } }
