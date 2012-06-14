@@ -28,7 +28,8 @@ namespace lsimd { namespace sse {
 	template<typename T, int M, int K>
 	struct mtimes_op<T, M, K, 2>
 	{
-		inline static void run(
+		LSIMD_ENSURE_INLINE
+		static void run(
 				const smat_core<T, M, K>& A,
 				const smat_core<T, K, 2>& B,
 				      smat_core<T, M, 2>& C)
@@ -41,7 +42,8 @@ namespace lsimd { namespace sse {
 	template<typename T, int M, int K>
 	struct mtimes_op<T, M, K, 3>
 	{
-		inline static void run(
+		LSIMD_ENSURE_INLINE
+		static void run(
 				const smat_core<T, M, K>& A,
 				const smat_core<T, K, 3>& B,
 				      smat_core<T, M, 3>& C)
@@ -55,7 +57,8 @@ namespace lsimd { namespace sse {
 	template<typename T, int M, int K>
 	struct mtimes_op<T, M, K, 4>
 	{
-		inline static void run(
+		LSIMD_ENSURE_INLINE
+		static void run(
 				const smat_core<T, M, K>& A,
 				const smat_core<T, K, 4>& B,
 				      smat_core<T, M, 4>& C)

@@ -126,7 +126,8 @@ bench_sse: \
 	$(BIN)/bench_sse_math_svml \
 	$(BIN)/bench_sse_reduce \
 	$(BIN)/bench_sse_vecs \
-	$(BIN)/bench_sse_mats
+	$(BIN)/bench_sse_mats \
+	$(BIN)/bench_sse_mm
 	
 $(BIN)/bench_sse_arith: $(SSE_H) tests/bench_sse_arith.cpp
 	$(CXX_B) $(CXXFLAGS_B) tests/bench_sse_arith.cpp -lsvml -o $@
@@ -143,7 +144,8 @@ $(BIN)/bench_sse_vecs: $(SSE_H) tests/bench_sse_vecs.cpp
 $(BIN)/bench_sse_mats: $(SSE_H) tests/bench_sse_mats.cpp
 	$(CXX_B) $(CXXFLAGS_B) tests/bench_sse_mats.cpp -o $@
 
-
+$(BIN)/bench_sse_mm: $(SSE_H) tests/bench_sse_mm.cpp
+	$(CXX_B) $(CXXFLAGS_B) tests/bench_sse_mm.cpp -o $@
 
 
 
