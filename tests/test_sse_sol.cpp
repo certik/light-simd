@@ -108,7 +108,7 @@ GCASE1( solve )
 	LSIMD_ALIGN_SSE T yv[N];
 
 	special_fill_mat(N, av);
-	for (int i = 0; i < N * 4; ++i) bv[i] = T(i+1);
+	for (int i = 0; i < N; ++i) bv[i] = T(i+1);
 
 	simd_mat<T, N, N, sse_kind> A(av, aligned_t());
 

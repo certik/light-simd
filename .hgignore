@@ -8,6 +8,7 @@ temp/*
 bin/*
 sbin/*
 doc/*
+build/*
 
 *.swp
 *.suo
