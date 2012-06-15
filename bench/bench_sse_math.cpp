@@ -430,6 +430,7 @@ struct atanh_op
 	}
 };
 
+#ifdef LSIMD_HAS_SSE_ERF
 
 template<typename T>
 struct erf_op
@@ -463,7 +464,7 @@ struct erfc_op
 	}
 };
 
-
+#endif /* LSIMD_HAS_SSE_ERF */
 
 
 LSIMD_ALIGN(256) f32 af[arr_len];

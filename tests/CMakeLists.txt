@@ -34,6 +34,7 @@ link_directories(${SVML_PATH})
 set(INC ../light_simd)
 
 set(COMMON_BASIC_HS 
+    ${INC}/arch.h
     ${INC}/common/common_base.h 
     ${INC}/common/simd_pack.h
     ${INC}/common/simd_arith.h)
@@ -112,7 +113,7 @@ target_link_libraries(test_sse_sol test_main)
 
 set_target_properties(test_sse_math_svml
 	PROPERTIES
-	COMPILE_FLAGS "-DLSIMD_USE_SVML"
+	COMPILE_FLAGS "-DLSIMD_USE_INTEL_SVML"
 	LINK_FLAGS "-lsvml"
 )
 

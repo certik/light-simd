@@ -313,7 +313,7 @@ struct tanh_s
 
 
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#ifdef LSIMD_HAS_C99_SCALAR_MATH
 
 template<typename T>
 struct cbrt_s
@@ -483,6 +483,7 @@ struct atanh_s
 	}
 };
 
+#ifdef LSIMD_HAS_SSE_ERF
 
 template<typename T>
 struct erf_s
@@ -516,8 +517,9 @@ struct erfc_s
 	}
 };
 
+#endif /* LSIMD_HAS_SSE_ERF */
 
-#endif
+#endif /* LSIMD_HAS_C99_SCALAR_MATH */
 
 
 
@@ -534,7 +536,7 @@ bool test_all()
 	passed &= test_accuracy_u<T, log_s>();
 	passed &= test_accuracy_u<T, log10_s>();
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#ifdef LSIMD_HAS_C99_SCALAR_MATH
 
 	passed &= test_accuracy_u<T, cbrt_s>();
 	passed &= test_accuracy_b<T, hypot_s>();
@@ -567,7 +569,7 @@ bool test_all()
 	std::printf("hyperbolic:\n");
 	std::printf("----------------------------\n");
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#ifdef LSIMD_HAS_C99_SCALAR_MATH
 
 	passed &= test_accuracy_u<T, sinh_s>();
 	passed &= test_accuracy_u<T, cosh_s>();
@@ -584,7 +586,7 @@ bool test_all()
 	std::printf("error functions:\n");
 	std::printf("----------------------------\n");
 
-#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#ifdef LSIMD_HAS_C99_SCALAR_MATH
 
 	passed &= test_accuracy_u<T, erf_s>();
 	passed &= test_accuracy_u<T, erfc_s>();

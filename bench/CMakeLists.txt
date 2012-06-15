@@ -46,7 +46,7 @@ set_target_properties(${ALL_EXECUTABLES}
 
 set_target_properties(bench_sse_math_svml
 	PROPERTIES
-	COMPILE_FLAGS "-DLSIMD_USE_SVML"
+	COMPILE_FLAGS "-DLSIMD_USE_INTEL_SVML"
 	LINK_FLAGS "-lsvml"
 )
 

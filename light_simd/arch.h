@@ -47,6 +47,11 @@
 #endif
 
 
+#ifdef __GXX_EXPERIMENTAL_CXX0X__
+#define LSIMD_HAS_C99_SCALAR_MATH
+#endif
+
+
 // SIMD support detection
 
 #if defined(__SSE2__)
