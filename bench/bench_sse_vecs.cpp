@@ -7,7 +7,7 @@
  */
 
 
-#include "test_aux.h"
+#include "bench_aux.h"
 
 using namespace lsimd;
 

@@ -1,4 +1,4 @@
-# The CMakeLists file for Light-SIMD
+# The CMakeLists file for Light-SIMD (Testing)
 
 cmake_minimum_required(VERSION 2.8)
 project(LightSIMD)
@@ -92,11 +92,11 @@ add_executable(test_sse_math_svml ${SSE_MATH_DEP_HS} test_sse_math.cpp)
 set(ALL_EXECUTABLES 
     test_sse_packs
     test_sse_arith
-    test_sse_math_svml
     test_sse_vecs
     test_sse_mats
     test_sse_mm
-    test_sse_sol)
+    test_sse_sol
+    test_sse_math_svml)
     
 set_target_properties(${ALL_EXECUTABLES}
     PROPERTIES

@@ -9,6 +9,7 @@ bin/*
 sbin/*
 doc/*
 build/*
+build-bench/*
 
 *.swp
 *.suo

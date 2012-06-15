@@ -7,10 +7,7 @@
  */
 
 
-#define LSIMD_USE_SVML
-
-#include "test_aux.h"
-
+#include "bench_aux.h"
 
 using namespace lsimd;
 
