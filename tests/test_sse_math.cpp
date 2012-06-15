@@ -7,6 +7,7 @@
  */
 
 #include "test_aux.h"
+#include <light_test/color_printf.h>
 
 #include <cmath>
 
@@ -14,19 +15,36 @@ using namespace lsimd;
 
 const int N = 50 * 1024;
 
+const double tol_f32 = 1.e-6;
+const double tol_f64 = 1.0e-15;
+
+inline void print_pass(bool passed)
+{
+	if (passed)
+		ltest::printf_with_color(ltest::LTCOLOR_GREEN, "passed");
+	else
+		ltest::printf_with_color(ltest::LTCOLOR_RED, "failed");
+}
+
 template<typename T, template<typename U> class OpT>
-void test_accuracy_u()
+bool test_accuracy_u(T tol = sizeof(T) == 4 ? T(tol_f32) : T(tol_f64))
 {
 	T lb_x = OpT<T>::lb_x();
 	T ub_x = OpT<T>::ub_x();
 
 	double max_rdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x);
-	std::printf("  %-6s [%4g:%4g]             ==> max-rdev = %8.3g\n",
+	bool passed = max_rdev < tol;
+
+	std::printf("  %-6s [%4g:%4g]             ==> max-rdev = %8.3g  ...  ",
 			OpT<T>::name(), OpT<T>::lb_x(), OpT<T>::ub_x(), max_rdev);
+	print_pass(passed);
+	std::printf("\n");
+
+	return passed;
 }
 
 template<typename T, template<typename U> class OpT>
-void test_accuracy_b()
+bool test_accuracy_b(T tol = sizeof(T) == 4 ? T(tol_f32) : T(tol_f64))
 {
 	T lb_x = OpT<T>::lb_x();
 	T ub_x = OpT<T>::ub_x();
@@ -35,11 +53,17 @@ void test_accuracy_b()
 	T ub_y = OpT<T>::ub_y();
 
 	double max_rdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x, lb_y, ub_y);
-	std::printf("  %-6s [%4g:%4g] [%4g:%4g] ==> max-rdev = %8.3g\n",
+	bool passed = max_rdev < tol;
+
+	std::printf("  %-6s [%4g:%4g] [%4g:%4g] ==> max-rdev = %8.3g  ...  ",
 			OpT<T>::name(),
 			OpT<T>::lb_x(), OpT<T>::ub_x(),
 			OpT<T>::lb_y(), OpT<T>::ub_y(),
 			max_rdev);
+	print_pass(passed);
+	std::printf("\n");
+
+	return passed;
 }
 
 
@@ -498,27 +522,29 @@ struct erfc_s
 
 
 template<typename T>
-void test_all()
+bool test_all()
 {
+	bool passed = true;
+
 	std::printf("power, exp, log:\n");
 	std::printf("----------------------------\n");
 
-	test_accuracy_b<T, pow_s>();
-	test_accuracy_u<T, exp_s>();
-	test_accuracy_u<T, log_s>();
-	test_accuracy_u<T, log10_s>();
+	passed &= test_accuracy_b<T, pow_s>();
+	passed &= test_accuracy_u<T, exp_s>();
+	passed &= test_accuracy_u<T, log_s>();
+	passed &= test_accuracy_u<T, log10_s>();
 
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
 
-	test_accuracy_u<T, cbrt_s>();
-	test_accuracy_b<T, hypot_s>();
+	passed &= test_accuracy_u<T, cbrt_s>();
+	passed &= test_accuracy_b<T, hypot_s>();
 
-	test_accuracy_u<T, exp2_s>();
-	test_accuracy_u<T, exp10_s>();
-	test_accuracy_u<T, expm1_s>();
+	passed &= test_accuracy_u<T, exp2_s>();
+	passed &= test_accuracy_u<T, exp10_s>();
+	passed &= test_accuracy_u<T, expm1_s>();
 
-	test_accuracy_u<T, log2_s>();
-	test_accuracy_u<T, log1p_s>();
+	passed &= test_accuracy_u<T, log2_s>();
+	passed &= test_accuracy_u<T, log1p_s>();
 
 #endif
 
@@ -527,14 +553,14 @@ void test_all()
 	std::printf("trigonometric:\n");
 	std::printf("----------------------------\n");
 
-	test_accuracy_u<T, sin_s>();
-	test_accuracy_u<T, cos_s>();
-	test_accuracy_u<T, tan_s>();
+	passed &= test_accuracy_u<T, sin_s>();
+	passed &= test_accuracy_u<T, cos_s>();
+	passed &= test_accuracy_u<T, tan_s>();
 
-	test_accuracy_u<T, asin_s>();
-	test_accuracy_u<T, acos_s>();
-	test_accuracy_u<T, atan_s>();
-	test_accuracy_b<T, atan2_s>();
+	passed &= test_accuracy_u<T, asin_s>();
+	passed &= test_accuracy_u<T, acos_s>();
+	passed &= test_accuracy_u<T, atan_s>();
+	passed &= test_accuracy_b<T, atan2_s>();
 
 	std::printf("\n");
 
@@ -543,13 +569,13 @@ void test_all()
 
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
 
-	test_accuracy_u<T, sinh_s>();
-	test_accuracy_u<T, cosh_s>();
-	test_accuracy_u<T, tanh_s>();
+	passed &= test_accuracy_u<T, sinh_s>();
+	passed &= test_accuracy_u<T, cosh_s>();
+	passed &= test_accuracy_u<T, tanh_s>();
 
-	test_accuracy_u<T, asinh_s>();
-	test_accuracy_u<T, acosh_s>();
-	test_accuracy_u<T, atanh_s>();
+	passed &= test_accuracy_u<T, asinh_s>();
+	passed &= test_accuracy_u<T, acosh_s>();
+	passed &= test_accuracy_u<T, atanh_s>();
 
 #endif
 
@@ -560,29 +586,33 @@ void test_all()
 
 #ifdef __GXX_EXPERIMENTAL_CXX0X__
 
-	test_accuracy_u<T, erf_s>();
-	test_accuracy_u<T, erfc_s>();
+	passed &= test_accuracy_u<T, erf_s>();
+	passed &= test_accuracy_u<T, erfc_s>();
 
 #endif
+
+	return passed;
 
 }
 
 
 int main(int argc, char *argv[])
 {
+	bool passed = true;
+
 	std::printf("Tests on f32\n");
 	std::printf("===========================================================\n");
-	test_all<f32>();
+	passed &= test_all<f32>();
 
 	std::printf("\n");
 
 	std::printf("Tests on f64\n");
 	std::printf("===========================================================\n");
-	test_all<f64>();
+	passed &= test_all<f64>();
 
 	std::printf("\n");
 
-	return 0;
+	return passed ? 0 : -1;
 }
 
 

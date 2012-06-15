@@ -7,25 +7,42 @@
  */
 
 #include "test_aux.h"
+#include <light_test/color_printf.h>
 
 using namespace lsimd;
 
 const int N = 100 * 1024;
 
+const double tol_f32 = 1.e-7;
+const double tol_f64 = 1.0e-16;
+
+inline void print_pass(bool passed)
+{
+	if (passed)
+		ltest::printf_with_color(ltest::LTCOLOR_GREEN, "passed");
+	else
+		ltest::printf_with_color(ltest::LTCOLOR_RED, "failed");
+}
+
 
 template<typename T, template<typename U> class OpT>
-void test_accuracy_u()
+bool test_accuracy_u(T tol = sizeof(T) == 4 ? T(tol_f32) : T(tol_f64))
 {
 	T lb_x = OpT<T>::lb_x();
 	T ub_x = OpT<T>::ub_x();
 
 	double maxdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x);
-	std::printf("\t%-9s:    max-rdev = %8.3g\n",
-			OpT<T>::name(), maxdev);
+	bool passed = maxdev < tol;
+
+	std::printf("\t%-9s:    max-rdev = %8.3g  ... ", OpT<T>::name(), maxdev);
+	print_pass(passed);
+	std::printf("\n");
+
+	return passed;
 }
 
 template<typename T, template<typename U> class OpT>
-void test_accuracy_b()
+bool test_accuracy_b(T tol = sizeof(T) == 4 ? T(tol_f32) : T(tol_f64))
 {
 	T lb_x = OpT<T>::lb_x();
 	T ub_x = OpT<T>::ub_x();
@@ -34,11 +51,14 @@ void test_accuracy_b()
 	T ub_y = OpT<T>::ub_y();
 
 	double maxdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x, lb_y, ub_y);
-	std::printf("\t%-9s:    max-rdev = %8.3g\n",
-			OpT<T>::name(), maxdev);
+	bool passed = maxdev < tol;
+
+	std::printf("\t%-9s:    max-rdev = %8.3g  ... ", OpT<T>::name(), maxdev);
+	print_pass(passed);
+	std::printf("\n");
+
+	return passed;
 }
-
-
 
 
 template<typename T>
@@ -380,49 +400,55 @@ struct ceil2_ts
 
 
 template<typename T>
-void test_all()
+bool test_all()
 {
-	test_accuracy_b<T, add_ts>();
-	test_accuracy_b<T, sub_ts>();
-	test_accuracy_b<T, mul_ts>();
-	test_accuracy_b<T, div_ts>();
+	bool passed = true;
 
-	test_accuracy_u<T, neg_ts>();
-	test_accuracy_u<T, abs_ts>();
-	test_accuracy_b<T, min_ts>();
-	test_accuracy_b<T, max_ts>();
+	if (!test_accuracy_b<T, add_ts>()) passed = false;
+	if (!test_accuracy_b<T, sub_ts>()) passed = false;
+	if (!test_accuracy_b<T, mul_ts>()) passed = false;
+	if (!test_accuracy_b<T, div_ts>()) passed = false;
 
-	test_accuracy_u<T, sqr_ts>();
-	test_accuracy_u<T, sqrt_ts>();
-	test_accuracy_u<T, rcp_ts>();
-	test_accuracy_u<T, rsqrt_ts>();
-	test_accuracy_u<T, cube_ts>();
+	if (!test_accuracy_u<T, neg_ts>()) passed = false;
+	if (!test_accuracy_u<T, abs_ts>()) passed = false;
+	if (!test_accuracy_b<T, min_ts>()) passed = false;
+	if (!test_accuracy_b<T, max_ts>()) passed = false;
 
-	test_accuracy_u<T, floor_ts>();
-	test_accuracy_u<T, ceil_ts>();
-	test_accuracy_u<T, floor2_ts>();
-	test_accuracy_u<T, ceil2_ts>();
+	if (!test_accuracy_u<T, sqr_ts>()) passed = false;
+	if (!test_accuracy_u<T, sqrt_ts>()) passed = false;
+	if (!test_accuracy_u<T, rcp_ts>()) passed = false;
+	if (!test_accuracy_u<T, rsqrt_ts>()) passed = false;
+	if (!test_accuracy_u<T, cube_ts>()) passed = false;
+
+	if (!test_accuracy_u<T, floor_ts>()) passed = false;
+	if (!test_accuracy_u<T, ceil_ts>()) passed = false;
+	if (!test_accuracy_u<T, floor2_ts>()) passed = false;
+	if (!test_accuracy_u<T, ceil2_ts>()) passed = false;
+
+	return passed;
 }
 
 
 int main(int argc, char *argv[])
 {
+	bool passed = true;
+
 	std::printf("Tests on f32\n");
 	std::printf("================================\n");
-	test_all<f32>();
+	if (!test_all<f32>()) passed = false;
 
-	test_accuracy_u<f32, rcp_a_ts>();
-	test_accuracy_u<f32, rsqrt_a_ts>();
+	if (!test_accuracy_u<f32, rcp_a_ts>(1.e-3f)) passed = false;
+	if (!test_accuracy_u<f32, rsqrt_a_ts>(1.e-3f)) passed = false;
 
 	std::printf("\n");
 
 	std::printf("Tests on f64\n");
 	std::printf("================================\n");
-	test_all<f64>();
+	if (!test_all<f64>()) passed = false;
 
 	std::printf("\n");
 
-	return 0;
+	return passed ? 0 : -1;
 }
 
 
