@@ -38,44 +38,44 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk hdiff(sse_f32pk p)
+	inline sse_f32pk hdiff(LSIMD_VT(sse_f32pk) p)
 	{
 		return sub_s(p, p.dup2_high());
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk hdiff(sse_f64pk p)
+	inline sse_f64pk hdiff(LSIMD_VT(sse_f64pk) p)
 	{
 		return sub_s(p, p.dup_high());
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk rev_hdiff(sse_f64pk p)
+	inline sse_f64pk rev_hdiff(LSIMD_VT(sse_f64pk) p)
 	{
 		return sub_s(p.dup_high(), p);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk pre_det(smat_core<f32,2,2> a)
+	inline sse_f32pk pre_det(const smat_core<f32,2,2>& a)
 	{
 		return a.col01_pk * a.col01_pk.swizzle<3,2,1,0>();
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk pre_det(smat_core<f64,2,2> a)
+	inline sse_f64pk pre_det(const smat_core<f64,2,2>& a)
 	{
 		return a.col0.m_pk * a.col1.m_pk.swizzle<1,0>();
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat_core<f32,2,2> mm2x2(smat_core<f32,2,2> a, smat_core<f32,2,2> b)
+	inline smat_core<f32,2,2> mm2x2(const smat_core<f32,2,2>& a, const smat_core<f32,2,2>& b)
 	{
 		return  (a.col01_pk.dup_low()  * b.col01_pk.dup2_low()) +
 				(a.col01_pk.dup_high() * b.col01_pk.dup2_high());
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat_core<f64,2,2> mm2x2(smat_core<f64,2,2> a, smat_core<f64,2,2> b)
+	inline smat_core<f64,2,2> mm2x2(const smat_core<f64,2,2>& a, const smat_core<f64,2,2>& b)
 	{
 		smat_core<f64, 2, 2> r;
 		r.col0 = a.col0 * b.col0.bsx_pk<0>() + a.col1 * b.col0.bsx_pk<1>();
@@ -84,7 +84,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk mm2x2_trace_p(smat_core<f32,2,2> a, smat_core<f32,2,2> b)
+	inline sse_f32pk mm2x2_trace_p(const smat_core<f32,2,2>& a, const smat_core<f32,2,2>& b)
 	{
 		sse_f32pk p = a.col01_pk * b.col01_pk.swizzle<0,2,1,3>();
 		p = p + p.dup_high();
@@ -92,7 +92,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk mm2x2_trace_p(smat_core<f64,2,2> a, smat_core<f64,2,2> b)
+	inline sse_f64pk mm2x2_trace_p(const smat_core<f64,2,2>& a, const smat_core<f64,2,2>& b)
 	{
 		sse_f64pk p = a.col0.m_pk * unpack_low(b.col0.m_pk, b.col1.m_pk);
 		p = p + a.col1.m_pk * unpack_high(b.col0.m_pk, b.col1.m_pk);
@@ -108,7 +108,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat_core<f32,2,2> adjoint_mat(smat_core<f32,2,2> a, smat_core<f32,2,2> mask)
+	inline smat_core<f32,2,2> adjoint_mat(const smat_core<f32,2,2>& a, const smat_core<f32,2,2>& mask)
 	{
 		sse_f32pk p = _mm_xor_ps(a.col01_pk.swizzle<3,1,2,0>().v, mask.col01_pk.v);
 		return p;
@@ -124,7 +124,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat_core<f64,2,2> adjoint_mat(smat_core<f64,2,2> a, smat_core<f64,2,2> mask)
+	inline smat_core<f64,2,2> adjoint_mat(const smat_core<f64,2,2>& a, const smat_core<f64,2,2>& mask)
 	{
 		smat_core<f64,2,2> r;
 		r.col0.m_pk = _mm_xor_pd(unpack_high(a.col1.m_pk, a.col0.m_pk).v, mask.col0.m_pk.v);
@@ -585,7 +585,7 @@ namespace lsimd { namespace sse {
 	 *******************************************/
 
 	template<typename T, int N>
-	inline void solve(const smat_core<T, N, N>& A, sse_vec<T, N> b, sse_vec<T, N>& x)
+	inline void solve(const smat_core<T, N, N>& A, const sse_vec<T, N>& b, sse_vec<T, N>& x)
 	{
 		smat_core<T, N, N> R;
 		sse_pack<T> detv = adjoint(A, R);
@@ -624,7 +624,7 @@ namespace lsimd { namespace sse {
 	 *******************************************/
 
 	LSIMD_ENSURE_INLINE
-	inline void solve(smat_core<f32, 2, 2> A, sse_vec<f32, 2> b, sse_vec<f32, 2>& x)
+	inline void solve(const smat_core<f32, 2, 2>& A, const sse_vec<f32, 2>& b, sse_vec<f32, 2>& x)
 	{
 		sse_f32pk ac = A.col01_pk.swizzle<3,0,2,1>();
 
@@ -641,7 +641,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void solve(smat_core<f32, 2, 2> A, smat_core<f32, 2, 2> B, smat_core<f32, 2, 2>& X)
+	inline void solve(const smat_core<f32, 2, 2>& A, const smat_core<f32, 2, 2>& B, smat_core<f32, 2, 2>& X)
 	{
 		sse_f32pk ac = A.col01_pk.swizzle<3,0,2,1>();
 
@@ -658,7 +658,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void solve(smat_core<f32, 2, 2> A, smat_core<f32, 2, 3> B, smat_core<f32, 2, 3>& X)
+	inline void solve(const smat_core<f32, 2, 2>& A, const smat_core<f32, 2, 3>& B, smat_core<f32, 2, 3>& X)
 	{
 		sse_f32pk ac = A.col01_pk.swizzle<3,0,2,1>();
 
@@ -681,7 +681,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void solve(smat_core<f32, 2, 2> A, smat_core<f32, 2, 4> B, smat_core<f32, 2, 4>& X)
+	inline void solve(const smat_core<f32, 2, 2>& A, const smat_core<f32, 2, 4>& B, smat_core<f32, 2, 4>& X)
 	{
 		sse_f32pk ac = A.col01_pk.swizzle<3,0,2,1>();
 
@@ -703,7 +703,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void solve(smat_core<f64, 2, 2> A, sse_vec<f64, 2> b, sse_vec<f64, 2>& x)
+	inline void solve(const smat_core<f64, 2, 2>& A, const sse_vec<f64, 2>& b, sse_vec<f64, 2>& x)
 	{
 		sse_f64pk ac_p = shuffle<1,0>(A.col1.m_pk, A.col0.m_pk);
 		sse_f64pk ac_n = shuffle<1,0>(A.col0.m_pk, A.col1.m_pk);
@@ -718,7 +718,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void solve(smat_core<f64, 2, 2> A, smat_core<f64, 2, 2> B, smat_core<f64, 2, 2>& X)
+	inline void solve(const smat_core<f64, 2, 2>& A, const smat_core<f64, 2, 2>& B, smat_core<f64, 2, 2>& X)
 	{
 		sse_f64pk ac_p = shuffle<1,0>(A.col1.m_pk, A.col0.m_pk);
 		sse_f64pk ac_n = shuffle<1,0>(A.col0.m_pk, A.col1.m_pk);
@@ -737,7 +737,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void solve(smat_core<f64, 2, 2> A, smat_core<f64, 2, 3> B, smat_core<f64, 2, 3>& X)
+	inline void solve(const smat_core<f64, 2, 2>& A, const smat_core<f64, 2, 3>& B, smat_core<f64, 2, 3>& X)
 	{
 		sse_f64pk ac_p = shuffle<1,0>(A.col1.m_pk, A.col0.m_pk);
 		sse_f64pk ac_n = shuffle<1,0>(A.col0.m_pk, A.col1.m_pk);
@@ -761,7 +761,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void solve(smat_core<f64, 2, 2> A, smat_core<f64, 2, 4> B, smat_core<f64, 2, 4>& X)
+	inline void solve(const smat_core<f64, 2, 2>& A, const smat_core<f64, 2, 4>& B, smat_core<f64, 2, 4>& X)
 	{
 		sse_f64pk ac_p = shuffle<1,0>(A.col1.m_pk, A.col0.m_pk);
 		sse_f64pk ac_n = shuffle<1,0>(A.col0.m_pk, A.col1.m_pk);

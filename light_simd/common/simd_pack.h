@@ -74,10 +74,10 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE simd_pack() { }
 
-		LSIMD_ENSURE_INLINE simd_pack(const impl_type imp)
+		LSIMD_ENSURE_INLINE simd_pack(LSIMD_VT(impl_type)imp)
 		: impl(imp) { }
 
-		LSIMD_ENSURE_INLINE simd_pack(const intern_type v)
+		LSIMD_ENSURE_INLINE simd_pack(intern_type v)
 		: impl(v) { }
 
 		LSIMD_ENSURE_INLINE simd_pack( zero_t )
@@ -183,7 +183,7 @@ namespace lsimd
 			return impl.partial_sum<I>();
 		}
 
-		LSIMD_ENSURE_INLINE T max() const
+		LSIMD_ENSURE_INLINE T (max)() const
 		{
 			return impl.max();
 		}
@@ -194,7 +194,7 @@ namespace lsimd
 			return impl.partial_max<I>();
 		}
 
-		LSIMD_ENSURE_INLINE T min() const
+		LSIMD_ENSURE_INLINE T (min)() const
 		{
 			return impl.min();
 		}

@@ -202,7 +202,7 @@ namespace lsimd
 			return sse::f32_partial_sum<I>(v);
 		}
 
-		LSIMD_ENSURE_INLINE f32 max() const
+		LSIMD_ENSURE_INLINE f32 (max)() const
 		{
 			return sse::f32_max(v);
 		}
@@ -213,7 +213,7 @@ namespace lsimd
 			return sse::f32_partial_max<I>(v);
 		}
 
-		LSIMD_ENSURE_INLINE f32 min() const
+		LSIMD_ENSURE_INLINE f32 (min)() const
 		{
 			return sse::f32_min(v);
 		}
@@ -443,7 +443,7 @@ namespace lsimd
 			return sse::f64_partial_sum<I>(v);
 		}
 
-		LSIMD_ENSURE_INLINE f64 max() const
+		LSIMD_ENSURE_INLINE f64 (max)() const
 		{
 			return sse::f64_max(v);
 		}
@@ -454,7 +454,7 @@ namespace lsimd
 			return sse::f64_partial_max<I>(v);
 		}
 
-		LSIMD_ENSURE_INLINE f64 min() const
+		LSIMD_ENSURE_INLINE f64 (min)() const
 		{
 			return sse::f64_min(v);
 		}
@@ -521,50 +521,50 @@ namespace lsimd
 
 	template<int I0, int I1, int I2, int I3>
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk shuffle(sse_f32pk a, sse_f32pk b)
+	inline sse_f32pk shuffle(LSIMD_VT(sse_f32pk) a, LSIMD_VT(sse_f32pk) b)
 	{
 		return _mm_shuffle_ps(a.v, b.v, _MM_SHUFFLE(I3, I2, I1, I0));
 	}
 
 	template<int I0, int I1>
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk shuffle(sse_f64pk a, sse_f64pk b)
+	inline sse_f64pk shuffle(LSIMD_VT(sse_f64pk) a, LSIMD_VT(sse_f64pk) b)
 	{
 		return _mm_shuffle_pd(a.v, b.v, _MM_SHUFFLE2(I1, I0));
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk merge_low(sse_f32pk a, sse_f32pk b)
+	inline sse_f32pk merge_low(LSIMD_VT(sse_f32pk) a, LSIMD_VT(sse_f32pk) b)
 	{
 		return _mm_movelh_ps(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk merge_high(sse_f32pk a, sse_f32pk b)
+	inline sse_f32pk merge_high(LSIMD_VT(sse_f32pk) a, LSIMD_VT(sse_f32pk) b)
 	{
 		return _mm_movehl_ps(b.v, a.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk unpack_low(sse_f32pk a, sse_f32pk b)
+	inline sse_f32pk unpack_low(LSIMD_VT(sse_f32pk) a, LSIMD_VT(sse_f32pk) b)
 	{
 		return _mm_unpacklo_ps(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk unpack_high(sse_f32pk a, sse_f32pk b)
+	inline sse_f32pk unpack_high(LSIMD_VT(sse_f32pk) a, LSIMD_VT(sse_f32pk) b)
 	{
 		return _mm_unpackhi_ps(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk unpack_low(sse_f64pk a, sse_f64pk b)
+	inline sse_f64pk unpack_low(LSIMD_VT(sse_f64pk) a, LSIMD_VT(sse_f64pk) b)
 	{
 		return _mm_unpacklo_pd(a.v, b.v);
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk unpack_high(sse_f64pk a, sse_f64pk b)
+	inline sse_f64pk unpack_high(LSIMD_VT(sse_f64pk) a, LSIMD_VT(sse_f64pk) b)
 	{
 		return _mm_unpackhi_pd(a.v, b.v);
 	}

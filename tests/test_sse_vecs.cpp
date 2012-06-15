@@ -14,17 +14,6 @@ using namespace ltest;
 
 // explicit instantiation for thorough syntax check
 
-
-template class lsimd::sse_vec<f32, 1>;
-template class lsimd::sse_vec<f32, 2>;
-template class lsimd::sse_vec<f32, 3>;
-template class lsimd::sse_vec<f32, 4>;
-
-template class lsimd::sse_vec<f64, 1>;
-template class lsimd::sse_vec<f64, 2>;
-template class lsimd::sse_vec<f64, 3>;
-template class lsimd::sse_vec<f64, 4>;
-
 template struct lsimd::simd_vec<f32, 1, sse_kind>;
 template struct lsimd::simd_vec<f32, 2, sse_kind>;
 template struct lsimd::simd_vec<f32, 3, sse_kind>;

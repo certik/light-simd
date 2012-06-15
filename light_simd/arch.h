@@ -54,6 +54,16 @@
 
 // SIMD support detection
 
+#if defined(_MSC_VER)
+
+#if _M_IX86_FP >= 2
+#define LSIMD_HAS_SSE2
+#endif
+
+#define LSIMD_VT(T) const T&  // to work around the infamous C2719 error
+
+#else
+
 #if defined(__SSE2__)
 #define LSIMD_HAS_SSE2
 #endif
@@ -74,10 +84,13 @@
 #define LSIMD_HAS_SSE4_2
 #endif
 
+#define LSIMD_VT(T) const T
+
+#endif
+
 #ifndef LSIMD_HAS_SSE2
 	#error Light-SIMD needs SSE2 support to work.
 #endif
-
 
 #endif
 

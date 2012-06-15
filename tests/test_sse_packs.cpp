@@ -15,8 +15,6 @@ using namespace ltest;
 // explicit instantiation for thorough syntax check
 
 
-template struct lsimd::sse_pack<f32>;
-template struct lsimd::sse_pack<f64>;
 template struct lsimd::simd_pack<f32, sse_kind>;
 template struct lsimd::simd_pack<f64, sse_kind>;
 

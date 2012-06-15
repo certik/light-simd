@@ -6,21 +6,26 @@ project(LightSIMD)
 enable_testing()
 
 include_directories(..)
+include_directories($ENV{LIGHT_TEST_HOME})
 
 # Compiler configuration
 
 set(CMAKE_BUILD_TYPE "Release")
 
-set(LANG_FLAGS "-std=c++0x -pedantic -march=native ")
-set(WARNING_FLAGS "-Wall -Wextra -Wconversion -Wformat -Wno-unused-parameter ")
-set(EXTINC_FLAGS "-isystem $ENV{LIGHT_TEST_HOME}")
+if (MSVC)
+	set(LANG_FLAGS "/arch:SSE2")
+	set(WARNING_FLAGS "/Wall")
+else (MSVC)
+	set(LANG_FLAGS "-std=c++0x -pedantic -march=native ")
+	set(WARNING_FLAGS "-Wall -Wextra -Wconversion -Wformat -Wno-unused-parameter ")
+endif (MSVC)
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
 	set(LANG_FLAGS "${LANG_FLAGS} -stdlib=libc++ -Qunused-arguments")
 	set(CMAKE_CXX_COMPILER "clang++")
 endif (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
 
-set(TEST_CXX_FLAGS "${LANG_FLAGS} ${WARNING_FLAGS} ${EXTINC_FLAGS}")
+set(TEST_CXX_FLAGS "${LANG_FLAGS} ${WARNING_FLAGS}")
 
 set(CMAKE_CXX_FLAGS "${TEST_CXX_FLAGS}")
 
@@ -28,8 +33,13 @@ set(CMAKE_CXX_FLAGS "${TEST_CXX_FLAGS}")
 
 set(SVML_PATH "$ENV{ICC_LIBPATH}")
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+find_library(SVML svml_disp
+	HINTS ${SVML_PATH})
+else (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 find_library(SVML svml 
     HINTS ${SVML_PATH})
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 if (SVML_NOT_FOUND)
 message(SEND_ERROR "Intel SVML (Short Vector Math Library) is NOT found.")

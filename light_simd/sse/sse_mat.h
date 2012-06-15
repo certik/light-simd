@@ -38,7 +38,7 @@ namespace lsimd
 		sse::smat_core<T, M, N> core;
 
 		LSIMD_ENSURE_INLINE
-		sse_mat(sse::smat_core<T, M, N> a) : core(a) { }
+		sse_mat(const sse::smat_core<T, M, N>& a) : core(a) { }
 
 	public:
 		LSIMD_ENSURE_INLINE
@@ -145,59 +145,59 @@ namespace lsimd
 
 	public:
 		LSIMD_ENSURE_INLINE
-		sse_mat operator + (sse_mat r) const
+		sse_mat operator + (const sse_mat& r) const
 		{
 			return core + r.core;
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat operator - (sse_mat r) const
+		sse_mat operator - (const sse_mat& r) const
 		{
 			return core - r.core;
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat operator % (sse_mat r) const
+		sse_mat operator % (const sse_mat& r) const
 		{
 			return core % r.core;
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat operator * (sse_pack<T> s) const
+		sse_mat operator * (LSIMD_VT(sse_pack<T>) s) const
 		{
 			return core * s;
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat& operator += (sse_mat r)
+		sse_mat& operator += (const sse_mat& r)
 		{
 			core += r.core;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat& operator -= (sse_mat r)
+		sse_mat& operator -= (const sse_mat& r)
 		{
 			core -= r.core;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat& operator %= (sse_mat r)
+		sse_mat& operator %= (const sse_mat& r)
 		{
 			core %= r.core;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat& operator *= (sse_pack<T> s)
+		sse_mat& operator *= (LSIMD_VT(sse_pack<T>) s)
 		{
 			core *= s;
 			return *this;
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_vec<T, M> operator * (sse_vec<T, N> v) const
+		sse_vec<T, M> operator * (const sse_vec<T, N>& v) const
 		{
 			return transform(core, v);
 		}
@@ -254,7 +254,7 @@ namespace lsimd
 	}
 
 	template<typename T, int N>
-	inline sse_vec<T, N> solve(const sse_mat<T, N, N>& A, sse_vec<T, N> b)
+	inline sse_vec<T, N> solve(const sse_mat<T, N, N>& A, const sse_vec<T, N>& b)
 	{
 		sse_vec<T, N> x;
 		sse::solve(A.core, b, x);

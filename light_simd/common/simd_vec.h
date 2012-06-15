@@ -33,6 +33,7 @@ namespace lsimd
 	{
 		typedef T value_type;
 		typedef typename simd_vec_traits<T, N, Kind>::impl_type impl_type;
+		typedef simd_pack<T, Kind> pack_type;
 
 		impl_type impl;
 
@@ -42,7 +43,7 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE simd_vec( zero_t ) : impl( zero_t() ) { }
 
-		LSIMD_ENSURE_INLINE simd_vec( impl_type imp ) : impl(imp) { }
+		LSIMD_ENSURE_INLINE simd_vec( const impl_type& imp ) : impl(imp) { }
 
 		LSIMD_ENSURE_INLINE simd_vec( const T *x, aligned_t )
 		: impl(x, aligned_t()) { }
@@ -74,45 +75,45 @@ namespace lsimd
 
 		// arithmetic
 
-		LSIMD_ENSURE_INLINE simd_vec operator + (simd_vec rhs) const
+		LSIMD_ENSURE_INLINE simd_vec operator + (const simd_vec& rhs) const
 		{
 			return impl + rhs.impl;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec operator - (simd_vec rhs) const
+		LSIMD_ENSURE_INLINE simd_vec operator - (const simd_vec& rhs) const
 		{
 			return impl - rhs.impl;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec operator % (simd_vec rhs) const
+		LSIMD_ENSURE_INLINE simd_vec operator % (const simd_vec& rhs) const
 		{
 			return impl % rhs.impl;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec& operator += (simd_vec rhs)
+		LSIMD_ENSURE_INLINE simd_vec& operator += (const simd_vec& rhs)
 		{
 			impl += rhs.impl;
 			return *this;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec& operator -= (simd_vec rhs)
+		LSIMD_ENSURE_INLINE simd_vec& operator -= (const simd_vec& rhs)
 		{
 			impl -= rhs.impl;
 			return *this;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec& operator %= (simd_vec rhs)
+		LSIMD_ENSURE_INLINE simd_vec& operator %= (const simd_vec& rhs)
 		{
 			impl %= rhs.impl;
 			return *this;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec operator * (simd_pack<T, Kind> s) const
+		LSIMD_ENSURE_INLINE simd_vec operator * (LSIMD_VT(pack_type) s) const
 		{
 			return impl * s.impl;
 		}
 
-		LSIMD_ENSURE_INLINE simd_vec& operator *= (simd_pack<T, Kind> s)
+		LSIMD_ENSURE_INLINE simd_vec& operator *= (LSIMD_VT(pack_type) s)
 		{
 			impl *= s.impl;
 			return *this;
@@ -125,7 +126,7 @@ namespace lsimd
 			return impl.sum();
 		}
 
-		LSIMD_ENSURE_INLINE T dot(simd_vec rhs) const
+		LSIMD_ENSURE_INLINE T dot(const simd_vec& rhs) const
 		{
 			return impl.dot(rhs.impl);
 		}

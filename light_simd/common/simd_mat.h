@@ -33,6 +33,7 @@ namespace lsimd
 	{
 		typedef T value_type;
 		typedef typename simd_mat_traits<T, M, N, Kind>::impl_type impl_type;
+		typedef simd_pack<T, Kind> pack_type;
 		impl_type impl;
 
 		// constructors
@@ -44,7 +45,7 @@ namespace lsimd
 		simd_mat( zero_t ) : impl( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		simd_mat( impl_type imp ) : impl(imp) { }
+		simd_mat( const impl_type& imp ) : impl(imp) { }
 
 		LSIMD_ENSURE_INLINE
 		simd_mat(const T *x, aligned_t)
@@ -159,7 +160,7 @@ namespace lsimd
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat operator * (const simd_pack<T, Kind> s) const
+		simd_mat operator * (LSIMD_VT(pack_type) s) const
 		{
 			return impl * s.impl;
 		}
@@ -186,7 +187,7 @@ namespace lsimd
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat& operator *= (const simd_pack<T, Kind> s)
+		simd_mat& operator *= (LSIMD_VT(pack_type) s)
 		{
 			impl *= s.impl;
 			return *this;
@@ -196,7 +197,7 @@ namespace lsimd
 		// linear algebra
 
 		LSIMD_ENSURE_INLINE
-		simd_vec<T, M> operator * (simd_vec<T, N> v) const
+		simd_vec<T, M> operator * (const simd_vec<T, N>& v) const
 		{
 			return impl * v.impl;
 		}
