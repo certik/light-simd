@@ -19,7 +19,14 @@ set(CMAKE_CXX_FLAGS "${BENCH_CXX_FLAGS}")
 # External link libraries
 
 set(SVML_PATH "$ENV{ICC_LIBPATH}")
-link_directories(${SVML_PATH})
+
+find_library(SVML svml 
+    HINTS ${SVML_PATH})
+
+if (SVML_NOT_FOUND)
+message(SEND_ERROR "Intel SVML (Short Vector Math Library) is NOT found.")
+endif (SVML_NOT_FOUND)
+
 
 # Executables
 
@@ -31,6 +38,8 @@ add_executable(bench_sse_mats bench_sse_mats.cpp)
 add_executable(bench_sse_mm   bench_sse_mm.cpp)
 
 add_executable(bench_sse_math_svml bench_sse_math.cpp)
+
+target_link_libraries(bench_sse_math_svml ${SVML})
 
 set(ALL_EXECUTABLES
     bench_sse_arith
@@ -47,7 +56,6 @@ set_target_properties(${ALL_EXECUTABLES}
 set_target_properties(bench_sse_math_svml
 	PROPERTIES
 	COMPILE_FLAGS "-DLSIMD_USE_INTEL_SVML"
-	LINK_FLAGS "-lsvml"
 )
 
 

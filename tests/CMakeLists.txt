@@ -27,7 +27,14 @@ set(CMAKE_CXX_FLAGS "${TEST_CXX_FLAGS}")
 # External link libraries
 
 set(SVML_PATH "$ENV{ICC_LIBPATH}")
-link_directories(${SVML_PATH})
+
+find_library(SVML svml 
+    HINTS ${SVML_PATH})
+
+if (SVML_NOT_FOUND)
+message(SEND_ERROR "Intel SVML (Short Vector Math Library) is NOT found.")
+endif (SVML_NOT_FOUND)
+
 
 # Header file groups (to be used as dependencies)
 
@@ -90,6 +97,14 @@ add_executable(test_sse_sol  ${SSE_LINALG_DEP_HS} test_sse_sol.cpp)
 
 add_executable(test_sse_math_svml ${SSE_MATH_DEP_HS} test_sse_math.cpp)
 
+target_link_libraries(test_sse_packs test_main)
+target_link_libraries(test_sse_arith test_main)
+target_link_libraries(test_sse_math_svml test_main ${SVML})
+target_link_libraries(test_sse_vecs test_main)
+target_link_libraries(test_sse_mats test_main)
+target_link_libraries(test_sse_mm test_main)
+target_link_libraries(test_sse_sol test_main)
+
 set(ALL_EXECUTABLES 
     test_sse_packs
     test_sse_arith
@@ -103,20 +118,10 @@ set_target_properties(${ALL_EXECUTABLES}
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "bin")    
 
-target_link_libraries(test_sse_packs test_main)
-target_link_libraries(test_sse_arith test_main)
-target_link_libraries(test_sse_math_svml test_main)
-target_link_libraries(test_sse_vecs test_main)
-target_link_libraries(test_sse_mats test_main)
-target_link_libraries(test_sse_mm test_main)
-target_link_libraries(test_sse_sol test_main)
-
 set_target_properties(test_sse_math_svml
 	PROPERTIES
 	COMPILE_FLAGS "-DLSIMD_USE_INTEL_SVML"
-	LINK_FLAGS "-lsvml"
 )
-
 
 # Add Tests
 
