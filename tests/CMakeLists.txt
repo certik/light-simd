@@ -42,6 +42,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 else (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	find_library(SVML svml 
 		HINTS ${SVML_PATH})
+
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 if (SVML_NOT_FOUND)
@@ -114,7 +115,13 @@ add_executable(test_sse_math_svml ${SSE_MATH_DEP_HS} test_sse_math.cpp)
 
 target_link_libraries(test_sse_packs test_main)
 target_link_libraries(test_sse_arith test_main)
+
+if (MSVC)
 target_link_libraries(test_sse_math_svml test_main ${SVML} ${LIBIRC})
+else (MSVC)
+target_link_libraries(test_sse_math_svml test_main ${SVML})
+endif (MSVC)
+
 target_link_libraries(test_sse_vecs test_main)
 target_link_libraries(test_sse_mats test_main)
 target_link_libraries(test_sse_mm test_main)

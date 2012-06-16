@@ -287,7 +287,9 @@ void do_bench1()
 	std::printf("\n");
 }
 
-
+#ifdef _MSC_VER
+#pragma warning(disable: 4100)
+#endif
 
 
 int main(int argc, char *argv[])

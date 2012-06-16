@@ -17,6 +17,17 @@
 #include <cmath>
 #include <cstdlib>
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4141)
+#define ASM __asm
+
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
+#include <Windows.h>
+
+#endif
+
 namespace lsimd
 {
 	/********************************************
@@ -25,32 +36,39 @@ namespace lsimd
 	 *
 	 ********************************************/
 
+#ifdef _MSC_VER
+	
+#error Performance counter is not yet ready for MSVC
+
+#else
 	LSIMD_ENSURE_INLINE
-	inline uint64_t read_tsc(void) {
+	inline uint64_t read_tsc(void) 
+	{
 	    uint32_t lo, hi;
-	    __asm__ __volatile__("rdtscp" : "=a"(lo), "=d"(hi) :: "ecx" );
+	    __asm__ volatile("rdtscp" : "=a"(lo), "=d"(hi) :: "ecx" );
 	    return (uint64_t)hi << 32 | lo;
 	}
 
 	template<typename T>
 	LSIMD_ENSURE_INLINE
-	inline void force_to_reg(const simd_pack<T, sse_kind> x)
+	inline void force_to_reg(const simd_pack<T, sse_kind>& x)
 	{
-		asm volatile("" : : "x"(x.impl.v));
+		__asm__ volatile("" : : "x"(x.impl.v));
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline void force_to_reg(const f32& x)
 	{
-		asm volatile("" : : "x"(x));
+		__asm__ volatile("" : : "x"(x));
 	}
 
 	LSIMD_ENSURE_INLINE
 	inline void force_to_reg(const f64& x)
 	{
-		asm volatile("" : : "x"(x));
+		__asm__ volatile("" : : "x"(x));
 	}
 
+#endif
 
 	template<class Op>
 	uint64_t tsc_bench(Op op, unsigned warming_times, unsigned repeat_times)
@@ -156,5 +174,9 @@ namespace lsimd
 	}
 
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif /* BENCH_AUX_H_ */

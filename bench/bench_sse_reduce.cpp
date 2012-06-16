@@ -74,7 +74,7 @@ struct psum2_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<f32, sse_kind> x)
+	static void run(const simd_pack<f32, sse_kind>& x)
 	{
 		T r = x.partial_sum<2>();
 		force_to_reg(r);
@@ -93,7 +93,7 @@ struct psum3_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<f32, sse_kind> x)
+	static void run(const simd_pack<f32, sse_kind>& x)
 	{
 		T r = x.partial_sum<3>();
 		force_to_reg(r);
@@ -112,7 +112,7 @@ struct max_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		T r = x.max();
 		force_to_reg(r);
@@ -130,7 +130,7 @@ struct pmax2_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<f32, sse_kind> x)
+	static void run(const simd_pack<f32, sse_kind>& x)
 	{
 		T r = x.partial_max<2>();
 		force_to_reg(r);
@@ -149,7 +149,7 @@ struct pmax3_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<f32, sse_kind> x)
+	static void run(const simd_pack<f32, sse_kind>& x)
 	{
 		T r = x.partial_max<3>();
 		force_to_reg(r);
@@ -168,7 +168,7 @@ struct min_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		T r = x.min();
 		force_to_reg(r);
@@ -187,7 +187,7 @@ struct pmin2_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<f32, sse_kind> x)
+	static void run(const simd_pack<f32, sse_kind>& x)
 	{
 		T r = x.partial_min<2>();
 		force_to_reg(r);
@@ -206,13 +206,16 @@ struct pmin3_op
 	static unsigned folds() { return 1; }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<f32, sse_kind> x)
+	static void run(const simd_pack<f32, sse_kind>& x)
 	{
 		T r = x.partial_min<3>();
 		force_to_reg(r);
 	}
 };
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4100)
+#endif
 
 int main(int argc, char *argv[])
 {

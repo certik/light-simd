@@ -146,6 +146,10 @@ void do_bench()
 }
 
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4100)
+#endif
+
 int main(int argc, char *argv[])
 {
 	fill_rand(arr_len, af, 0.f, 1.f);

@@ -52,7 +52,7 @@ struct pow_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = pow(x, simd_pack<T, sse_kind>(2.5));
 		force_to_reg(r);
@@ -68,7 +68,7 @@ struct cbrt_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = cbrt(x);
 		force_to_reg(r);
@@ -84,7 +84,7 @@ struct hypot_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = hypot(x, simd_pack<T, sse_kind>(2.0));
 		force_to_reg(r);
@@ -101,7 +101,7 @@ struct exp_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = exp(x);
 		force_to_reg(r);
@@ -117,7 +117,7 @@ struct exp2_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = exp2(x);
 		force_to_reg(r);
@@ -133,7 +133,7 @@ struct exp10_op
 	static T ubound() { return T(3); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = exp10(x);
 		force_to_reg(r);
@@ -149,7 +149,7 @@ struct log_op
 	static T ubound() { return T(100); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = log(x);
 		force_to_reg(r);
@@ -165,7 +165,7 @@ struct log2_op
 	static T ubound() { return T(100); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = log2(x);
 		force_to_reg(r);
@@ -181,7 +181,7 @@ struct log10_op
 	static T ubound() { return T(100); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = log10(x);
 		force_to_reg(r);
@@ -197,7 +197,7 @@ struct expm1_op
 	static T ubound() { return T(0.1); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = expm1(x);
 		force_to_reg(r);
@@ -213,7 +213,7 @@ struct log1p_op
 	static T ubound() { return T(0.1); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = log1p(x);
 		force_to_reg(r);
@@ -230,7 +230,7 @@ struct sin_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = sin(x);
 		force_to_reg(r);
@@ -246,7 +246,7 @@ struct cos_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = cos(x);
 		force_to_reg(r);
@@ -262,7 +262,7 @@ struct tan_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = tan(x);
 		force_to_reg(r);
@@ -278,7 +278,7 @@ struct asin_op
 	static T ubound() { return T(1); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = asin(x);
 		force_to_reg(r);
@@ -294,7 +294,7 @@ struct acos_op
 	static T ubound() { return T(1); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = acos(x);
 		force_to_reg(r);
@@ -310,7 +310,7 @@ struct atan_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = atan(x);
 		force_to_reg(r);
@@ -326,7 +326,7 @@ struct atan2_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = atan2(x, simd_pack<T, sse_kind>::ones());
 		force_to_reg(r);
@@ -343,7 +343,7 @@ struct sinh_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = sinh(x);
 		force_to_reg(r);
@@ -359,7 +359,7 @@ struct cosh_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = cosh(x);
 		force_to_reg(r);
@@ -375,7 +375,7 @@ struct tanh_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = tanh(x);
 		force_to_reg(r);
@@ -391,7 +391,7 @@ struct asinh_op
 	static T ubound() { return T(1); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = asinh(x);
 		force_to_reg(r);
@@ -407,7 +407,7 @@ struct acosh_op
 	static T ubound() { return T(1); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = acosh(x);
 		force_to_reg(r);
@@ -423,7 +423,7 @@ struct atanh_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = atanh(x);
 		force_to_reg(r);
@@ -441,7 +441,7 @@ struct erf_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = erf(x);
 		force_to_reg(r);
@@ -457,7 +457,7 @@ struct erfc_op
 	static T ubound() { return T(10); }
 
 	LSIMD_ENSURE_INLINE
-	static void run(simd_pack<T, sse_kind> x)
+	static void run(const simd_pack<T, sse_kind>& x)
 	{
 		simd_pack<T, sse_kind> r = erfc(x);
 		force_to_reg(r);
@@ -471,6 +471,10 @@ LSIMD_ALIGN(256) f32 af[arr_len];
 LSIMD_ALIGN(256) f32 bf[arr_len];
 LSIMD_ALIGN(256) f64 ad[arr_len];
 LSIMD_ALIGN(256) f64 bd[arr_len];
+
+#ifdef _MSC_VER
+#pragma warning(disable: 4100)
+#endif
 
 int main(int argc, char *argv[])
 {
