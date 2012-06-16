@@ -78,7 +78,7 @@ namespace lsimd
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk operator - (const LSIMD_VT(sse_f64pk) a)
+	inline sse_f64pk operator - (LSIMD_VT(sse_f64pk) a)
 	{
 		return _mm_xor_pd(_mm_set1_pd(-0.0), a.v);
 	}
