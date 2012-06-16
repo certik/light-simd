@@ -26,14 +26,14 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator + (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator + (const simd_pack<T, Kind>& a, const simd_pack<T, Kind>& b)
 	{
 		return a.impl + b.impl;
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator + (const simd_pack<T, Kind> a, const T b)
+	inline simd_pack<T, Kind> operator + (const simd_pack<T, Kind>& a, const T b)
 	{
 		typedef typename simd<T, Kind>::impl_type impl_t;
 		return a.impl + impl_t(b);
@@ -41,7 +41,7 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator + (const T a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator + (const T a, const simd_pack<T, Kind>& b)
 	{
 		typedef typename simd<T, Kind>::impl_type impl_t;
 		return impl_t(a) + b.impl;
@@ -50,14 +50,14 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind>& a, const simd_pack<T, Kind>& b)
 	{
 		return a.impl - b.impl;
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a, const T b)
+	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind>& a, const T b)
 	{
 		typedef typename simd<T, Kind>::impl_type impl_t;
 		return a.impl - impl_t(b);
@@ -65,7 +65,7 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator - (const T a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator - (const T a, const simd_pack<T, Kind>& b)
 	{
 		typedef typename simd<T, Kind>::impl_type impl_t;
 		return impl_t(a) - b.impl;
@@ -75,14 +75,14 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator * (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator * (const simd_pack<T, Kind>& a, const simd_pack<T, Kind>& b)
 	{
 		return a.impl * b.impl;
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator * (const simd_pack<T, Kind> a, const T b)
+	inline simd_pack<T, Kind> operator * (const simd_pack<T, Kind>& a, const T b)
 	{
 		typedef typename simd<T, Kind>::impl_type impl_t;
 		return a.impl * impl_t(b);
@@ -90,7 +90,7 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator * (const T a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator * (const T a, const simd_pack<T, Kind>& b)
 	{
 		typedef typename simd<T, Kind>::impl_type impl_t;
 		return impl_t(a) * b.impl;
@@ -99,14 +99,14 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator / (const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator / (const simd_pack<T, Kind>& a, const simd_pack<T, Kind>& b)
 	{
 		return a.impl / b.impl;
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator / (const simd_pack<T, Kind> a, const T b)
+	inline simd_pack<T, Kind> operator / (const simd_pack<T, Kind>& a, const T b)
 	{
 		typedef typename simd<T, Kind>::impl_type impl_t;
 		return a.impl / impl_t(b);
@@ -114,7 +114,7 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator / (const T a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> operator / (const T a, const simd_pack<T, Kind>& b)
 	{
 		typedef typename simd<T, Kind>::impl_type impl_t;
 		return impl_t(a) / b.impl;
@@ -123,7 +123,7 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> operator - (const simd_pack<T, Kind>& a)
 	{
 		return - a.impl;
 	}
@@ -133,56 +133,56 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> abs(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> abs(const simd_pack<T, Kind>& a)
 	{
 		return abs(a.impl);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> vmin(const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> vmin(const simd_pack<T, Kind>& a, const simd_pack<T, Kind>& b)
 	{
 		return vmin(a.impl, b.impl);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> vmax(const simd_pack<T, Kind> a, const simd_pack<T, Kind> b)
+	inline simd_pack<T, Kind> vmax(const simd_pack<T, Kind>& a, const simd_pack<T, Kind>& b)
 	{
 		return vmax(a.impl, b.impl);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> sqrt(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> sqrt(const simd_pack<T, Kind>& a)
 	{
 		return sqrt(a.impl);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> rcp(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> rcp(const simd_pack<T, Kind>& a)
 	{
 		return rcp(a.impl);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> rsqrt(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> rsqrt(const simd_pack<T, Kind>& a)
 	{
 		return rsqrt(a.impl);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> sqr(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> sqr(const simd_pack<T, Kind>& a)
 	{
 		return sqr(a.impl);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> cube(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> cube(const simd_pack<T, Kind>& a)
 	{
 		return cube(a.impl);
 	}
@@ -192,14 +192,14 @@ namespace lsimd
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> floor(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> floor(const simd_pack<T, Kind>& a)
 	{
 		return floor(a.impl);
 	}
 
 	template<typename T, typename Kind>
 	LSIMD_ENSURE_INLINE
-	inline simd_pack<T, Kind> ceil(const simd_pack<T, Kind> a)
+	inline simd_pack<T, Kind> ceil(const simd_pack<T, Kind>& a)
 	{
 		return ceil(a.impl);
 	}

@@ -60,8 +60,6 @@
 #define LSIMD_HAS_SSE2
 #endif
 
-#define LSIMD_VT(T) const T&  // to work around the infamous C2719 error
-
 #else
 
 #if defined(__SSE2__)
@@ -83,8 +81,6 @@
 #if defined(__SSE4_2__)
 #define LSIMD_HAS_SSE4_2
 #endif
-
-#define LSIMD_VT(T) const T
 
 #endif
 

@@ -339,7 +339,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat_core<f32,2,2> operator * (const smat_core<f32,2,2>& a, LSIMD_VT(sse_f32pk) s)
+	inline smat_core<f32,2,2> operator * (const smat_core<f32,2,2>& a, const sse_f32pk& s)
 	{
 		return a.col01_pk * s;
 	}
@@ -363,7 +363,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void operator *= (smat_core<f32,2,2>& a, LSIMD_VT(sse_f32pk) s)
+	inline void operator *= (smat_core<f32,2,2>& a, const sse_f32pk& s)
 	{
 		a.col01_pk = a.col01_pk * s;
 	}
@@ -411,7 +411,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat_core<f32,2,3> operator * (const smat_core<f32,2,3>& a, LSIMD_VT(sse_f32pk) s)
+	inline smat_core<f32,2,3> operator * (const smat_core<f32,2,3>& a, const sse_f32pk& s)
 	{
 		smat_core<f32,2,3> r;
 		r.col01_pk = a.col01_pk * s;
@@ -441,7 +441,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void operator *= (smat_core<f32,2,3>& a, LSIMD_VT(sse_f32pk) s)
+	inline void operator *= (smat_core<f32,2,3>& a, const sse_f32pk& s)
 	{
 		a.col01_pk = a.col01_pk * s;
 		a.col2z_pk = a.col2z_pk * s;
@@ -494,7 +494,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline smat_core<f32,2,4> operator * (const smat_core<f32,2,4>& a, LSIMD_VT(sse_f32pk) s)
+	inline smat_core<f32,2,4> operator * (const smat_core<f32,2,4>& a, const sse_f32pk& s)
 	{
 		smat_core<f32,2,4> r;
 		r.col01_pk = a.col01_pk * s;
@@ -524,7 +524,7 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline void operator *= (smat_core<f32,2,4>& a, LSIMD_VT(sse_f32pk) s)
+	inline void operator *= (smat_core<f32,2,4>& a, const sse_f32pk& s)
 	{
 		a.col01_pk = a.col01_pk * s;
 		a.col23_pk = a.col23_pk * s;

@@ -38,19 +38,19 @@ namespace lsimd { namespace sse {
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f32pk hdiff(LSIMD_VT(sse_f32pk) p)
+	inline sse_f32pk hdiff(const sse_f32pk& p)
 	{
 		return sub_s(p, p.dup2_high());
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk hdiff(LSIMD_VT(sse_f64pk) p)
+	inline sse_f64pk hdiff(const sse_f64pk& p)
 	{
 		return sub_s(p, p.dup_high());
 	}
 
 	LSIMD_ENSURE_INLINE
-	inline sse_f64pk rev_hdiff(LSIMD_VT(sse_f64pk) p)
+	inline sse_f64pk rev_hdiff(const sse_f64pk& p)
 	{
 		return sub_s(p.dup_high(), p);
 	}

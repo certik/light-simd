@@ -160,7 +160,7 @@ namespace lsimd
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat operator * (LSIMD_VT(pack_type) s) const
+		simd_mat operator * (const pack_type& s) const
 		{
 			return impl * s.impl;
 		}
@@ -187,7 +187,7 @@ namespace lsimd
 		}
 
 		LSIMD_ENSURE_INLINE
-		simd_mat& operator *= (LSIMD_VT(pack_type) s)
+		simd_mat& operator *= (const pack_type& s)
 		{
 			impl *= s.impl;
 			return *this;

@@ -163,7 +163,7 @@ namespace lsimd
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat operator * (LSIMD_VT(sse_pack<T>) s) const
+		sse_mat operator * (const sse_pack<T>& s) const
 		{
 			return core * s;
 		}
@@ -190,7 +190,7 @@ namespace lsimd
 		}
 
 		LSIMD_ENSURE_INLINE
-		sse_mat& operator *= (LSIMD_VT(sse_pack<T>) s)
+		sse_mat& operator *= (const sse_pack<T>& s)
 		{
 			core *= s;
 			return *this;

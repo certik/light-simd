@@ -74,7 +74,7 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE simd_pack() { }
 
-		LSIMD_ENSURE_INLINE simd_pack(LSIMD_VT(impl_type)imp)
+		LSIMD_ENSURE_INLINE simd_pack(const impl_type& imp)
 		: impl(imp) { }
 
 		LSIMD_ENSURE_INLINE simd_pack(intern_type v)

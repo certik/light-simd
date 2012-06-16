@@ -41,7 +41,7 @@ namespace lsimd { namespace sse {
 		smat_core( zero_t ) : col01_pk( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(sse_f32pk) c01) : col01_pk( c01 ) { }
+		smat_core(const sse_f32pk& c01) : col01_pk( c01 ) { }
 
 		template<typename AlignT>
 		LSIMD_ENSURE_INLINE void load(const f32 *x, AlignT)
@@ -129,7 +129,7 @@ namespace lsimd { namespace sse {
 		: col01_pk( zero_t() ), col2z_pk( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(sse_f32pk) c01, LSIMD_VT(sse_f32pk) c2)
+		smat_core(const sse_f32pk& c01, const sse_f32pk& c2)
 		: col01_pk( c01 ), col2z_pk( c2 ) { }
 
 		template<typename AlignT>
@@ -234,7 +234,7 @@ namespace lsimd { namespace sse {
 		: col01_pk( zero_t() ), col23_pk( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(sse_f32pk) c01, LSIMD_VT(sse_f32pk) c2)
+		smat_core(const sse_f32pk& c01, const sse_f32pk& c2)
 		: col01_pk( c01 ), col23_pk( c2 ) { }
 
 		template<typename AlignT>
@@ -351,7 +351,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1)
+		smat_core(const vec_t& v0, const vec_t& v1)
 		: col0(v0), col1(v1) { }
 
 		template<typename AlignT>
@@ -456,7 +456,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2 )
 		: col0(v0), col1(v1), col2( v2 ) { }
 
 		template<typename AlignT>
@@ -571,7 +571,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ), col3( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2, LSIMD_VT(vec_t) v3 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2, const vec_t& v3 )
 		: col0(v0), col1(v1), col2( v2 ), col3( v3 ) { }
 
 		template<typename AlignT>
@@ -708,7 +708,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1 )
+		smat_core(const vec_t& v0, const vec_t& v1 )
 		: col0(v0), col1(v1) { }
 
 		template<typename AlignT>
@@ -816,7 +816,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2 )
 		: col0(v0), col1(v1), col2( v2 ) { }
 
 		template<typename AlignT>
@@ -934,7 +934,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ), col3( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2, LSIMD_VT(vec_t) v3 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2, const vec_t& v3 )
 		: col0(v0), col1(v1), col2( v2 ), col3( v3 ) { }
 
 		template<typename AlignT>
@@ -1072,7 +1072,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1 )
+		smat_core(const vec_t& v0, const vec_t& v1 )
 		: col0(v0), col1(v1) { }
 
 		template<typename AlignT>
@@ -1166,7 +1166,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2 )
 		: col0(v0), col1(v1), col2( v2 ) { }
 
 		template<typename AlignT>
@@ -1278,7 +1278,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ), col3( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2, LSIMD_VT(vec_t) v3 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2, const vec_t& v3 )
 		: col0(v0), col1(v1), col2( v2 ), col3( v3 ) { }
 
 		template<typename AlignT>
@@ -1409,7 +1409,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1 )
+		smat_core(const vec_t& v0, const vec_t& v1 )
 		: col0(v0), col1(v1) { }
 
 		template<typename AlignT>
@@ -1490,7 +1490,7 @@ namespace lsimd { namespace sse {
 
 	private:
 		LSIMD_ENSURE_INLINE
-		void _load_trans(LSIMD_VT(sse_f64pk) pr0, LSIMD_VT(sse_f64pk) pr1, LSIMD_VT(sse_f64pk) pr2)
+		void _load_trans(const sse_f64pk& pr0, const sse_f64pk& pr1, const sse_f64pk& pr2)
 		{
 			sse_f64pk z = zero_t();
 
@@ -1519,7 +1519,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2 )
 		: col0(v0), col1(v1), col2( v2 ) { }
 
 		template<typename AlignT>
@@ -1666,7 +1666,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ), col3( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2, LSIMD_VT(vec_t) v3 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2, const vec_t& v3 )
 		: col0(v0), col1(v1), col2( v2 ), col3( v3 ) { }
 
 		template<typename AlignT>
@@ -1816,7 +1816,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ) { }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1 )
+		smat_core(const vec_t& v0, const vec_t& v1 )
 		: col0(v0), col1(v1) { }
 
 		template<typename AlignT>
@@ -1901,8 +1901,8 @@ namespace lsimd { namespace sse {
 
 	private:
 		LSIMD_ENSURE_INLINE
-		void _load_trans(LSIMD_VT(sse_f64pk) pr0, LSIMD_VT(sse_f64pk) pr1, 
-			LSIMD_VT(sse_f64pk) pr2, LSIMD_VT(sse_f64pk) pr3)
+		void _load_trans(const sse_f64pk& pr0, const sse_f64pk& pr1,
+			const sse_f64pk& pr2, const sse_f64pk& pr3)
 		{
 			col0.m_pk0 = unpack_low (pr0, pr1);
 			col0.m_pk1 = unpack_low (pr2, pr3);
@@ -1929,7 +1929,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2 )
 		: col0(v0), col1(v1), col2( v2 ) { }
 
 		template<typename AlignT>
@@ -2080,7 +2080,7 @@ namespace lsimd { namespace sse {
 		: col0( zero_t() ), col1( zero_t() ), col2( zero_t() ), col3( zero_t() ){ }
 
 		LSIMD_ENSURE_INLINE
-		smat_core(LSIMD_VT(vec_t) v0, LSIMD_VT(vec_t) v1, LSIMD_VT(vec_t) v2, LSIMD_VT(vec_t) v3 )
+		smat_core(const vec_t& v0, const vec_t& v1, const vec_t& v2, const vec_t& v3 )
 		: col0(v0), col1(v1), col2( v2 ), col3( v3 ) { }
 
 		template<typename AlignT>
