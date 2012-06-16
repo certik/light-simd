@@ -17,6 +17,12 @@
 #include "details/sse_mat_matmul_bits.h"
 #include "details/sse_mat_sol_bits.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4141)
+#endif
+
+
 namespace lsimd
 {
 
@@ -270,5 +276,9 @@ namespace lsimd
 	}
 
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif 

@@ -15,6 +15,11 @@
 
 #include "../sse_base.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4141)
+#endif
+
 namespace lsimd {  namespace sse {
 
 
@@ -451,4 +456,9 @@ namespace lsimd {  namespace sse {
 
 } }
 
-#endif /* SSE_PACK_MANIP_H_ */
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+
+#endif 

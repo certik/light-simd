@@ -407,7 +407,6 @@ namespace lsimd
 		sse_f32pk m_pk;
 	};
 
-
 	template<> class sse_vec<f32, 4>
 	{
 	public:
@@ -792,6 +791,48 @@ namespace lsimd
 		sse_f64pk m_pk;
 	};
 
+		
+	namespace sse
+	{
+		template<int I> struct _sse_v2d_bsx;
+
+		template<> struct _sse_v2d_bsx<0>
+		{
+			LSIMD_ENSURE_INLINE
+			static sse_f64pk get(const sse_f64pk& pk0, const sse_f64pk& )
+			{
+				return pk0.bsx<0>();
+			}
+		};
+
+		template<> struct _sse_v2d_bsx<1>
+		{
+			LSIMD_ENSURE_INLINE
+			static sse_f64pk get(const sse_f64pk& pk0, const sse_f64pk& )
+			{
+				return pk0.bsx<1>();
+			}
+		};
+
+		template<> struct _sse_v2d_bsx<2>
+		{
+			LSIMD_ENSURE_INLINE
+			static sse_f64pk get(const sse_f64pk&, const sse_f64pk& pk1)
+			{
+				return pk1.bsx<0>();
+			}
+		};
+
+		template<> struct _sse_v2d_bsx<3>
+		{
+			LSIMD_ENSURE_INLINE
+			static sse_f64pk get(const sse_f64pk&, const sse_f64pk& pk1)
+			{
+				return pk1.bsx<1>();
+			}
+		};
+	}
+
 
 	template<> class sse_vec<f64, 3>
 	{
@@ -843,7 +884,7 @@ namespace lsimd
 		template<int I>
 		LSIMD_ENSURE_INLINE sse_f64pk bsx_pk() const
 		{
-			return (I > 1) ? m_pk1.bsx<I-2>() : m_pk0.bsx<I>();
+			return sse::_sse_v2d_bsx<I>::get(m_pk0, m_pk1);
 		}
 
 	public:
@@ -994,7 +1035,7 @@ namespace lsimd
 		template<int I>
 		LSIMD_ENSURE_INLINE sse_f64pk bsx_pk() const
 		{
-			return (I > 1) ? m_pk1.bsx<I-2>() : m_pk0.bsx<I>();
+			return sse::_sse_v2d_bsx<I>::get(m_pk0, m_pk1);
 		}
 
 	public:

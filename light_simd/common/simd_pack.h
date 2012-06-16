@@ -185,7 +185,7 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE T (max)() const
 		{
-			return impl.max();
+			return (impl.max)();
 		}
 
 		template<int I>
@@ -196,7 +196,7 @@ namespace lsimd
 
 		LSIMD_ENSURE_INLINE T (min)() const
 		{
-			return impl.min();
+			return (impl.min)();
 		}
 
 		template<int I>

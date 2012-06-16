@@ -83,7 +83,7 @@ GCASE1( inv )
 	simple_mat<T,N,N> cm(E);
 	ref_mm(am, bm, cm);
 
-	T tol = sizeof(T) == 4 ? T(1.0e-5) : T(1.0e-12);
+	T tol = sizeof(T) == 4 ? T(1.0e-4) : T(1.0e-12);
 	ASSERT_VEC_APPROX(N*N, E, E0, tol);
 
 	simd_mat<T, N, N, sse_kind> inv_a2;

@@ -35,7 +35,7 @@ bool test_accuracy_u(T tol = sizeof(T) == 4 ? T(tol_f32) : T(tol_f64))
 	double max_rdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x);
 	bool passed = max_rdev < tol;
 
-	std::printf("  %-6s [%4g:%4g]             ==> max-rdev = %8.3g  ...  ",
+	std::printf("  %-6s [%4g:%4g]             ==> max-rdev = %10.3g  ...  ",
 			OpT<T>::name(), OpT<T>::lb_x(), OpT<T>::ub_x(), max_rdev);
 	print_pass(passed);
 	std::printf("\n");
@@ -55,7 +55,7 @@ bool test_accuracy_b(T tol = sizeof(T) == 4 ? T(tol_f32) : T(tol_f64))
 	double max_rdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x, lb_y, ub_y);
 	bool passed = max_rdev < tol;
 
-	std::printf("  %-6s [%4g:%4g] [%4g:%4g] ==> max-rdev = %8.3g  ...  ",
+	std::printf("  %-6s [%4g:%4g] [%4g:%4g] ==> max-rdev = %10.3g  ...  ",
 			OpT<T>::name(),
 			OpT<T>::lb_x(), OpT<T>::ub_x(),
 			OpT<T>::lb_y(), OpT<T>::ub_y(),
@@ -597,6 +597,9 @@ bool test_all()
 
 }
 
+#ifdef _MSC_VER
+#pragma warning(disable: 4100)
+#endif
 
 int main(int argc, char *argv[])
 {

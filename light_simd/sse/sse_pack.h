@@ -15,6 +15,11 @@
 
 #include "details/sse_pack_bits.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4141)
+#endif
+
 namespace lsimd
 {
 
@@ -571,5 +576,9 @@ namespace lsimd
 
 
 }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif /* SSE_PACK_H_ */

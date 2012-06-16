@@ -14,8 +14,12 @@
 #define LSIMD_SIMD_ARITH_H_
 
 #include "simd_pack.h"
-
 #include <light_simd/sse/sse_arith.h>
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4141)
+#endif
 
 namespace lsimd
 {
@@ -205,5 +209,11 @@ namespace lsimd
 	}
 
 }
+
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
 
 #endif /* SIMD_ARITH_H_ */

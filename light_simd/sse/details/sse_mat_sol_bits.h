@@ -15,6 +15,11 @@
 
 #include "sse_mat_matmul_bits.h"
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4141 4127)
+#endif
+
 namespace lsimd { namespace sse {
 
 	/**********************************
@@ -789,5 +794,9 @@ namespace lsimd { namespace sse {
 	}
 
 } }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #endif 

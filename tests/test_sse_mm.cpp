@@ -13,21 +13,60 @@
 using namespace lsimd;
 using namespace ltest;
 
+#ifdef _MSC_VER
+#pragma warning(disable : 4324 4996)
+#endif
+
+const int MaxArrLen = 16;
+
+LSIMD_ALIGN(32) f32 arr_af[MaxArrLen];
+LSIMD_ALIGN(32) f32 arr_bf[MaxArrLen];
+LSIMD_ALIGN(32) f32 arr_crf[MaxArrLen];
+LSIMD_ALIGN(32) f32 arr_c0f[MaxArrLen];
+
+LSIMD_ALIGN(32) f64 arr_ad[MaxArrLen];
+LSIMD_ALIGN(32) f64 arr_bd[MaxArrLen];
+LSIMD_ALIGN(32) f64 arr_crd[MaxArrLen];
+LSIMD_ALIGN(32) f64 arr_c0d[MaxArrLen];
+
+template<typename T> struct storage_s;
+
+template<> struct storage_s<f32>
+{
+	static f32 *arr_a() { return arr_af; }
+	static f32 *arr_b() { return arr_bf; }
+	static f32 *arr_cr() { return arr_crf; }
+	static f32 *arr_c0() { return arr_c0f; }
+};
+
+template<> struct storage_s<f64>
+{
+	static f64 *arr_a() { return arr_ad; }
+	static f64 *arr_b() { return arr_bd; }
+	static f64 *arr_cr() { return arr_crd; }
+	static f64 *arr_c0() { return arr_c0d; }
+};
+
 
 template<typename T, int M, int K, int N>
 class matmul_tests : public test_case
 {
 	char m_name[128];
 
-	LSIMD_ALIGN_SSE T arr_a[M * K];
-	LSIMD_ALIGN_SSE T arr_b[K * N];
-	LSIMD_ALIGN_SSE T arr_c0[M * N];
-	LSIMD_ALIGN_SSE T arr_cr[M * N];
-
+	T *arr_a;
+	T *arr_b;
+	T *arr_cr;
+	T *arr_c0;
+	
 public:
 	matmul_tests()
 	{
 		std::sprintf(m_name, "mm (%d x %d) * (%d x %d)", M, K, K, N);
+
+		arr_a = storage_s<T>::arr_a();
+		arr_b = storage_s<T>::arr_b();
+		arr_cr = storage_s<T>::arr_cr();
+		arr_c0 = storage_s<T>::arr_c0();
 	}
 
 	const char *name() const

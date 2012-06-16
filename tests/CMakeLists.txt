@@ -13,8 +13,8 @@ include_directories($ENV{LIGHT_TEST_HOME})
 set(CMAKE_BUILD_TYPE "Release")
 
 if (MSVC)
-	set(LANG_FLAGS "/arch:SSE2")
-	set(WARNING_FLAGS "/Wall")
+	set(LANG_FLAGS "/arch:SSE2 /EHsc")
+	set(WARNING_FLAGS "/W4")
 else (MSVC)
 	set(LANG_FLAGS "-std=c++0x -pedantic -march=native ")
 	set(WARNING_FLAGS "-Wall -Wextra -Wconversion -Wformat -Wno-unused-parameter ")
@@ -34,11 +34,14 @@ set(CMAKE_CXX_FLAGS "${TEST_CXX_FLAGS}")
 set(SVML_PATH "$ENV{ICC_LIBPATH}")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-find_library(SVML svml_disp
-	HINTS ${SVML_PATH})
+	find_library(SVML svml_disp
+		HINTS ${SVML_PATH})
+	find_library(LIBIRC libirc 
+		HINTS ${SVML_PATH})
+	
 else (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-find_library(SVML svml 
-    HINTS ${SVML_PATH})
+	find_library(SVML svml 
+		HINTS ${SVML_PATH})
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 if (SVML_NOT_FOUND)
@@ -86,10 +89,12 @@ set(SSE_BASIC_DEP_HS
     
 set(SSE_MATH_DEP_HS
     ${SSE_BASIC_DEP_HS}
+	${COMMON_MATH_HS}
     ${SSE_MATH_HS})
     
 set(SSE_LINALG_DEP_HS
     ${SSE_BASIC_DEP_HS}
+	${COMMON_LINALG_HS}
     ${SSE_LINALG_HS})
     
 
@@ -109,7 +114,7 @@ add_executable(test_sse_math_svml ${SSE_MATH_DEP_HS} test_sse_math.cpp)
 
 target_link_libraries(test_sse_packs test_main)
 target_link_libraries(test_sse_arith test_main)
-target_link_libraries(test_sse_math_svml test_main ${SVML})
+target_link_libraries(test_sse_math_svml test_main ${SVML} ${LIBIRC})
 target_link_libraries(test_sse_vecs test_main)
 target_link_libraries(test_sse_mats test_main)
 target_link_libraries(test_sse_mm test_main)

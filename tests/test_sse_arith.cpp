@@ -13,8 +13,8 @@ using namespace lsimd;
 
 const int N = 100 * 1024;
 
-const double tol_f32 = 1.e-7;
-const double tol_f64 = 1.0e-16;
+const double tol_f32 = 1.e-6;
+const double tol_f64 = 1.0e-15;
 
 inline void print_pass(bool passed)
 {
@@ -34,7 +34,7 @@ bool test_accuracy_u(T tol = sizeof(T) == 4 ? T(tol_f32) : T(tol_f64))
 	double maxdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x);
 	bool passed = maxdev < tol;
 
-	std::printf("\t%-9s:    max-rdev = %8.3g  ... ", OpT<T>::name(), maxdev);
+	std::printf("\t%-9s:    max-rdev = %10.3g  ... ", OpT<T>::name(), maxdev);
 	print_pass(passed);
 	std::printf("\n");
 
@@ -53,7 +53,7 @@ bool test_accuracy_b(T tol = sizeof(T) == 4 ? T(tol_f32) : T(tol_f64))
 	double maxdev = eval_approx_accuracy<T, sse_kind, OpT<T> >(N, lb_x, ub_x, lb_y, ub_y);
 	bool passed = maxdev < tol;
 
-	std::printf("\t%-9s:    max-rdev = %8.3g  ... ", OpT<T>::name(), maxdev);
+	std::printf("\t%-9s:    max-rdev = %10.3g  ... ", OpT<T>::name(), maxdev);
 	print_pass(passed);
 	std::printf("\n");
 
@@ -427,6 +427,10 @@ bool test_all()
 
 	return passed;
 }
+
+#ifdef _MSC_VER
+#pragma warning(disable: 4100)
+#endif
 
 
 int main(int argc, char *argv[])

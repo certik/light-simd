@@ -9,6 +9,10 @@
 #include <light_test/std_test_mon.h>
 #include "test_aux.h"
 
+#ifdef _MSC_VER
+#pragma warning(disable:4100)
+#endif
+
 using namespace ltest;
 
 ltest::test_suite lsimd::lsimd_main_suite("Main");

@@ -31,6 +31,10 @@ namespace lsimd
 	 *
 	 ********************************************/
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable:4996)
+#endif
 
 	extern ::ltest::test_suite lsimd_main_suite;
 	extern void add_test_packs();
@@ -86,6 +90,10 @@ namespace lsimd
 			return m_name;
 		}
 	};
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 
 	/********************************************

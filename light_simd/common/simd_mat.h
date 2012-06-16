@@ -223,7 +223,6 @@ namespace lsimd
 
 
 	template<typename Kind, typename T, int N>
-	LSIMD_ENSURE_INLINE
 	inline T det(const simd_mat<T, N, N, Kind>& a)
 	{
 		return det(a.impl);
