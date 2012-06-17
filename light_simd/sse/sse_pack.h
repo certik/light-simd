@@ -25,144 +25,355 @@ namespace lsimd
 
 	template<typename T> struct sse_pack;
 
+	/**
+	 * The class to represent an SSE pack comprised of
+	 * 4 single-precision floating-point numbers (f32)
+	 */
 	template<>
 	struct sse_pack<f32>
 	{
-		// types
 
+		/**
+		 * The scalar value type
+		 */
 		typedef f32 value_type;
+
+		/**
+		 * The builtin representation type
+		 */
 		typedef __m128 intern_type;
+
+		/**
+		 * The number of scalars in a pack
+		 */
 		static const unsigned int pack_width = 4;
 
 		union
 		{
-			__m128 v;
-			LSIMD_ALIGN_SSE f32 e[4];
+			__m128 v;  /**< The builtin representation  */
+			LSIMD_ALIGN_SSE f32 e[4];  /**< The representation in an array of scalars */
 		};
 
-		LSIMD_ENSURE_INLINE unsigned int width() const
-		{
-			return pack_width;
-		}
-
-		LSIMD_ENSURE_INLINE __m128 intern() const
-		{
-			return v;
-		}
 
 		// constructors
 
+		/**
+		 * Default constructor
+		 *
+		 * The entries in this pack are left uninitialized
+		 */
 		LSIMD_ENSURE_INLINE sse_pack() { }
 
+		/**
+		 * Constructs a pack using builtin representation
+		 *
+		 * @param v_ the builtin representation of a pack
+		 */
 		LSIMD_ENSURE_INLINE sse_pack(const __m128 v_)
 		: v(v_) { }
 
+		/**
+		 * Constructs a pack with all entries initialized to zeros
+		 */
 		LSIMD_ENSURE_INLINE sse_pack( zero_t )
 		{
 			v = _mm_setzero_ps();
 		}
 
+		/**
+		 * Constructs a pack with all entries initialized
+		 * to a given value
+		 *
+		 * @param x the value used to initialize the pack
+		 */
 		LSIMD_ENSURE_INLINE explicit sse_pack(const f32 x)
 		{
 			v = _mm_set1_ps(x);
 		}
 
+		/**
+		 * Constructs a pack with given values
+		 *
+		 * @param e0 the 0-th entry value (the lowest-end)
+		 * @param e1 the 1st entry value
+		 * @param e2 the 2nd entry value
+		 * @param e3 the 3rd entry value (the highest-end)
+		 */
 		LSIMD_ENSURE_INLINE sse_pack(const f32 e0, const f32 e1, const f32 e2, const f32 e3)
 		{
 			v = _mm_set_ps(e3, e2, e1, e0);
 		}
 
+		/**
+		 * Constructs a pack by loading the entry values from
+		 * a properly aligned memory address
+		 *
+		 * @param a the memory address from which values are
+		 *          loaded
+		 */
 		LSIMD_ENSURE_INLINE sse_pack(const f32* a, aligned_t)
 		{
 			v = _mm_load_ps(a);
 		}
 
+		/**
+		 * Constructs a pack by loading the entry values from
+		 * an memory address that is not necessarily aligned
+		 *
+		 * @param a the memory address from which values are
+		 *          loaded
+		 */
 		LSIMD_ENSURE_INLINE sse_pack(const f32* a, unaligned_t)
 		{
 			v = _mm_loadu_ps(a);
 		}
 
 
-		// set, load, store
+		/**
+		 * @name Basic Information Retrieval Methods
+		 *
+		 * The member functions to get basic information about the SIMD pack.
+		 */
+		///@{
 
+
+		/**
+		 * Get the pack width (the number of scalars in a pack)
+		 *
+		 * @return the value of \ref pack_width
+		 */
+		LSIMD_ENSURE_INLINE unsigned int width() const
+		{
+			return pack_width;
+		}
+
+		/**
+		 * Get the builtin representation
+		 *
+		 * @return a copy of the builtin representation variable
+		 */
+		LSIMD_ENSURE_INLINE __m128 intern() const
+		{
+			return v;
+		}
+
+		///@}
+
+
+		/**
+		 * @name Import and Export Methods
+		 *
+		 * The member functions to set, load and store entry values.
+		 */
+		///@{
+
+		/**
+		 * Set all scalar entries to zeros
+		 */
 		LSIMD_ENSURE_INLINE void set_zero()
 		{
 			v = _mm_setzero_ps();
 		}
 
+		/**
+		 * Set all scalar entries to a given value
+		 *
+		 * @param x the value to be set to all entries
+		 */
 		LSIMD_ENSURE_INLINE void set(const f32 x)
 		{
 			v = _mm_set1_ps(x);
 		}
 
+		/**
+		 * Set given values to the entries
+		 *
+		 * @param e0 the value to be set to the 0-th entry (lowest end)
+		 * @param e1 the value to be set to the 1st entry
+		 * @param e2 the value to be set to the 2nd entry
+		 * @param e3 the value to be set to the 3rd entry (highest end)
+		 */
 		LSIMD_ENSURE_INLINE void set(const f32 e0, const f32 e1, const f32 e2, const f32 e3)
 		{
 			v = _mm_set_ps(e3, e2, e1, e0);
 		}
 
+		/**
+		 * Load all entries from an aligned memory address
+		 *
+		 * @param a the memory address from which the values are loaded
+		 */
 		LSIMD_ENSURE_INLINE void load(const f32* a, aligned_t)
 		{
 			v = _mm_load_ps(a);
 		}
 
+		/**
+		 * Load all entries from an memory address that is not
+		 * necessarily aligned
+		 *
+		 * @param a the memory address from which the values
+		 *          are loaded
+		 */
 		LSIMD_ENSURE_INLINE void load(const f32* a, unaligned_t)
 		{
 			v = _mm_loadu_ps(a);
 		}
 
+		/**
+		 * Store all entries to a properly aligned memory
+		 * address
+		 *
+		 * @param a the memory address from which the values
+		 *          are stored
+		 */
 		LSIMD_ENSURE_INLINE void store(f32* a, aligned_t) const
 		{
 			_mm_store_ps(a, v);
 		}
 
+		/**
+		 * Store all entries to the memory address that is not
+		 * necessarily aligned
+		 *
+		 * @param a the memory address from which the values
+		 *          are stored
+		 */
 		LSIMD_ENSURE_INLINE void store(f32* a, unaligned_t) const
 		{
 			_mm_storeu_ps(a, v);
 		}
 
+		/**
+		 * Load a subset of entries from a given memory address
+		 *
+		 * @tparam I the number of entries to be loaded.
+		 *           The value of I must be either 1, 2, or 3
+		 *
+		 * @param a the memory address from which the values
+		 *          are loaded
+		 *
+		 * @remark the loaded values are set to the lower-end of
+		 *         the pack, while the entries at higher-end are
+		 *         set to zeros
+		 */
 		template<int I>
 		LSIMD_ENSURE_INLINE void partial_load(const f32 *a)
 		{
 			v = sse::partial_load<I>(a);
 		}
 
+		/**
+		 * Store a subset of entries to a given memory address
+		 *
+		 * @tparam I the number of entries to be stored.
+		 *           The value of I must be either 1, 2, or 3.
+		 *
+		 * @param a the memory address
+		 *
+		 * @remark This method stores the first I values at
+		 *         the lower end of the pack
+		 */
 		template<int I>
 		LSIMD_ENSURE_INLINE void partial_store(f32 *a) const
 		{
 			sse::partial_store<I>(a, v);
 		}
 
+		///@}
 
-		// entry manipulation
+		/**
+		 * @name Entry Manipulation Methods
+		 *
+		 * The member functions to extract entries or switch their positions
+		 */
+		///@{
 
+
+		/**
+		 * Extract the entry at lowest end
+		 *
+		 * @return the scalar value of the entry at lowest
+		 *         end (i.e. \ref e[0])
+		 *
+		 * @remark To extract the scalar at arbitrary position,
+		 *         one may use another member function \ref extract.
+		 */
 		LSIMD_ENSURE_INLINE f32 to_scalar() const
 		{
 			return _mm_cvtss_f32(v);
 		}
 
+		/**
+		 * Extract the entry at given position
+		 *
+		 * @tparam I the entry position.
+		 *           The value of I must be within [0, 3].
+		 *
+		 * @return the I-th entry of this pack.
+		 *
+		 * @remark extract<0>() is equivalent to to_scalar().
+		 *
+		 * @see to_scalar
+		 */
 		template<int I>
 		LSIMD_ENSURE_INLINE f32 extract() const
 		{
 			return sse::f32p_extract<I>(v);
 		}
 
+		/**
+		 * Broadcast the entry at a given position
+		 *
+		 * @tparam I the position of the entry to be broadcasted.
+		 *           The value of I must be within [0, 3].
+		 *
+		 * @return a pack whose entries are all equal to
+		 *         the I-th entry of this pack
+		 */
 		template<int I>
 		LSIMD_ENSURE_INLINE sse_pack bsx() const
 		{
 			return _mm_shuffle_ps(v, v, _MM_SHUFFLE(I, I, I, I));
 		}
 
+		/**
+		 * Shift entries towards the low end
+		 * (with zeros shift-in from the high end)
+		 *
+		 * @tparam I the distance to shift (in terms of the number
+		 *           of scalars).
+		 *           The value of I must be within [0, 4].
+		 *
+		 * @return The shifted pack, of which the k-th
+		 *         entry equals the (k+I)-th entry of this pack,
+		 *         when k < 4 - I, or zero otherwise.
+		 */
 		template<int I>
 		LSIMD_ENSURE_INLINE sse_pack shift_front() const
 		{
 			return _mm_castsi128_ps(_mm_srli_si128(_mm_castps_si128(v), (I << 2)));
 		}
 
+		/**
+		 * Shift entries towards the high end
+		 * (with zeros shift-in from the low end)
+		 *
+		 * @tparam I the distance to shift (in terms of the number
+		 *           of scalars).
+		 *           The value of I must be within [0, 4].
+		 *
+		 * @return The shifted pack, of which the k-th
+		 *         entry equals the (k-I)-th entry of this pack,
+		 *         when k >= I, or zero otherwise.
+		 */
 		template<int I>
 		LSIMD_ENSURE_INLINE sse_pack shift_back() const
 		{
 			return _mm_castsi128_ps(_mm_slli_si128(_mm_castps_si128(v), (I << 2)));
 		}
+
+		///@}
 
 
 		// special entry manipulation
@@ -277,6 +488,10 @@ namespace lsimd
 	};
 
 
+	/**
+	 * The class to represent an SSE pack comprised of
+	 * 4 single-precision floating-point numbers (f32)
+	 */
 	template<>
 	struct sse_pack<f64>
 	{
@@ -518,7 +733,14 @@ namespace lsimd
 
 	// typedefs
 
+	/**
+	 * A short name for sse_pack<f32>
+	 */
 	typedef sse_pack<f32> sse_f32pk;
+
+	/**
+	 * A short name for sse_pack<f64>
+	 */
 	typedef sse_pack<f64> sse_f64pk;
 
 
