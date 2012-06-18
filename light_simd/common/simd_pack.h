@@ -1,9 +1,32 @@
 /**
  * @file simd_pack.h
  *
- * This file defines the generic template class for representing SIMD packs
+ * @brief The generic template class for representing SIMD packs.
  *
  * @author Dahua Lin
+ *
+ * @copyright
+ *
+ * Copyright (C) 2012 Dahua Lin
+ * 
+ * Permission is hereby granted, free of charge, to any person 
+ * obtaining a copy of this software and associated documentation 
+ * files (the "Software"), to deal in the Software without restriction, 
+ * including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software, 
+ * and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #ifdef _MSC_VER
@@ -18,6 +41,39 @@
 
 namespace lsimd
 {
+	/**
+	 * @defgroup packs SIMD Packs
+	 * @ingroup core_module
+	 * 
+	 * @brief SIMD pack classes and a set of convenient routines.
+	 *
+	 * An SIMD pack is a bundle of small number of scalars that can 
+	 * fit into an SIMD register of a particular SIMD architecture.
+	 *
+	 * For example, for SSE architecture, there are eight 128-bit XMM 
+	 * registers, which can accomodate either four single-precision 
+	 * real numbers or two double-precision ones. 
+	 *
+	 * Each kind of architecture is associated with a tag type 
+	 * (e.g. SSE is associated with lsimd::sse_kind). 
+	 *
+	 * This module comprises:
+	 * - a generic SIMD pack class lsimd::simd_pack, which takes
+	 *   a tag_type as template argument. 
+	 *
+	 * - a set of architecture-specific SIMD pack classes 
+	 *   (e.g. lsimd::sse_pack<f32> and lsimd::sse_pack<f64>). 
+	 *  
+	 */
+	/** @{ */ 
+
+	/**
+	 * @defgroup packs_generic Generic Packs
+	 * @ingroup packs
+	 *
+	 * @brief Generic pack classes
+	 */ 	
+	/** @{ */  
 
 	/**
 	 * SIMD type traits for SSE Kind.
@@ -536,6 +592,10 @@ namespace lsimd
 		///@}
 
 	};
+
+	/** @} */  // packs_generic
+
+	/** @} */ // packs
 
 }
 

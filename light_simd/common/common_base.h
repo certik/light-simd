@@ -1,8 +1,9 @@
 /**
  * @file common_base.h
  *
- * This file defines a set of basic types that will be used by the entire library.
- * Particularly, it contains the definitions of
+ * @brief A set of basic types and macros that will be used by the entire library.
+ *
+ * This file, particularly, contains the definitions of
  *
  * - Basic numeric types (e.g. f32, f64, i32, etc)
  * - Basic tag types (e.g. aligned_t, unaligned_t and zero_t)
@@ -10,6 +11,29 @@
  * - A set of useful macros
  *
  * @author Dahua Lin
+ *
+ * @copyright
+ *
+ * Copyright (C) 2012 Dahua Lin
+ * 
+ * Permission is hereby granted, free of charge, to any person 
+ * obtaining a copy of this software and associated documentation 
+ * files (the "Software"), to deal in the Software without restriction, 
+ * including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software, 
+ * and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #ifdef _MSC_VER
@@ -25,6 +49,31 @@
 #include <stdint.h>
 #include <cstdio>
 
+
+
+/**
+ * @defgroup core_module Core Module
+ *
+ * @brief  SIMD pack classes, arithmetic functions, 
+ *         and supporting facilities.
+ *
+ * The core module comprises a set of SIMD pack classes that 
+ * serve as the core of the entire library, which particularly
+ * include
+ *
+ * - A generic SIMD pack class: lsimd::simd_pack
+ * - A set of specific SIMD pack classes:
+ *   - lsimd::sse_pack<f32>
+ *   - lsimd::sse_pack<f64>
+ *
+ * In addition, it also contains 
+ * - A set of useful supporting facilities (see \ref common_base.h)
+ * - Overloaded operators and arithmetic functions 
+ *   (see \ref simd_arith.h and \ref sse_arith.h)
+ */
+
+
+
 /**
  * The main namespace of the Light SIMD library.
  *
@@ -33,7 +82,26 @@
  */
 namespace lsimd
 {
-	// primitive types
+
+	/**
+	 * @defgroup basic_defs Basic Definitions
+	 * @ingroup core_module
+	 *
+	 * @brief Definitions of basic types used by the 
+	 *        entire library.
+	 */
+
+	/**
+	 * @defgroup scalar_types Scalar Types
+	 * @ingroup basic_defs
+	 *
+	 * @brief The primitive scalar types to represent a single 
+	 *        scalar. 
+	 *
+	 * The primitive types are mostly typedefs of builtin types, using 
+	 * consistent naming.
+	 */ 
+	/** @{ */ 
 
 	/**
 	 * 8-bit signed integer.
@@ -91,7 +159,19 @@ namespace lsimd
 
 	typedef i32 index_t;
 
-	// tag types
+	/** @} */ // scalar_types
+
+
+	/**
+	 * @defgroup tag_types Tag Types
+	 * @ingroup basic_defs
+	 *
+	 * @brief The tag types for meta-programming.
+	 *
+	 * The tag types are mostly empty struct types to indicate a particular
+	 * operation or attribute at compile-time.
+	 */ 
+	/** @{ */ 
 
 	/**
 	 * A tag type that indicates the provided address is properly aligned.
@@ -114,14 +194,10 @@ namespace lsimd
 	struct zero_t { };
 
 
-	// forward declaration
-
-
 	/**
 	 * A tag type that indicates to use SSE 128-bit data types for SIMD processing.
 	 */
 	struct sse_kind { };
-
 
 	/**
 	 * The default kind of data types for SIMD processing.
@@ -135,6 +211,10 @@ namespace lsimd
 	 */
 	typedef sse_kind default_simd_kind;
 
+	/** @} */  // tag_types
+
+
+	// forward declarations
 
 	template<typename T, typename Kind> struct simd;
 
@@ -146,7 +226,10 @@ namespace lsimd
 
 }
 
-// useful macros
+/**
+ * @ingroup basic_defs
+ * @{
+ */
 
 #if (LSIMD_COMPILER == LSIMD_GCC || LSIMD_COMPILER == LSIMD_CLANG )
 
@@ -175,7 +258,7 @@ namespace lsimd
 
 #endif
 
-
+/** @} */
 
 
 #endif /* COMMON_BASE_H_ */

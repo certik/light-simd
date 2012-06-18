@@ -1,9 +1,9 @@
 /**
  * @file sse_base.h
  *
- * The basic types for SSE packs
+ * @brief The base header file for SSE-based modules
  *
- * All intrinsic headers are also included here.
+ * This file includes all headers of SSE intrinsics.
  *
  * @author Dahua Lin
  */
