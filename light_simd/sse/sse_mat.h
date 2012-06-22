@@ -1,9 +1,32 @@
 /*
  * @file sse_mat.h
  *
- * SSE-based fixed-size small matrices
+ * @brief SSE-based fixed-size small matrices
  *
  * @author Dahua Lin
+ *
+ * @copyright
+ *
+ * Copyright (C) 2012 Dahua Lin
+ * 
+ * Permission is hereby granted, free of charge, to any person 
+ * obtaining a copy of this software and associated documentation 
+ * files (the "Software"), to deal in the Software without restriction, 
+ * including without limitation the rights to use, copy, modify, merge, 
+ * publish, distribute, sublicense, and/or sell copies of the Software, 
+ * and to permit persons to whom the Software is furnished to do so, 
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be 
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES 
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+ * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #ifndef _MSC_VER
@@ -26,17 +49,24 @@
 namespace lsimd
 {
 
+	/**
+	 * \addtogroup mat_vec_sse
+	 *?
+	/** @{ */ 
+
 
 	template<typename T, int M, int N> class sse_mat;
 
 
-	/********************************************
+	/**
+	 * SSE-based fixed size matrix.
 	 *
-	 *  sse_mat class (generic)
+	 * @tparam T    The entry value type.
+	 * @tparam M    The number of rows.
+	 * @tparam N    The number of columns.
 	 *
-	 ********************************************/
-
-
+	 * @remark      The entries are in column-major order.
+	 */
 	template<typename T, int M, int N>
 	class sse_mat
 	{
@@ -47,102 +77,246 @@ namespace lsimd
 		sse_mat(const sse::smat_core<T, M, N>& a) : core(a) { }
 
 	public:
+		/**
+		 * Default constructor.
+		 *
+		 * All entries of the matrix are left uninitialized.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat() { }
 
+		/**
+		 * Constructs a matrix with all entries initialized to zeros.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat( zero_t ) : core( zero_t() ) { }
 
+		/**
+		 * Constructs a matrix by loading entry values from an aligned
+		 * memory address.
+		 *
+		 * @param x    The memory address from which the values are loaded.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat(const T *x, aligned_t)
 		{
 			core.load(x, aligned_t());
 		}
 
+		/**
+		 * Constructs a matrix by loading entry values from an address
+		 * that is not necessarily aligned.
+		 *
+		 * @param x    The memory address from which the values are loaded.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat(const T *x, unaligned_t)
 		{
 			core.load(x, unaligned_t());
 		}
 
+		/**
+		 * Constructs a matrix by loading from strided memory, where each
+		 * column is aligned.
+		 *
+		 * Specifically, the first column is loaded from x, the second is
+		 * loaded from x + ldim, and so on. Here, the base addresses of
+		 * all columns (x, x + ldim, etc) should be aligned.
+		 *
+		 * @param x    	The base address of the first column. 
+		 * @param ldim 	The stride (the offset between two consecutive columns).
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat(const T *x, int ldim, aligned_t)
 		{
 			core.load(x, ldim, aligned_t());
 		}
 
+		/**
+		 * Constructs a matrix by loading from strided memory, where the 
+		 * column bases are not necessarily aligned.
+		 *
+		 * Specifically, the first column is loaded from x, the second is
+		 * loaded from x + ldim, and so on. 
+		 *
+		 * @param x    	The base address of the first column. 
+		 * @param ldim 	The stride (the offset between two consecutive columns).
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat(const T *x, int ldim, unaligned_t)
 		{
 			core.load(x, ldim, unaligned_t());
 		}
 
+		/**
+		 * Loads entry values from an aligned memory address.
+		 *
+		 * @param x    The memory address from which the values are loaded.
+		 */
 		LSIMD_ENSURE_INLINE
 		void load(const T *x, aligned_t)
 		{
 			core.load(x, aligned_t());
 		}
 
+		/**
+		 * Loads entry values from an address that is not 
+		 * necessarily aligned.
+		 *
+		 * @param x    The memory address from which the values are loaded.
+		 */
 		LSIMD_ENSURE_INLINE
 		void load(const T *x, unaligned_t)
 		{
 			core.load(x, unaligned_t());
 		}
 
+		/**
+		 * Loads from strided memory, where each column is aligned.
+		 *
+		 * Specifically, the first column is loaded from x, the second is
+		 * loaded from x + ldim, and so on. Here, the base addresses of
+		 * all columns (x, x + ldim, etc) should be aligned.
+		 *
+		 * @param x    	The base address of the first column. 
+		 * @param ldim 	The stride (the offset between two consecutive columns).
+		 */
 		LSIMD_ENSURE_INLINE
 		void load(const T *x, int ldim, aligned_t)
 		{
 			core.load(x, ldim, aligned_t());
 		}
 
+		/**
+		 * Loads entry values from strided memory, where the base
+		 * addresses are not necessarily aligned.
+		 *
+		 * Specifically, the first column is loaded from x, the
+		 * second column is loaded from x + ldim, and so on.
+		 *
+		 * @param x     The base address of the first column.
+		 * @param ldim  The stride (the offset between two consecutive columns).
+		 */
 		LSIMD_ENSURE_INLINE
 		void load(const T *x, int ldim, unaligned_t)
 		{
 			core.load(x, ldim, unaligned_t());
 		}
 
+		/**
+		 * Loads from an aligned memory address and transpose.
+		 *
+		 * Here, the matrix stored in the memory have M columns and
+		 * each column has N entries.
+		 *
+		 * @param x    The memory address from which the values are loaded.
+		 * 
+		 * @remark     One can also use this function to load an M x N matrix
+		 *             from a matrix in memory with row-major layout.
+		 */
 		LSIMD_ENSURE_INLINE
 		void load_trans(const T *x, aligned_t)
 		{
 			core.load_trans(x, aligned_t());
 		}
 
+		/**
+		 * Loads from a memory address (not necessarily aligned) and
+		 * transpose.
+		 *
+		 * Here, the matrix stored in the memory have M columns and
+		 * each column has N entries.
+		 *
+		 * @param x    The memory address from which the values are loaded.
+		 * 
+		 * @remark     One can also use this function to load an M x N matrix
+		 *             from a matrix in memory with row-major layout.
+		 */
 		LSIMD_ENSURE_INLINE
 		void load_trans(const T *x, unaligned_t)
 		{
 			core.load_trans(x, unaligned_t());
 		}
 
+		/**
+		 * Loads from strided memory (where each column is aligned)
+		 * and transpose.
+		 *
+		 * Here, the matrix stored in the memory have M columns and
+		 * each column has N entries.
+		 *
+		 * @param x     The memory address from which the values are loaded.
+		 * @param ldim  The stride (the offset between consecutive columns).
+		 * 
+		 * @remark     One can also use this function to load an M x N matrix
+		 *             from a matrix in memory with row-major layout.
+		 */
 		LSIMD_ENSURE_INLINE
 		void load_trans(const T *x, int ldim, aligned_t)
 		{
 			core.load_trans(x, ldim, aligned_t());
 		}
 
+		/**
+		 * Loads from strided memory and transpose.
+		 *
+		 * Here, the matrix stored in the memory have M columns and
+		 * each column has N entries.
+		 *
+		 * @param x     The memory address from which the values are loaded.
+		 * @param ldim  The stride (the offset between consecutive columns).
+		 * 
+		 * @remark     One can also use this function to load an M x N matrix
+		 *             from a matrix in memory with row-major layout.
+		 */
 		LSIMD_ENSURE_INLINE
 		void load_trans(const T *x, int ldim, unaligned_t)
 		{
 			core.load_trans(x, ldim, unaligned_t());
 		}
 
+		/**
+		 * Stores entry values to an aligned memory address.
+		 *
+		 * @param x    The memory address to which the entry values are stored.
+		 */
 		LSIMD_ENSURE_INLINE
 		void store(T *x, aligned_t) const
 		{
 			core.store(x, aligned_t());
 		}
 
+		/**
+		 * Stores entry values to a memory address that is not necessarily
+		 * aligned.
+		 *
+		 * @param x    The memory address to which the entry values are stored.
+		 */
 		LSIMD_ENSURE_INLINE
 		void store(T *x, unaligned_t) const
 		{
 			core.store(x, unaligned_t());
 		}
 
+		/**
+		 * Stores entry values to strided memory, where each column is aligned.
+		 *
+		 * @param x     The memory address to which the entry values are stored.
+		 * @param ldim  The stride (the offset between consecutive columns).
+		 */
 		LSIMD_ENSURE_INLINE
 		void store(T *x, int ldim, aligned_t) const
 		{
 			core.store(x, ldim, aligned_t());
 		}
 
+		/**
+		 * Stores entry values to strided memory (where the column base addresses
+		 * are not required to be aligned).
+		 *
+		 * @param x     The memory address to which the entry values are stored.
+		 * @param ldim  The stride (the offset between consecutive columns).
+		 */
 		LSIMD_ENSURE_INLINE
 		void store(T *x, int ldim, unaligned_t) const
 		{
