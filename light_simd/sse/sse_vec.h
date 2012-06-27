@@ -54,7 +54,7 @@ namespace lsimd
 #ifdef LSIMD_IN_DOXYGEN
 
 	/**
-	 * A fixed-size SSE-based vector.
+	 * @brief A fixed-size SSE-based vector.
 	 *
 	 * @tparam T   The type of entry values.
 	 * @tparam N   The number of entries in a vector.

@@ -78,7 +78,7 @@ namespace lsimd
 
 
 	/**
-	 * Generic fixed-size vector class.
+	 * @brief Generic fixed-size vector class.
 	 *
 	 * @tparam T 		The scalar type.
 	 * @tparam N 		The vector length.

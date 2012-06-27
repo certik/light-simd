@@ -57,8 +57,7 @@ namespace lsimd
 	template<typename T> struct sse_pack;
 
 	/**
-	 * The class to represent an SSE pack comprised of
-	 * four single-precision floating-point numbers (f32).
+	 * @brief SSE pack with four single-precision real values.
 	 */
 	template<>
 	struct sse_pack<f32>
@@ -681,8 +680,7 @@ namespace lsimd
 
 
 	/**
-	 * The class to represent an SSE pack comprised of
-	 * two double-precision floating-point numbers (f64).
+	 * @brief SSE pack with two double-precision real values.
 	 */
 	template<>
 	struct sse_pack<f64>
@@ -1258,12 +1256,12 @@ namespace lsimd
 	// typedefs
 
 	/**
-	 * A short name for sse_pack<f32>
+	 * @brief A short name for sse_pack<f32>.
 	 */
 	typedef sse_pack<f32> sse_f32pk;
 
 	/**
-	 * A short name for sse_pack<f64>
+	 * @brief A short name for sse_pack<f64>.
 	 */
 	typedef sse_pack<f64> sse_f64pk;
 

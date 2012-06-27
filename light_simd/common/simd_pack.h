@@ -76,7 +76,7 @@ namespace lsimd
 	/** @{ */  
 
 	/**
-	 * SIMD type traits for SSE Kind.
+	 * @brief SIMD type traits for SSE Kind.
 	 *
 	 * @tparam T The scalar type.
 	 *
@@ -117,8 +117,10 @@ namespace lsimd
 
 
 	/**
-	 * The class to represent an SIMD pack, a small vector of
-	 * numbers that can fit in an SIMD register.
+	 * @brief SIMD pack.
+	 *
+	 * An SIMD pack is a small vector of numbers that can fit in 
+	 * an SIMD register.
 	 *
 	 * @tparam T     The scalar type.
 	 * @tparam Kind  The kind of SIMD instructions (e.g. \ref sse_kind).

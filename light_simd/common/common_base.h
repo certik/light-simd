@@ -103,55 +103,55 @@ namespace lsimd
 	 */ 
 	/** @{ */ 
 
-	/**
-	 * 8-bit signed integer.
+	/** 
+	 * @brief 8-bit signed integer. 
 	 */
 	typedef  int8_t  i8;
 
 	/**
-	 * 8-bit unsigned integer.
+	 * @brief 8-bit unsigned integer.
 	 */
 	typedef uint8_t  u8;
 
 	/**
-	 * 16-bit signed integer.
+	 * @brief 16-bit signed integer.
 	 */
 	typedef  int16_t i16;
 
 	/**
-	 * 16-bit unsigned integer.
+	 * @brief 16-bit unsigned integer.
 	 */
 	typedef uint16_t u16;
 
 	/**
-	 * 32-bit signed integer.
+	 * @brief 32-bit signed integer.
 	 */
 	typedef  int32_t i32;
 
 	/**
-	 * 32-bit unsigned integer.
+	 * @brief 32-bit unsigned integer.
 	 */
 	typedef uint32_t u32;
 
 	/**
-	 * single-precision (32-bit) floating-point real number.
+	 * @brief Single-precision (32-bit) floating-point real number.
 	 */
 	typedef float  f32;
 
 	/**
-	 * double-precision (64-bit) floating-point real number.
+	 * @brief Double-precision (64-bit) floating-point real number.
 	 */
 	typedef double f64;
 
 	/**
-	 * The unsigned integer type to represent sizes.
+	 * @brief The unsigned integer type to represent sizes.
 	 *
 	 * @remark This is simply using std::size_t.
 	 */
 	using std::size_t;
 
 	/**
-	 * The unsigned integer type to represent the offset between two pointers.
+	 * @brief The unsigned integer type to represent the offsets.
 	 *
 	 * @remark This is simply using std::ptrdiff_t.
 	 */
@@ -174,33 +174,32 @@ namespace lsimd
 	/** @{ */ 
 
 	/**
-	 * A tag type that indicates the provided address is properly aligned.
+	 * @brief tag type: memory addresses are properly aligned.
 	 *
 	 * @see unaligned_t.
 	 */
 	struct aligned_t { };
 
 	/**
-	 * A tag type that indicates that the provided address is not necessarily
-	 * aligned to the proper boundary.
+	 * @brief tag type: memory addresses are not necessarily aligned.
 	 *
 	 * @see aligned_t
 	 */
 	struct unaligned_t { };
 
 	/**
-	 * A tag type that indicates to initialize all elements to zero values.
+	 * @brief tag type: initialize all elements to zero values.
 	 */
 	struct zero_t { };
 
 
 	/**
-	 * A tag type that indicates to use SSE 128-bit data types for SIMD processing.
+	 * @brief tag type: use SSE for SIMD computation.
 	 */
 	struct sse_kind { };
 
 	/**
-	 * The default kind of data types for SIMD processing.
+	 * @brief The default kind of data types for SIMD processing.
 	 *
 	 * @remark Currently, only SSE has been supported by the library,
 	 *         and thus this is set to be the same as \ref sse_kind.

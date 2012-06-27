@@ -59,7 +59,7 @@ namespace lsimd
 
 
 	/**
-	 * SSE-based fixed size matrix.
+	 * @brief SSE-based fixed size matrix.
 	 *
 	 * @tparam T    The entry value type.
 	 * @tparam M    The number of rows.

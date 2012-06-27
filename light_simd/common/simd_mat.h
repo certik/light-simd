@@ -57,7 +57,7 @@ namespace lsimd
 	};
 
 	/**
-	 * Generic fixed size matrix.
+	 * @brief Generic fixed size matrix.
 	 *  
 	 * @tparam T    The entry value type.
 	 * @tparam M    The number of rows.
