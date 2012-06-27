@@ -1,4 +1,4 @@
-/*
+/**
  * @file sse_mat.h
  *
  * @brief SSE-based fixed-size small matrices
