@@ -51,7 +51,7 @@ namespace lsimd
 
 	/**
 	 * \addtogroup mat_vec_sse
-	 *?
+	 */
 	/** @{ */ 
 
 
@@ -324,30 +324,67 @@ namespace lsimd
 		}
 
 	public:
+
+		/**
+		 * Adds two matrices.
+		 *
+		 * @param r    The matrix of addends.
+		 * 
+		 * @return     The resultant matrix, as this matrix + r.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat operator + (const sse_mat& r) const
 		{
 			return core + r.core;
 		}
 
+		/**
+		 * Subtracts two matrices.
+		 *
+		 * @param r    The matrix of subtrahends.
+		 * 
+		 * @return     The resultant matrix, as this matrix - r.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat operator - (const sse_mat& r) const
 		{
 			return core - r.core;
 		}
 
+		/**
+		 * Multiplies two matrices in an entry-wise way.
+		 *
+		 * @param r    The matrix of multiplicands.
+		 * 
+		 * @return     The resultant matrix, as an element-wise
+		 *			   product between this matrix and r.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat operator % (const sse_mat& r) const
 		{
 			return core % r.core;
 		}
 
+		/**
+		 * Multiplies with a scale
+		 *
+		 * @param s    An SSE pack filled with the same scale.
+		 * 
+		 * @return     The resultant matrix, as this matrix * s.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat operator * (const sse_pack<T>& s) const
 		{
 			return core * s;
 		}
 
+		/**
+		 * Adds another matrix to this matrix.
+		 *
+		 * @param r    The matrix of addends.
+		 * 
+		 * @return     The reference to this matrix.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat& operator += (const sse_mat& r)
 		{
@@ -355,6 +392,13 @@ namespace lsimd
 			return *this;
 		}
 
+		/**
+		 * Subtracts another matrix from this matrix.
+		 *
+		 * @param r    The matrix of addends.
+		 * 
+		 * @return     The reference to this matrix.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat& operator -= (const sse_mat& r)
 		{
@@ -362,6 +406,13 @@ namespace lsimd
 			return *this;
 		}
 
+		/**
+		 * Multiplies another matrix to this matrix, in an entry-wise way.
+		 *
+		 * @param r    The matrix of multiplicands.
+		 * 
+		 * @return     The reference to this matrix.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat& operator %= (const sse_mat& r)
 		{
@@ -369,6 +420,13 @@ namespace lsimd
 			return *this;
 		}
 
+		/**
+		 * Multiplies this matrix with a scalar. 
+		 *
+		 * @param s   An SSE pack filled with the same scale value.
+		 *
+		 * @return    The reference to this matrix.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_mat& operator *= (const sse_pack<T>& s)
 		{
@@ -376,12 +434,27 @@ namespace lsimd
 			return *this;
 		}
 
+		/**
+		 * Evaluates matrix-vector product (in linear algebraic sense).
+		 *
+		 * @param v   The vector to be multiplied with.
+		 *
+		 * @return    The matrix-vector product, as this matrix * v.
+		 */
 		LSIMD_ENSURE_INLINE
 		sse_vec<T, M> operator * (const sse_vec<T, N>& v) const
 		{
 			return transform(core, v);
 		}
 
+		/**
+		 * Evaluates the trace of the matrix.
+		 *
+		 * @return   The trace value.
+		 *
+		 * @remarks  The trace of a matrix equals the sum of all diagonal
+		 *           entries.
+		 */
 		LSIMD_ENSURE_INLINE
 		T trace() const
 		{
@@ -403,36 +476,87 @@ namespace lsimd
 
 	};
 
+	/**
+	 * Evaluates matrix-matrix product.
+	 *
+	 * @param A    A matrix of size M x K.
+	 * @param B    A matrix of size K x N.
+	 *
+	 * @return     The product of A and B, whose size is M x N.
+	 */ 
 	template<typename T, int M, int K, int N>
-	inline sse_mat<T, M, N> operator * (const sse_mat<T, M, K>& a, const sse_mat<T, K, N>& b)
+	inline sse_mat<T, M, N> operator * (const sse_mat<T, M, K>& A, const sse_mat<T, K, N>& B)
 	{
-		sse_mat<T, M, N> c;
-		sse::mtimes_op<T, M, K, N>::run(a.core, b.core, c.core);
-		return c;
+		sse_mat<T, M, N> C;
+		sse::mtimes_op<T, M, K, N>::run(A.core, B.core, C.core);
+		return C;
 	}
 
+	/** @} */  // mat_vec_sse
 
+
+	/**
+	 * \defgroup linsol_sse SSE Equation Solving
+	 * @ingroup linalg_module
+	 * 
+	 * @brief SSE-based functions to solve linear equations, 
+	 *		  evaluate matrix determinant and inverse.
+	 */
+	 /** @{ */
+
+	/**
+	 * Evaluate the determinant of a matrix.
+	 *
+	 * @param A   The input matrix.
+	 *
+	 * @return    The determinant of A.
+	 */
 	template<typename T, int N>
 	LSIMD_ENSURE_INLINE
-	inline T det(const sse_mat<T, N, N>& a)
+	inline T det(const sse_mat<T, N, N>& A)
 	{
-		return sse::det(a.core);
+		return sse::det(A.core);
 	}
 
+	/**
+	 * Evaluates the inverse of a matrix.
+	 *
+	 * @param A    The input matrix.
+	 *
+	 * @return     The inverse of A.
+	 */
 	template<typename T, int N>
-	inline sse_mat<T, N, N> inv(const sse_mat<T, N, N>& a)
+	inline sse_mat<T, N, N> inv(const sse_mat<T, N, N>& A)
 	{
-		sse_mat<T, N, N> r;
-		sse::inv(a.core, r.core);
-		return r;
+		sse_mat<T, N, N> R;
+		sse::inv(A.core, R.core);
+		return R;
 	}
 
+	/**
+	 * Evaluates the inverse and determinant of a matrix.
+	 *
+	 * @param A    The input matrix.
+	 * @param R    The output matrix that stores the inverse of A.
+	 *
+	 * @return     The determinant of A.
+	 */
 	template<typename T, int N>
-	inline T inv_and_det(const sse_mat<T, N, N>& a, sse_mat<T, N, N>& r)
+	inline T inv_and_det(const sse_mat<T, N, N>& A, sse_mat<T, N, N>& R)
 	{
-		return sse::inv(a.core, r.core);
+		return sse::inv(A.core, R.core);
 	}
 
+	/**
+	 * Solves a linear equation.
+	 *
+	 * @param A    The input matrix of equation coefficients.
+	 * @param b    The right hand side vector.
+	 *
+	 * @return     The solution x, such that A * x = b.
+	 *
+	 * @remark     This function assumes A is invertible.
+	 */
 	template<typename T, int N>
 	inline sse_vec<T, N> solve(const sse_mat<T, N, N>& A, const sse_vec<T, N>& b)
 	{
@@ -441,6 +565,16 @@ namespace lsimd
 		return x;
 	}
 
+	/**
+	 * Solves linear equations.
+	 *
+	 * @param A    The input matrix of equation coefficients.
+	 * @param B    The right hand side matrix.
+	 *
+	 * @return     The solution matrix X, such that A * X = B.
+	 *
+	 * @remark     This function assumes A is invertible.
+	 */
 	template<typename T, int N, int N2>
 	inline sse_mat<T, N, N2> solve(const sse_mat<T, N, N>& A, const sse_mat<T, N, N2>& B)
 	{
@@ -448,6 +582,8 @@ namespace lsimd
 		sse::solve(A.core, B.core, X.core);
 		return X;
 	}
+
+	/** @} */
 
 }
 
